@@ -17,7 +17,7 @@ export default function ProfileScreen() {
       alignItems: 'center', 
       justifyContent: 'center' 
     }}>
-      <Text style={{ fontSize: 20 }}>Profile Screen</Text>
+      <Text style={{ fontSize: 20 }}>Profile Screen </Text>
       <Button title='Logout' onPress={handleLogout}></Button>
     </View>
   );

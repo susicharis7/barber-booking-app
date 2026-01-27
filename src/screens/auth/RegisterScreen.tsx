@@ -6,7 +6,7 @@ export default function RegisterScreen({ navigation }: any) {
       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
     >
       <Text style={{ fontSize: 22, marginBottom: 20 }}>
-        Register Screen 
+        Register Screen 📝
       </Text>
 
       <Button

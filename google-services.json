@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1070876676064",
+    "project_id": "barber-booking-app-199a4",
+    "storage_bucket": "barber-booking-app-199a4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070876676064:android:3c9d14073802c1e149e585",
+        "android_client_info": {
+          "package_name": "com.haris.barberbooking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070876676064-t1foare1315m4q6qn13p4sl50sjr97uq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.haris.barberbooking",
+            "certificate_hash": "ca58d3e010711d87bdb891b7f7fe56e47ca52c0a"
+          }
+        },
+        {
+          "client_id": "1070876676064-u8dk4dq6urkgc4man4sb13816u1lotr7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.haris.barberbooking",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1070876676064-o1h4e4vkdga9juunle0da0sj7ocp6f2o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKhZpD7RK7Y75tEL1lz41QvYbBbnlRfrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070876676064-o1h4e4vkdga9juunle0da0sj7ocp6f2o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1070876676064-3lpko0bpapaus9i828i4ngd3jpi80ja4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.haris.barberbooking"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
