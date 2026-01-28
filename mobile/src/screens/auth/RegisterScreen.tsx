@@ -1,18 +1,133 @@
-import { View, Text, Button } from 'react-native';
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  Image,
+} from 'react-native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+import { firebaseAuth } from '../../services/firebase';
+import { styles } from '../../styles/screens/register-styles';
+
+const logo = require('../../../assets/images/logo.png');
 
 export default function RegisterScreen({ navigation }: any) {
-  return (
-    <View
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-    >
-      <Text style={{ fontSize: 22, marginBottom: 20 }}>
-        Register Screen 📝
-      </Text>
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-      <Button
-        title="Complete Profile"
-        onPress={() => navigation.navigate('CompleteProfile')}
-      />
+  const handleRegister = async () => {
+    if (!email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all required fields.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email.trim(),
+        password
+      );
+
+
+      Alert.alert(
+        'Success',
+        'Account created successfully. Please log in.'
+      );
+
+      navigation.replace('Login');
+    } catch (error: any) {
+      Alert.alert('Registration failed', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.logoSection}>
+        <Image source={logo} style={styles.logo} resizeMode="contain" />
+      </View>
+
+      <View style={styles.formSection}>
+        <Text style={styles.title}>Register</Text>
+
+        <TextInput
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Email"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
+
+        <View style={styles.passwordRow}>
+          <TextInput
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            style={[styles.input, styles.halfInput]}
+          />
+
+          <TextInput
+            placeholder="Confirm Password"
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            style={[styles.input, styles.halfInput]}
+          />
+        </View>
+
+        <TouchableOpacity
+          onPress={handleRegister}
+          disabled={loading}
+          style={styles.registerButton}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.registerButtonText}>Create Account</Text>
+          )}
+        </TouchableOpacity>
+
+        <View style={styles.footerLinkContainer}>
+          <View style={styles.footerRow}>
+            <Text style={styles.footerText}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.footerLink}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
