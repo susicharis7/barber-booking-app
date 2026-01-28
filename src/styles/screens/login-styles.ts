@@ -3,9 +3,17 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
+  },
+  logoSection: {
+    paddingTop: 24,
+    paddingBottom: 24,
+    alignItems: 'center',
+  },
+  formSection: {
+    paddingTop: 8,
   },
   title: {
     fontSize: 32,
@@ -13,6 +21,11 @@ export const styles = StyleSheet.create({
     marginBottom: 40,
     textAlign: 'center',
     color: '#333',
+  },
+  logo: {
+    width: 240,
+    height: 180,
+    alignSelf: "center",
   },
   input: {
     borderWidth: 1,
@@ -24,7 +37,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   loginButton: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#000000',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -33,6 +46,41 @@ export const styles = StyleSheet.create({
   loginButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: '600',
+  },
+  registerRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  registerText: {
+    color: '#6B7280',
+    fontSize: 14,
+  },
+  registerLink: {
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  socialSection: {
+    marginTop: 20,
+    gap: 12,
+  },
+  socialButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    paddingVertical: 14,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#fff',
+  },
+  socialButtonText: {
+    color: '#111827',
+    fontSize: 16,
     fontWeight: '600',
   },
   dividerContainer: {
@@ -49,21 +97,5 @@ export const styles = StyleSheet.create({
     marginHorizontal: 10,
     color: '#888',
     fontSize: 14,
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    gap: 10,
-  },
-  googleButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '500',
   },
 });
