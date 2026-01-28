@@ -6,7 +6,6 @@ import {
 } from 'firebase/auth';
 
 import { firebaseAuth } from './firebase';
-import { signOutFromGoogle } from './google-auth-service';
 
 export const login = async(
     email: string,
@@ -21,16 +20,8 @@ export const login = async(
     return userCredential.user;
 };
 
-
+/* Logout Current User */
 export const logout = async(): Promise<void> => {
-    try {
-        await signOutFromGoogle();
-    } catch (error) {
-       
-        console.log('Google sign out skipped:', error);
-    }
-    
- 
     await signOut(firebaseAuth);
 };
 
