@@ -14,6 +14,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from '../../services/firebase';
 import { styles } from '../../styles/screens/login-styles';
 
+import { useEffect } from "react";
+
 const logo = require('../../../assets/images/logo.png');
 
 export default function LoginScreen({ navigation }: any) {
@@ -37,6 +39,9 @@ export default function LoginScreen({ navigation }: any) {
       setLoading(false);
     }
   };
+
+  
+
 
   return (
     <View style={styles.container}>
