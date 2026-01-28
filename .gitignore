@@ -6,10 +6,10 @@ node_modules/
 ####################################
 # Expo
 ####################################
-.expo/
-.expo-shared/
-web-build/
-dist/
+/.expo/
+/.expo-shared/
+/web-build/
+/dist/
 expo-env.d.ts
 
 ####################################
@@ -63,6 +63,22 @@ pnpm-debug.log*
 Thumbs.db
 
 ####################################
-# Backend (Node.js – future)
+# Mobile app
 ####################################
-coverage/
+/mobile/node_modules/
+/mobile/.expo/
+/mobile/.expo-shared/
+/mobile/web-build/
+/mobile/dist/
+
+####################################
+# Backend (Node.js)
+####################################
+/backend/node_modules/
+/backend/coverage/
+/backend/dist/
+/backend/build/
+/backend/.cache/
+/backend/.env
+/backend/.env.*
+/backend/src/firebase/firebase-service-account.json
