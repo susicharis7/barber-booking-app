@@ -14,23 +14,18 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.haris.barberbooking",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "com.haris.barberbooking"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.haris.barberbooking",
-      "googleServicesFile": "./google-services.json"
+      "package": "com.haris.barberbooking"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "@react-native-google-signin/google-signin/app.plugin.js"
-    ],
     "extra": {
       "eas": {
         "projectId": "7bdb659a-fcfc-449e-88ab-1aaaf05382b0"
