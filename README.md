@@ -93,17 +93,26 @@ Current focus:
 ## Project Architecture
 
 ```text
-src/
- ├─ screens/              # App screens (Login, Home, Profile, etc.)
- ├─ navigation/           # Navigators (Auth, App, Root)
- ├─ components/           # Reusable UI components
- ├─ context/              # Global state (Auth, App state)
- ├─ services/             # Firebase & API services
- ├─ styles/               # Global & screen-specific styles
- │   ├─ colors.ts
- │   ├─ spacing.ts
- │   ├─ typography.ts
- │   └─ screens/
- │       └─ login-styles.ts
- ├─ types/                # TypeScript types & models
- └─ utils/                # Helper functions
+barber-booking-app/
+├── README.md
+│
+├── backend/
+│   └── src/
+│       ├── app.ts
+│       ├── index.ts
+│       ├── db/
+│       ├── firebase/
+│       ├── middleware/
+│       └── modules/
+└── mobile/
+    ├── assets/
+    └── src/
+        ├── context/
+        ├── navigation/
+        ├── screens/
+        │   ├── appointments/
+        │   ├── auth/
+        │   ├── home/
+        │   └── profile/
+        ├── services/
+        └── styles/
