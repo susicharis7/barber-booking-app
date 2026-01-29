@@ -16,6 +16,9 @@ import { styles } from '../../styles/screens/register-styles';
 
 const logo = require('../../../assets/images/logo.png');
 
+const API_URL = 'http://192.168.1.13:5000'; /* From Home */
+const API_URL_WORK = ''; /* From Work (Add Later) */
+
 export default function RegisterScreen({ navigation }: any) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -25,8 +28,8 @@ export default function RegisterScreen({ navigation }: any) {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    if (!email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all required fields.');
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
 
@@ -38,11 +41,38 @@ export default function RegisterScreen({ navigation }: any) {
     setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         firebaseAuth,
         email.trim(),
         password
       );
+
+      /* New : Fetch Token for Backend */
+      const token = await userCredential.user.getIdToken();
+
+      /* Register user into Postgre (Sending first_name & last_name as planned) */
+      const response = await fetch(`${API_URL}/api/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Backend Registration ERROR: ', data);
+        Alert.alert('Warning', 'Account is created but Profile Setup Failed. Please Try Logging in.');
+        return;
+      };
+
+      console.log('User registered successfully:', data);
 
 
       Alert.alert(
@@ -50,7 +80,7 @@ export default function RegisterScreen({ navigation }: any) {
         'Account created successfully. Please log in.'
       );
 
-      navigation.replace('Login');
+
     } catch (error: any) {
       Alert.alert('Registration failed', error.message);
     } finally {
