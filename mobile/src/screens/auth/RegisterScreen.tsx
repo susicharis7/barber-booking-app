@@ -77,7 +77,7 @@ export default function RegisterScreen({ navigation }: any) {
 
       Alert.alert(
         'Success',
-        'Account created successfully. Please log in.'
+        'Account created successfully!'
       );
 
 

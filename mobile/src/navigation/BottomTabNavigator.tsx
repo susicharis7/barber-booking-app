@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/home/HomeScreen';
 import {AppointmentsScreen} from '../screens/appointments/AppointmentsScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
+import SettingsScreen from '../screens/settings/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +20,7 @@ export default function BottomTabNavigator() {
           } else if (route.name === 'Appointments') {
             iconName = 'calendar-outline';
           } else {
-            iconName = 'person-outline';
+            iconName = 'settings-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -35,7 +35,7 @@ export default function BottomTabNavigator() {
         component={AppointmentsScreen}
         options={{ title: 'My Appointments' }}
       />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }
