@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             try {
                 const token = await firebaseUser.getIdToken();
                 console.log("Token: ", token);
-                const res = await fetch('http://192.168.1.79:5000/auth/me', {
+                const res = await fetch('http://192.168.1.13:5000/api/users/me', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
