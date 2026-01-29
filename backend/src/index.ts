@@ -28,12 +28,19 @@ app.get("/auth/me", async (req, res) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
+      console.log("AUTH /auth/me: missing Authorization header");
       return res.status(401).json({ message: "No token provided" });
     }
 
     const token = authHeader.split(" ")[1];
+    console.log("AUTH /auth/me Token:", token);
 
     const decodedToken = await firebaseAdminAuth.verifyIdToken(token);
+    console.log("AUTH /auth/me Backend User:", {
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      provider: decodedToken.firebase.sign_in_provider,
+    });
 
     return res.json({
       uid: decodedToken.uid,
