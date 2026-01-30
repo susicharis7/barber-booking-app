@@ -2,8 +2,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/home/HomeScreen';
-import {AppointmentsScreen} from '../screens/appointments/AppointmentsScreen';
-import SettingsScreen from '../screens/settings/SettingsScreen';
+import { AppointmentsScreen } from '../screens/appointments/AppointmentsScreen';
+import SettingsStackNavigator from './SettingsStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +25,7 @@ export default function BottomTabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2563EB',
+        tabBarActiveTintColor: '#000000',
         tabBarInactiveTintColor: '#6B7280',
       })}
     >
@@ -35,7 +35,7 @@ export default function BottomTabNavigator() {
         component={AppointmentsScreen}
         options={{ title: 'My Appointments' }}
       />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Settings" component={SettingsStackNavigator} />
     </Tab.Navigator>
   );
 }
