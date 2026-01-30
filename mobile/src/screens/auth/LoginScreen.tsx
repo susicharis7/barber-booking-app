@@ -55,7 +55,10 @@ export default function LoginScreen({ navigation }: any) {
 
         <TextInput
           placeholder="Please enter your Email"
+          textContentType="username"
+          autoComplete="email"
           autoCapitalize="none"
+          autoCorrect={false}
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
@@ -64,6 +67,10 @@ export default function LoginScreen({ navigation }: any) {
 
         <TextInput 
           placeholder="Please enter your Password"
+          textContentType="password"
+          autoComplete="password"
+          autoCapitalize="none"
+          autoCorrect={false}
           secureTextEntry
           value={password}
           onChangeText={setPassword}

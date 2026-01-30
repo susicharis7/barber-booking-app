@@ -12,12 +12,10 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { firebaseAuth } from '../../services/firebase';
+import { api } from '../../services/api';
 import { styles } from '../../styles/screens/register-styles';
 
 const logo = require('../../../assets/images/logo.png');
-
-const API_URL = 'http://192.168.1.13:5000'; /* From Home */
-const API_URL_WORK = ''; /* From Work (Add Later) */
 
 export default function RegisterScreen({ navigation }: any) {
   const [firstName, setFirstName] = useState('');
@@ -41,47 +39,20 @@ export default function RegisterScreen({ navigation }: any) {
     setLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        email.trim(),
-        password
-      );
+      // 1. Kreiraj usera na Firebase
+      await createUserWithEmailAndPassword(firebaseAuth, email.trim(), password);
 
-      /* New : Fetch Token for Backend */
-      const token = await userCredential.user.getIdToken();
-
-      /* Register user into Postgre (Sending first_name & last_name as planned) */
-      const response = await fetch(`${API_URL}/api/users/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-
-        body: JSON.stringify({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-        }),
+      // 2. Registruj usera u PostgreSQL
+      const data = await api.post('/api/users/register', {
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error('Backend Registration ERROR: ', data);
-        Alert.alert('Warning', 'Account is created but Profile Setup Failed. Please Try Logging in.');
-        return;
-      };
-
       console.log('User registered successfully:', data);
-
-
-      Alert.alert(
-        'Success',
-        'Account created successfully!'
-      );
-
+      Alert.alert('Success', 'Account created successfully!');
 
     } catch (error: any) {
+      console.error('Registration error:', error);
       Alert.alert('Registration failed', error.message);
     } finally {
       setLoading(false);
@@ -122,6 +93,9 @@ export default function RegisterScreen({ navigation }: any) {
 
           <TextInput
             placeholder="Email"
+            textContentType='emailAddress'
+            autoComplete='email'
+            autoCorrect={false}
             autoCapitalize="none"
             keyboardType="email-address"
             value={email}
@@ -132,6 +106,10 @@ export default function RegisterScreen({ navigation }: any) {
           <View style={styles.passwordRow}>
             <TextInput
               placeholder="Password"
+              textContentType='newPassword'
+              autoComplete='password-new'
+              autoCapitalize='none'
+              autoCorrect={false}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -144,6 +122,10 @@ export default function RegisterScreen({ navigation }: any) {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               style={[styles.input, styles.halfInput]}
+              autoComplete='password-new'
+              autoCapitalize='none'
+              autoCorrect={false}
+              textContentType='newPassword'
             />
           </View>
 
