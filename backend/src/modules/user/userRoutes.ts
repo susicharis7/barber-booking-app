@@ -7,8 +7,11 @@ const router = Router();
 // Registration (Needs to have Firebase Token)
 router.post('/register', verifyToken, userController.register);
 
-// Fetch Current Usre (Also needs Firebase Token)
+// Fetch Current User (Also needs Firebase Token)
 router.get('/me', verifyToken, userController.getMe);
+
+// Update Current User
+router.put('/me', verifyToken, userController.updateMe); 
 
 export default router;
 

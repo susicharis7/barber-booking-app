@@ -70,3 +70,42 @@ export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
 
 };
 
+
+/* PUT api/users/me */
+export const updateMe = async (req: AuthRequest, res: Response): Promise<void> => {
+
+    try {
+        const { first_name, last_name, phone } = req.body;
+        const { uid } = req.user!;
+
+
+        if (!first_name || !last_name) {
+            res.status(400).json({ message: 'First name & Last name are required.'});
+            return;
+        }
+
+        const updatedUser = await userService.updateUser(uid, {
+            first_name,
+            last_name,
+            phone: phone || null,
+        });
+
+        if (!updatedUser) {
+            res.status(404).json({ message: 'User not found.' });
+            return;
+        }
+
+        console.log('User updated: ', updatedUser);
+
+        res.json({ 
+            message: 'Profile updated successfully.',
+            user: updatedUser,
+        });
+        
+
+    } catch(error) {
+        console.error("Updated User Error: ", error);
+        res.status(500).json({ message: 'Internal server error...'});
+    }
+
+}
