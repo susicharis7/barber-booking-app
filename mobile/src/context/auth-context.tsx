@@ -1,71 +1,66 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { firebaseAuth } from '../services/firebase';
+import { api } from '../services/api';
+import { DatabaseUser } from '../types';
 
-
-type AuthContextType = { 
-    user: User | null;
-    loading : boolean;
+type AuthContextType = {
+  user: User | null;
+  dbUser: DatabaseUser | null;
+  loading: boolean;
+  refreshDbUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
-    user: null,
-    loading: true,
+  user: null,
+  dbUser: null,
+  loading: true,
+  refreshDbUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(firebaseAuth, async (firebaseUser) => {
-            setUser(firebaseUser);
-            setLoading(false);
+  const fetchDbUser = async () => {
+    try {
+      const data = await api.get<{ user: DatabaseUser }>('/api/users/me');
+      setDbUser(data.user);
+    } catch (error) {
+      console.log('Backend Auth Error:', error);
+      setDbUser(null);
+    }
+  };
 
-            if (!firebaseUser) {
-                return;
-            }
+  const refreshDbUser = async () => {
+    if (user) {
+      await fetchDbUser();
+    }
+  };
 
-            try {
-                const token = await firebaseUser.getIdToken();
-                console.log("Token: ", token);
-                const res = await fetch('http://192.168.1.13:5000/api/users/me', {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async (firebaseUser) => {
+      setUser(firebaseUser);
 
-                const contentType = res.headers.get('content-type') || '';
-                const raw = await res.text();
+      if (firebaseUser) {
+        await firebaseUser.getIdToken();
+        await fetchDbUser();
+      } else {
+        setDbUser(null);
+      }
 
-                if (!res.ok) {
-                    console.log('Backend Auth Error:', res.status, raw);
-                    return;
-                }
+      setLoading(false);
+    });
 
-                const data = contentType.includes('application/json')
-                    ? JSON.parse(raw)
-                    : { raw };
+    return unsubscribe;
+  }, []);
 
-                console.log("Backend User: ", data);
-            } catch (error) {
-                console.log("Backend Auth Error: " ,error);
-            }
-
-            
-        });
-
-        return unsubscribe;
-    }, []);
-
-
-    return(
-        <AuthContext.Provider value={{ user, loading }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ user, dbUser, loading, refreshDbUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
-
 
 export const useAuth = () => useContext(AuthContext);
