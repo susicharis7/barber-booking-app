@@ -70,6 +70,7 @@ Thumbs.db
 /mobile/.expo-shared/
 /mobile/web-build/
 /mobile/dist/
+/mobile/src/services/firebase.ts
 
 ####################################
 # Backend (Node.js)
