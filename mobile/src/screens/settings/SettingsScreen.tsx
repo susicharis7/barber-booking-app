@@ -72,6 +72,9 @@ export default function SettingsScreen({ navigation }: any) {
               <Text style={styles.headerSubtitle}>
                 Control your profile, bookings, and app experience.
               </Text>
+
+              <View style={styles.headerSeparator} />
+
             </View>
           </View>
         </ImageBackground>

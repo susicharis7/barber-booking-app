@@ -52,6 +52,9 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
     color: '#ffffff',
+    textShadowColor: 'rgba(0,0,0,0.45)',
+    textShadowOffset: { width: 0, height: 2},
+    textShadowRadius: 6,
   },
 
   headerSubtitle: {
@@ -61,13 +64,25 @@ export const styles = StyleSheet.create({
   },
 
   headerDivider: {
-    height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    marginTop: -6,
-    bottom: -25,
-    marginBottom: 6,
+    position: 'absolute',
+    left: 20,
+    right: 20,
+    bottom: -10,
+    height: 3,
+    borderRadius: 999,
+    backgroundColor: 'rgba(15, 23, 42, 0.22)',
     zIndex: 3,
-    
+  },
+  
+  headerSeparator: {
+    marginTop: 8,
+    top: 18,
+    height: 2,
+    borderRadius: 999, 
+    backgroundColor: '#ffffff',
+    opacity: 0.5,
+    alignSelf: 'stretch',
+    marginHorizontal: -20,
   },
 
   menuContainer: {
