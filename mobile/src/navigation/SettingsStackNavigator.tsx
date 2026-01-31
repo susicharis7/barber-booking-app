@@ -6,6 +6,7 @@ import MyAccountScreen from '../screens/settings/MyAccountScreen';
 import AboutAppScreen from '../screens/settings/AboutAppScreen';
 import TermsOfUseScreen from '../screens/settings/TermsOfUseScreen';
 import PrivacyPolicyScreen from '../screens/settings/PrivacyPolicyScreen';
+import WaitingListScreen from '../screens/settings/WaitingListScreen';
 
 
 
@@ -20,6 +21,7 @@ export default function SettingsStackNavigator() {
       <Stack.Screen name="AboutApp" component={AboutAppScreen} />
       <Stack.Screen name="TermsOfUse" component={TermsOfUseScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="WaitingList" component={WaitingListScreen} />
 
 
     </Stack.Navigator>
