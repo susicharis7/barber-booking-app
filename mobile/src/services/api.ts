@@ -1,6 +1,6 @@
 import { firebaseAuth } from './firebase';
 
-const API_URL = 'http://192.168.1.84:5000';
+const API_URL = 'http://172.20.10.11:5000';
 
 type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';

@@ -52,6 +52,19 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 10,
   },
+  locationText: {
+    textAlign: 'center',
+    color: '#ffffff',
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: 1.6,
+    marginTop: 20,
+    textTransform: 'uppercase',
+    textShadowColor: 'rgba(0,0,0,0.45)',
+    textShadowOffset: { width: 0, height: 4 },
+    textShadowRadius: 12,
+    top: 20
+  },
 
   sectionTitle: {
     textAlign: 'center',
@@ -200,12 +213,16 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.45)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
+    top: 40
   },
 
   map: {
     width: '100%',
     height: '100%',
   },
+
+
+
 
 
 });

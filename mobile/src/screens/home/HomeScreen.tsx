@@ -10,8 +10,15 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/home-styles';
 
+import MapView, { Marker } from 'react-native-maps';
+
 const homeBg = require('../../../assets/images/home-bg.png');
 const logo = require('../../../assets/images/logo.png');
+
+const BARBER_LOCATION = {
+  latitude: 44.821766031006305,
+  longitude: 15.863504410644202,
+};
 
 export default function HomeScreen({ navigation }: any) {
   const schedule = [
@@ -39,8 +46,12 @@ export default function HomeScreen({ navigation }: any) {
           {/* LOGO */}
           <Image source={logo} style={styles.logo} resizeMode="contain" />
 
-          {/* REZERVISI */}
-          <TouchableOpacity style={styles.primaryButton} activeOpacity={0.9}>
+          {/* Reservations */}
+          <TouchableOpacity 
+            style={styles.primaryButton} 
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('Services')}
+          >
             <Text style={styles.primaryButtonText}>RESERVATIONS</Text>
           </TouchableOpacity>
 
@@ -137,6 +148,29 @@ export default function HomeScreen({ navigation }: any) {
               </View>
             </View>
           </View>
+
+          
+          {/* MAP */}
+            <View style={styles.section}>
+              <Text style={styles.locationText}>Location</Text>
+              <View style={styles.mapCard}>
+                <MapView
+                  provider='google'
+                  style={styles.map}
+                  initialRegion={{
+                    ...BARBER_LOCATION,
+                    latitudeDelta: 0.005,
+                    longitudeDelta: 0.005,
+                  }}
+                >
+                  <Marker
+                    coordinate={BARBER_LOCATION}
+                    title="UNA BARBERINA"
+                    description="Barber Studio"
+                  />
+                </MapView>
+              </View>
+            </View>
 
           <View style={styles.bottomSpacer} />
         </ScrollView>
