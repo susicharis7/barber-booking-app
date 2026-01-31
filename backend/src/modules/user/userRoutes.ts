@@ -13,5 +13,8 @@ router.get('/me', verifyToken, userController.getMe);
 // Update Current User
 router.put('/me', verifyToken, userController.updateMe); 
 
+// Delete Current User
+router.delete('/me', verifyToken, userController.deleteMe);
+
 export default router;
 

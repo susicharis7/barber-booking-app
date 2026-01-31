@@ -48,6 +48,16 @@ export const updateUser = async(
     return result.rows[0] || null;
 }
 
+/* Deletes User in DB */
+export const deleteUser = async(firebase_uid: string): Promise<boolean> => {
+    const result = await pool.query(
+        `DELETE FROM users WHERE firebase_uid = $1 RETURNING *`, 
+        [firebase_uid]
+    );
+
+    return result.rowCount !== null && result.rowCount > 0;
+}
+
 /* Finds user by Firebase UID */
 export const findUserByFirebaseUID = async (firebase_uid: string): Promise<User | null> => {
     const result = await pool.query(

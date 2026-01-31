@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middleware/authMiddleware';
 import * as userService from './userService';
+import { firebaseAdminAuth } from '../../firebase/firebase-admin';
 
 /* POST /api/users/register */
 export const register = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -106,6 +107,33 @@ export const updateMe = async (req: AuthRequest, res: Response): Promise<void> =
     } catch(error) {
         console.error("Updated User Error: ", error);
         res.status(500).json({ message: 'Internal server error...'});
+    }
+
+}
+
+
+/* DELETE api/users/me */
+export const deleteMe = async (req: AuthRequest, res: Response): Promise<void> => {
+    
+    try {
+        const { uid } = req.user!;
+
+
+        // Delete from DB
+        const deleted = await userService.deleteUser(uid);
+
+        if (!deleted) {
+            res.status(404).json({ message: 'User not found...'});
+            return;
+        }
+
+        // Delete from Firebase
+        await firebaseAdminAuth.deleteUser(uid);
+        console.log("Deleted User: ", uid);
+        res.json({ message: 'Account deleted successfully!'});
+    } catch (error) {
+        console.error("Delete user error: ", error);
+        res.status(500).json({ message: 'Failed to delete account.'});
     }
 
 }
