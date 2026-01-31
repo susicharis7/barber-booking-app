@@ -51,10 +51,10 @@ export default function LoginScreen({ navigation }: any) {
       </View>
 
       <View style={styles.formSection}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>Prijava</Text>
 
         <TextInput
-          placeholder="Please enter your Email"
+          placeholder="Molimo unesite svoju email adresu"
           textContentType="username"
           autoComplete="email"
           autoCapitalize="none"
@@ -66,7 +66,7 @@ export default function LoginScreen({ navigation }: any) {
         />
 
         <TextInput 
-          placeholder="Please enter your Password"
+          placeholder="Molimo unesite svoju šifru"
           textContentType="password"
           autoComplete="password"
           autoCapitalize="none"
@@ -86,26 +86,26 @@ export default function LoginScreen({ navigation }: any) {
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={styles.loginButtonText}>Prijavi se</Text>
           )}
         </TouchableOpacity>
 
         <View style={styles.registerRow}>
-          <Text style={styles.registerText}>Don't have an account?</Text>
+          <Text style={styles.registerText}>Nemate račun?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.registerLink}>Register</Text>
+            <Text style={styles.registerLink}>Registrujte se</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.socialSection}>
           <TouchableOpacity style={styles.socialButton} activeOpacity={0.8}>
             <FontAwesome name="google" size={18} color="#000" />
-            <Text style={styles.socialButtonText}>Continue with Google</Text>
+            <Text style={styles.socialButtonText}>Nastavite sa Googleom</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.socialButton} activeOpacity={0.8}>
             <FontAwesome name="facebook" size={18} color="#000" />
-            <Text style={styles.socialButtonText}>Continue with Facebook</Text>
+            <Text style={styles.socialButtonText}>Nastavite sa Facebookom</Text>
           </TouchableOpacity>
         </View>
       </View>

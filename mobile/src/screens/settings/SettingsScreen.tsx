@@ -46,7 +46,7 @@ export default function SettingsScreen({ navigation }: any) {
     {
       icon: 'notifications-outline',
       label: 'Notifications',
-      onPress: () => navigation.navigate('Notifications'),
+      onPress: () => navigation.navigate('NotificationsScreen'),
     },
     {
       icon: 'log-out-outline',

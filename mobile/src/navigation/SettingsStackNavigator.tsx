@@ -7,7 +7,7 @@ import AboutAppScreen from '../screens/settings/AboutAppScreen';
 import TermsOfUseScreen from '../screens/settings/TermsOfUseScreen';
 import PrivacyPolicyScreen from '../screens/settings/PrivacyPolicyScreen';
 import WaitingListScreen from '../screens/settings/WaitingListScreen';
-
+import NotificationsScreen from '../screens/settings/NotificationsScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +22,7 @@ export default function SettingsStackNavigator() {
       <Stack.Screen name="TermsOfUse" component={TermsOfUseScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="WaitingList" component={WaitingListScreen} />
+      <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
 
 
     </Stack.Navigator>

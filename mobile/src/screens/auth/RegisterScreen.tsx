@@ -75,17 +75,17 @@ export default function RegisterScreen({ navigation }: any) {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={styles.title}>Register</Text>
+          <Text style={styles.title}>Registracija</Text>
 
           <TextInput
-            placeholder="First Name"
+            placeholder="Vaše ime"
             value={firstName}
             onChangeText={setFirstName}
             style={styles.input}
           />
 
           <TextInput
-            placeholder="Last Name"
+            placeholder="Vaše prezime"
             value={lastName}
             onChangeText={setLastName}
             style={styles.input}
@@ -105,7 +105,7 @@ export default function RegisterScreen({ navigation }: any) {
 
           <View style={styles.passwordRow}>
             <TextInput
-              placeholder="Password"
+              placeholder="Šifra"
               textContentType='newPassword'
               autoComplete='password-new'
               autoCapitalize='none'
@@ -117,7 +117,7 @@ export default function RegisterScreen({ navigation }: any) {
             />
 
             <TextInput
-              placeholder="Confirm Password"
+              placeholder="Potvrdite šifru"
               secureTextEntry
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -137,15 +137,15 @@ export default function RegisterScreen({ navigation }: any) {
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.registerButtonText}>Create Account</Text>
+              <Text style={styles.registerButtonText}>Registrujte se</Text>
             )}
           </TouchableOpacity>
 
           <View style={styles.footerLinkContainer}>
             <View style={styles.footerRow}>
-              <Text style={styles.footerText}>Already have an account?</Text>
+              <Text style={styles.footerText}>Već imate račun?</Text>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.footerLink}>Login</Text>
+                <Text style={styles.footerLink}>Prijavite se</Text>
               </TouchableOpacity>
             </View>
           </View>
