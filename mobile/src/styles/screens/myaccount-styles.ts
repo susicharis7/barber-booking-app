@@ -116,4 +116,91 @@ export const styles = StyleSheet.create({
   dangerText: {
     color: '#E53935',
   },
+
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 24,
+    width: '100%',
+    maxWidth: 340,
+    alignItems: 'center',
+  },
+
+  modalIconContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#fff0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#0f172a',
+    marginBottom: 12,
+  },
+
+  modalMessage: {
+    fontSize: 15,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 22,
+  },
+
+  modalWarning: {
+    fontSize: 13,
+    color: '#ff4d4d',
+    backgroundColor: '#fff5f5',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 10,
+    backgroundColor: '#f1f5f9',
+    alignItems: 'center',
+  },
+
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0f172a',
+  },
+
+  deleteButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 10,
+    backgroundColor: '#ff4d4d',
+    alignItems: 'center',
+  },
+
+  deleteButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
 });
