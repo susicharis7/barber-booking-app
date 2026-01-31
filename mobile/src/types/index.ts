@@ -10,3 +10,13 @@ export type DatabaseUser = {
 }
 
 
+/* Barber from the PostgreSQL DB */
+export type Barber = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  title: string;
+  bio: string;
+  avatar_url: string | null;
+  email: string;
+};
