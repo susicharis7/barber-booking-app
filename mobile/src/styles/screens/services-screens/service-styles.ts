@@ -12,6 +12,23 @@ export const styles = StyleSheet.create({
     height: 240,
   },
 
+  /* New */
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  loadingText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#64748b',
+  },
+
+
+
+  
+
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(2, 6, 23, 0.45)',
