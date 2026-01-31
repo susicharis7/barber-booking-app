@@ -181,13 +181,31 @@ export const styles = StyleSheet.create({
   },
 
   bottomSpacer: {
-    height: 140, // da se ne sudari sa bottom tab bar
+    height: 140, 
   },
   logo: {
-  width: 340,
-  height: 340,
-  alignSelf: 'center',
-  marginBottom: 20,
-},
+    width: 340,
+    height: 340,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+
+
+  /* Map */
+  mapCard: {
+    width: '100%',
+    height: 260,
+    borderRadius: 14,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+
 
 });
