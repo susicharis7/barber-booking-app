@@ -9,7 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/servicesAndPriceList-styles';
 
-const bgImage = require('../../../assets/images/settings-bg.png');
+const bgImage = require('../../../assets/images/services-bg.png');
 
 const services = [
   {
