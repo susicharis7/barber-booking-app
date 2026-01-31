@@ -191,7 +191,6 @@ export default function HomeScreen({ navigation }: any) {
                   activeOpacity={0.85}
                 >
                   <Ionicons name="locate-outline" size={20} color="#111" />
-                  <Text style={styles.recenterText}>Center map</Text>
                 </TouchableOpacity>
 
               </View>
