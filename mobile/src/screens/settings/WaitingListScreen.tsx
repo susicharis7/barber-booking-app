@@ -140,7 +140,7 @@ function WaitingItem({ item }: { item: typeof mockWaitingList[0] }) {
       <View style={styles.waitingActions}>
         <TouchableOpacity style={styles.cancelButton} activeOpacity={0.7}>
           <Ionicons name="close-circle-outline" size={18} color="#dc2626" />
-          <Text style={styles.cancelButtonText}>Leave Queue</Text>
+          <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>
