@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   Text,
@@ -30,6 +30,20 @@ export default function HomeScreen({ navigation }: any) {
     { day: 'SAT', time: '09:00 - 15:00', active: true },
     { day: 'SUN', time: 'Closed', active: false },
   ];
+
+  const mapRef = useRef<MapView | null>(null);
+
+  const recenterMap = () => {
+    mapRef.current?.animateToRegion(
+      {
+        ...BARBER_LOCATION,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      },
+      500 
+    );
+};
+
 
   return (
     <View style={styles.container}>
@@ -155,6 +169,7 @@ export default function HomeScreen({ navigation }: any) {
               <Text style={styles.locationText}>Location</Text>
               <View style={styles.mapCard}>
                 <MapView
+                  ref={mapRef}
                   provider='google'
                   style={styles.map}
                   initialRegion={{
@@ -169,6 +184,16 @@ export default function HomeScreen({ navigation }: any) {
                     description="Barber Studio"
                   />
                 </MapView>
+
+                <TouchableOpacity
+                  style={styles.recenterButton}
+                  onPress={recenterMap}
+                  activeOpacity={0.85}
+                >
+                  <Ionicons name="locate-outline" size={20} color="#111" />
+                  <Text style={styles.recenterText}>Center map</Text>
+                </TouchableOpacity>
+
               </View>
             </View>
 

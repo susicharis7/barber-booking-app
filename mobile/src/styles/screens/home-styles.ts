@@ -223,6 +223,28 @@ export const styles = StyleSheet.create({
 
 
 
+  recenterButton: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  recenterText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#111',
+  },
 
 
 });
