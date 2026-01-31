@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import userRoutes from './modules/user/userRoutes';
+import barberRoutes from './modules/barber/barberRoutes';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/health', (req, res) => {
 
 /* API Routes */
 app.use('/api/users', userRoutes);
+app.use('/api/barbers', barberRoutes);
 
 
 
