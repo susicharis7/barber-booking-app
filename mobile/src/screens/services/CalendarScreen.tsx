@@ -40,6 +40,30 @@ export default function CalendarScreen({ navigation, route }: any) {
 
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
 
+  /* For updating calendar at a real time */
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const isTodaySelected = () => {
+    if (!selectedDate) return false;
+    const today = new Date();
+
+    return (
+      selectedDate.getDate() === today.getDate() &&
+      selectedDate.getMonth() === today.getMonth() &&
+      selectedDate.getFullYear() === today.getFullYear()
+    );
+  };
+
+
+
   const fetchBookedSlots = async (dateStr: string) => {
   try {
     const res = await api.get<{ slots: { start_time: string }[] }>(
@@ -188,6 +212,9 @@ export default function CalendarScreen({ navigation, route }: any) {
     return days;
   };
 
+
+
+
   return (
     <View style={styles.container}>
       {/* HERO */}
@@ -257,6 +284,13 @@ export default function CalendarScreen({ navigation, route }: any) {
               {timeSlots.map((time) => {
                 const isBooked = bookedSlots.includes(time);
 
+                const isPast = isTodaySelected() && (() => {
+                  const [h, m] = time.split(':').map(Number);
+                  const slotTime = new Date();
+                  slotTime.setHours(h, m, 0, 0);
+                  return slotTime <= now;
+                })();
+
                 return (
                   <TouchableOpacity
                     key={time}
@@ -264,16 +298,17 @@ export default function CalendarScreen({ navigation, route }: any) {
                       styles.timeSlot,
                       selectedTime === time && styles.timeSlotSelected,
                       isBooked && styles.timeSlotDisabled,
+                      isPast && styles.timeSlotDisabled,
                     ]}
                     onPress={() => setSelectedTime(time)}
-                    disabled={isBooked}
+                    disabled={isBooked || isPast}
                     activeOpacity={0.7}
                   >
                     <Text
                       style={[
                         styles.timeSlotText,
                         selectedTime === time && styles.timeSlotTextSelected,
-                        isBooked && styles.timeSlotTextDisabled,
+                        (isBooked || isPast) && styles.timeSlotTextDisabled,
                       ]}
                     >
                       {time}
