@@ -39,3 +39,31 @@ export const getPastAppointments = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to fetch past appointments' });
   }
 };
+
+export const createAppointment = async(req: Request, res: Response) => {
+
+    try {
+        const { user } = req as AuthRequest;
+        if (!user?.uid) {
+            res.status(401).json({ message: 'Unauthorized user!'});
+            return;
+        }
+
+        const { barber_id , service_id, date, start_time, note} = req.body;
+
+        const appointment = await appointmentsService.createAppointmentByUid(
+            user.uid, { barber_id, service_id, date, start_time, note}
+        );
+
+        if (!appointment) {
+            res.status(400).json({ message: 'Failed to create an appointment..'});
+            return;
+        }
+
+        res.status(201).json({ appointment });
+    } catch(error) {
+        console.error("Create Appointment error: ", error);
+        res.status(500).json({ message: 'Failed to create an appointment...'});
+    }
+
+}

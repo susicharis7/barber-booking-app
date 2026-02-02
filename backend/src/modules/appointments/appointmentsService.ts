@@ -1,4 +1,5 @@
 import { pool } from '../../db/pool';
+import  type { CreateAppointmentData }  from '../../types/types';
 
 export const getUpcomingAppointments = async (firebaseUid: string) => {
   const result = await pool.query(
@@ -84,4 +85,67 @@ export const getPastAppointments = async (firebaseUid: string) => {
   );
 
   return result.rows;
+};
+
+export const createAppointmentByUid = async (
+  firebaseUid: string,
+  data: CreateAppointmentData
+) => {
+  const { barber_id, service_id, date, start_time, note = null } = data;
+
+  const result = await pool.query(
+    `
+    WITH new_appt AS (
+      INSERT INTO appointments (
+        customer_id, barber_id, service_id, date, start_time, end_time, status, note
+      )
+      SELECT
+        u.id,
+        $2,
+        $3,
+        $4::date,
+        $5::time,
+        ($5::time + (s.duration || ' minutes')::interval)::time,
+        'pending',
+        $6
+      FROM users u
+      JOIN services s ON s.id = $3
+      WHERE u.firebase_uid = $1
+      RETURNING *
+    )
+    SELECT
+      a.id,
+      a.date,
+      a.start_time,
+      a.end_time,
+      a.status,
+      a.note,
+      json_build_object(
+        'id', cu.id,
+        'first_name', cu.first_name,
+        'last_name', cu.last_name,
+        'email', cu.email
+      ) AS customer,
+      json_build_object(
+        'id', b.id,
+        'first_name', bu.first_name,
+        'last_name', bu.last_name,
+        'title', b.title
+      ) AS barber,
+      json_build_object(
+        'id', s.id,
+        'name', s.name,
+        'duration', s.duration,
+        'price', s.price
+      ) AS service
+    FROM new_appt a
+    JOIN users cu ON cu.id = a.customer_id
+    JOIN barbers b ON b.id = a.barber_id
+    JOIN users bu ON bu.id = b.user_id
+    JOIN services s ON s.id = a.service_id
+    `,
+    [firebaseUid, barber_id, service_id, date, start_time, note]
+  );
+
+  return result.rows[0] || null;
 };
