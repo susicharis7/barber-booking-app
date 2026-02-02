@@ -51,6 +51,22 @@ export const createAppointment = async(req: Request, res: Response) => {
 
         const { barber_id , service_id, date, start_time, note} = req.body;
 
+        /* Prevent POST for appointments in the past */
+        const today = new Date();
+        const nowDate = today.toISOString().split('T')[0];
+
+        if (date === nowDate) {
+          const [h,m] = String(start_time).split(':').map(Number);
+          const now = new Date();
+          const slotTime = new Date();
+          slotTime.setHours(h, m, 0, 0);
+
+          if (slotTime <= now) {
+            res.status(409).json({message: "Time slot is in the past"});
+            return;
+          }
+        }
+
         const appointment = await appointmentsService.createAppointmentByUid(
             user.uid, { barber_id, service_id, date, start_time, note}
         );
