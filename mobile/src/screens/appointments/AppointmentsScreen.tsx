@@ -17,10 +17,13 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 
-
+/* Background Image */
 const bgImage = require('../../../assets/images/appoint-bg.png');
 
+
+
 type TabType = 'upcoming' | 'past';
+
 
 export default function AppointmentsScreen({ navigation }: any) {
   const [activeTab, setActiveTab] = useState<TabType>('upcoming');
@@ -28,6 +31,10 @@ export default function AppointmentsScreen({ navigation }: any) {
   const [pastAppointments, setPastAppointments] = useState<AppointmentDetailed[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cancelingId, setCancelingId] = useState<number | null>(null);
+
+
+
 
 
   const loadAppointments = async () => {
@@ -53,14 +60,24 @@ export default function AppointmentsScreen({ navigation }: any) {
   };
 
 
+
+
+
   const handleCancel = async (appointmentId: number) => {
+    setCancelingId(appointmentId);
     try {
       await api.put(`/api/appointments/${appointmentId}/cancel`, {});
       await loadAppointments(); 
+      Alert.alert('Cancelled', 'Your appointment was cancelled.')
     } catch (err: any) {
-      console.error('Cancel appointment failed:', err);
+      Alert.alert('Error', err?.message ?? 'Failed to cancel appointment');
+    } finally {
+      setCancelingId(null);
     }
   };
+
+
+
 
 
   useFocusEffect(
@@ -72,6 +89,11 @@ export default function AppointmentsScreen({ navigation }: any) {
 
   const appointments = activeTab === 'upcoming' ? upcomingAppointments : pastAppointments;
   const hasAppointments = appointments.length > 0;
+
+  
+
+
+
 
 
 
@@ -157,6 +179,7 @@ export default function AppointmentsScreen({ navigation }: any) {
                   appointment={appointment}
                   isUpcoming={activeTab === 'upcoming'}
                   onCancel={handleCancel}
+                  cancelingId={cancelingId}
                 />
               ))}
 
@@ -200,6 +223,12 @@ export default function AppointmentsScreen({ navigation }: any) {
   );
 }
 
+
+
+
+
+
+
 /* APPOINTMENT CARD COMPONENT */
 type AppointmentType = AppointmentDetailed;
 
@@ -207,10 +236,12 @@ function AppointmentCard({
   appointment,
   isUpcoming,
   onCancel,
+  cancelingId,
 }: {
   appointment: AppointmentType;
   isUpcoming: boolean;
   onCancel: (id: number) => void;
+  cancelingId: number | null;
 }) {
   const formatDate = (dateString: string) => {
     const date = new Date(`${dateString}`);
@@ -222,6 +253,8 @@ function AppointmentCard({
   };
 
   const formatTime = (timeString: string) => timeString.slice(0, 5);
+
+
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -239,6 +272,9 @@ function AppointmentCard({
   };
 
   const status = getStatusStyle(appointment.status);
+  const isCancelling = cancelingId === appointment.id;
+
+
 
   return (
     <View style={styles.appointmentCard}>
@@ -287,6 +323,7 @@ function AppointmentCard({
           <TouchableOpacity 
             style={styles.cancelButton} 
             activeOpacity={0.7} 
+            disabled={isCancelling}
             onPress={() =>
               Alert.alert(
                 'Cancel appointment',

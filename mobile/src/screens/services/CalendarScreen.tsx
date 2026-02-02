@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/calendar-styles';
+
+import { api } from '../../services/api';
 
 const bgImage = require('../../../assets/images/settings-bg.png');
 
@@ -34,6 +36,26 @@ export default function CalendarScreen({ navigation, route }: any) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [note, setNote] = useState('');
+
+
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+
+  const fetchBookedSlots = async (dateStr: string) => {
+  try {
+    const res = await api.get<{ slots: { start_time: string }[] }>(
+      `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
+      false
+    );
+
+   
+    const slots = res.slots.map((s) => s.start_time.slice(0, 5));
+    setBookedSlots(slots);
+  } catch (err) {
+    console.error('Fetch booked slots error:', err);
+    setBookedSlots([]);
+  }
+};
+
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
@@ -61,6 +83,10 @@ export default function CalendarScreen({ navigation, route }: any) {
   const handleSelectDate = (day: number) => {
     if (!isDateDisabled(day)) {
       setSelectedDate(new Date(currentYear, currentMonth, day));
+
+      const dateStr = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+      fetchBookedSlots(dateStr);
+
       setSelectedTime(null);
     }
   };
@@ -228,26 +254,34 @@ export default function CalendarScreen({ navigation, route }: any) {
           <View style={styles.timeSlotsSection}>
             <Text style={styles.sectionLabel}>AVAILABLE TIMES</Text>
             <View style={styles.timeSlotsGrid}>
-              {timeSlots.map((time) => (
-                <TouchableOpacity
-                  key={time}
-                  style={[
-                    styles.timeSlot,
-                    selectedTime === time && styles.timeSlotSelected,
-                  ]}
-                  onPress={() => setSelectedTime(time)}
-                  activeOpacity={0.7}
-                >
-                  <Text
+              {timeSlots.map((time) => {
+                const isBooked = bookedSlots.includes(time);
+
+                return (
+                  <TouchableOpacity
+                    key={time}
                     style={[
-                      styles.timeSlotText,
-                      selectedTime === time && styles.timeSlotTextSelected,
+                      styles.timeSlot,
+                      selectedTime === time && styles.timeSlotSelected,
+                      isBooked && styles.timeSlotDisabled,
                     ]}
+                    onPress={() => setSelectedTime(time)}
+                    disabled={isBooked}
+                    activeOpacity={0.7}
                   >
-                    {time}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={[
+                        styles.timeSlotText,
+                        selectedTime === time && styles.timeSlotTextSelected,
+                        isBooked && styles.timeSlotTextDisabled,
+                      ]}
+                    >
+                      {time}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+
             </View>
           </View>
         )}
