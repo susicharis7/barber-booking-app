@@ -1,80 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/appointments-styles';
 
+
+import { api } from '../../services/api';
+import type { AppointmentDetailed } from '../../types';
+import { useFocusEffect } from '@react-navigation/native';
+
+
+
+
 const bgImage = require('../../../assets/images/appoint-bg.png');
-
-// Mock data 
-const mockUpcomingAppointments = [
-  {
-    id: 1,
-    service: 'Haircut & Beard',
-    barber: 'Alija Ramakic',
-    date: '2026-02-15',
-    time: '10:30',
-    duration: 45,
-    price: 25,
-    status: 'confirmed',
-  },
-  {
-    id: 2,
-    service: 'Classic Haircut',
-    barber: 'Alija Ramakic',
-    date: '2026-02-20',
-    time: '14:00',
-    duration: 30,
-    price: 15,
-    status: 'pending',
-  },
-];
-
-const mockPastAppointments = [
-  {
-    id: 3,
-    service: 'Beard Trim',
-    barber: 'Alija Ramakic',
-    date: '2026-01-25',
-    time: '11:00',
-    duration: 20,
-    price: 10,
-    status: 'completed',
-  },
-  {
-    id: 4,
-    service: 'Haircut & Beard',
-    barber: 'Alija Ramakic',
-    date: '2026-01-10',
-    time: '09:30',
-    duration: 45,
-    price: 25,
-    status: 'completed',
-  },
-  {
-    id: 5,
-    service: 'Classic Haircut',
-    barber: 'Alija Ramakic',
-    date: '2025-12-28',
-    time: '16:00',
-    duration: 30,
-    price: 15,
-    status: 'cancelled',
-  },
-];
 
 type TabType = 'upcoming' | 'past';
 
-export default function AppointmentsScreen() {
+export default function AppointmentsScreen({ navigation }: any) {
   const [activeTab, setActiveTab] = useState<TabType>('upcoming');
+  const [upcomingAppointments, setUpcomingAppointments] = useState<AppointmentDetailed[]>([]);
+  const [pastAppointments, setPastAppointments] = useState<AppointmentDetailed[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const appointments = activeTab === 'upcoming' ? mockUpcomingAppointments : mockPastAppointments;
+
+  const loadAppointments = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const [upcomingRes, pastRes] = await Promise.all([
+        api.get<{ appointments: AppointmentDetailed[] }>('/api/appointments/upcoming'),
+        api.get<{ appointments: AppointmentDetailed[] }>('/api/appointments/past'),
+      ]);
+
+      setUpcomingAppointments(upcomingRes.appointments);
+      setPastAppointments(pastRes.appointments);
+
+    } catch(err: any) {
+      setError(err?.message ?? 'Failed to load appointments..');
+    } finally {
+      setLoading(false);
+    }
+
+
+  };
+
+
+  useFocusEffect(
+  React.useCallback(() => {
+    loadAppointments();
+  }, [])
+);
+
+
+  const appointments = activeTab === 'upcoming' ? upcomingAppointments : pastAppointments;
   const hasAppointments = appointments.length > 0;
+
+
 
   return (
     <View style={styles.container}>
@@ -109,10 +98,10 @@ export default function AppointmentsScreen() {
             <Text style={[styles.tabText, activeTab === 'upcoming' && styles.tabTextActive]}>
               Upcoming
             </Text>
-            {mockUpcomingAppointments.length > 0 && (
+            {upcomingAppointments.length > 0 && (
               <View style={[styles.tabBadge, activeTab === 'upcoming' && styles.tabBadgeActive]}>
                 <Text style={[styles.tabBadgeText, activeTab === 'upcoming' && styles.tabBadgeTextActive]}>
-                  {mockUpcomingAppointments.length}
+                  {upcomingAppointments.length}
                 </Text>
               </View>
             )}
@@ -135,30 +124,42 @@ export default function AppointmentsScreen() {
         </View>
 
         {/* APPOINTMENTS LIST */}
-        {hasAppointments ? (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.sectionLabel}>
-              {activeTab === 'upcoming' ? 'SCHEDULED' : 'HISTORY'}
-            </Text>
+        {loading ? (
+            <View style={{ paddingTop: 40, alignItems: 'center' }}>
+              <ActivityIndicator size="large" />
+              <Text style={{ marginTop: 12, color: '#64748b' }}>
+                Loading appointments...
+              </Text>
+            </View>
+          ) : error ? (
+            <View style={{ paddingTop: 40, alignItems: 'center' }}>
+              <Text style={{ color: '#dc2626' }}>{error}</Text>
+            </View>
+          ) : hasAppointments ? (
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.sectionLabel}>
+                {activeTab === 'upcoming' ? 'SCHEDULED' : 'HISTORY'}
+              </Text>
 
-            {appointments.map((appointment) => (
-              <AppointmentCard
-                key={appointment.id}
-                appointment={appointment}
-                isUpcoming={activeTab === 'upcoming'}
-              />
-            ))}
+              {appointments.map((appointment) => (
+                <AppointmentCard
+                  key={appointment.id}
+                  appointment={appointment}
+                  isUpcoming={activeTab === 'upcoming'}
+                />
+              ))}
 
-            {activeTab === 'upcoming' && (
-              <View style={styles.infoCard}>
-                <Ionicons name="information-circle-outline" size={22} color="#3b82f6" />
-                <Text style={styles.infoText}>
-                  You can cancel or reschedule up to 2 hours before your appointment.
-                </Text>
-              </View>
-            )}
-          </ScrollView>
-        ) : (
+              {activeTab === 'upcoming' && (
+                <View style={styles.infoCard}>
+                  <Ionicons name="information-circle-outline" size={22} color="#3b82f6" />
+                  <Text style={styles.infoText}>
+                    You can cancel or reschedule up to 2 hours before your appointment.
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
+          ) : (
+
           <View style={styles.emptyState}>
             <View style={styles.emptyIconContainer}>
               <Ionicons
@@ -176,7 +177,7 @@ export default function AppointmentsScreen() {
                 : 'Your appointment history will appear here.'}
             </Text>
             {activeTab === 'upcoming' && (
-              <TouchableOpacity style={styles.bookButton} activeOpacity={0.7}>
+              <TouchableOpacity style={styles.bookButton} activeOpacity={0.7} onPress={() => navigation.navigate('Services')}>
                 <Text style={styles.bookButtonText}>Book Now</Text>
                 <Ionicons name="arrow-forward" size={18} color="#ffffff" />
               </TouchableOpacity>
@@ -189,7 +190,7 @@ export default function AppointmentsScreen() {
 }
 
 /* APPOINTMENT CARD COMPONENT */
-type AppointmentType = typeof mockUpcomingAppointments[0];
+type AppointmentType = AppointmentDetailed;
 
 function AppointmentCard({
   appointment,
@@ -199,13 +200,15 @@ function AppointmentCard({
   isUpcoming: boolean;
 }) {
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = new Date(`${dateString}T00:00:00`);
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
     });
   };
+
+  const formatTime = (timeString: string) => timeString.slice(0, 5);
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -236,22 +239,32 @@ function AppointmentCard({
         </View>
       </View>
 
-      <Text style={styles.serviceName}>{appointment.service}</Text>
+      <Text style={styles.serviceName}>{appointment.service.name}</Text>
 
       <View style={styles.appointmentDetails}>
         <View style={styles.detailRow}>
+
           <Ionicons name="person-outline" size={16} color="#64748b" />
-          <Text style={styles.detailText}>{appointment.barber}</Text>
+
+          <Text style={styles.detailText}>
+            {appointment.barber.first_name} {appointment.barber.last_name}
+          </Text>
+
         </View>
         <View style={styles.detailRow}>
           <Ionicons name="time-outline" size={16} color="#64748b" />
+          
           <Text style={styles.detailText}>
-            {appointment.time} • {appointment.duration} min
+            {formatTime(appointment.start_time)} • {appointment.service.duration} min
           </Text>
+
         </View>
         <View style={styles.detailRow}>
           <Ionicons name="cash-outline" size={16} color="#64748b" />
-          <Text style={styles.detailText}>${appointment.price}</Text>
+         <Text style={styles.detailText}>
+            {Number(appointment.service.price).toFixed(2)} BAM
+         </Text>
+
         </View>
       </View>
 
