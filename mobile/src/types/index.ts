@@ -20,3 +20,13 @@ export type Barber = {
   avatar_url: string | null;
   email: string;
 };
+
+/* Services & Price List */
+export type ServicesAndPriceList = {
+  id: number;
+  name: string;
+  description: string | null;
+  duration: number;
+  price: number | string;
+}
+
