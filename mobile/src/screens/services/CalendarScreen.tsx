@@ -24,6 +24,9 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June',
 
 export default function CalendarScreen({ navigation, route }: any) {
   const { employee, service } = route.params;
+
+  const serviceDuration = Number(service.duration) || 0;
+  const servicePrice = Number(service.price) || 0;
   
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -110,7 +113,7 @@ export default function CalendarScreen({ navigation, route }: any) {
   const calculateEndTime = () => {
     if (!selectedTime) return '';
     const [hours, minutes] = selectedTime.split(':').map(Number);
-    const endMinutes = minutes + service.duration;
+    const endMinutes = minutes + serviceDuration;
     const endHours = hours + Math.floor(endMinutes / 60);
     const finalMinutes = endMinutes % 60;
     return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
@@ -283,7 +286,7 @@ export default function CalendarScreen({ navigation, route }: any) {
             <View style={styles.summaryRow}>
               <Ionicons name="cash-outline" size={18} color="#64748b" />
               <Text style={styles.summaryLabel}>Price</Text>
-              <Text style={styles.summaryValuePrice}>{service.price.toFixed(2)} BAM</Text>
+              <Text style={styles.summaryValuePrice}>{servicePrice.toFixed(2)} BAM</Text>
             </View>
 
             <View style={styles.noteSection}>

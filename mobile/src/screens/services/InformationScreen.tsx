@@ -17,6 +17,8 @@ export default function InformationScreen({ navigation, route }: any) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const appointmentDate = new Date(date);
+  const serviceDuration = Number(service.duration) || 0;
+  const servicePrice = Number(service.price) || 0;
 
   const formatDate = () => {
     return appointmentDate.toLocaleDateString('en-US', {
@@ -29,7 +31,7 @@ export default function InformationScreen({ navigation, route }: any) {
 
   const calculateEndTime = () => {
     const [hours, minutes] = time.split(':').map(Number);
-    const endMinutes = minutes + service.duration;
+    const endMinutes = minutes + serviceDuration;
     const endHours = hours + Math.floor(endMinutes / 60);
     const finalMinutes = endMinutes % 60;
     return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
@@ -123,7 +125,7 @@ export default function InformationScreen({ navigation, route }: any) {
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Duration</Text>
-              <Text style={styles.detailValue}>{service.duration} minutes</Text>
+              <Text style={styles.detailValue}>{serviceDuration} minutes</Text>
             </View>
           </View>
 
@@ -141,7 +143,7 @@ export default function InformationScreen({ navigation, route }: any) {
 
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Total Price</Text>
-            <Text style={styles.priceValue}>{service.price.toFixed(2)} BAM</Text>
+            <Text style={styles.priceValue}>{servicePrice.toFixed(2)} BAM</Text>
           </View>
         </View>
 
