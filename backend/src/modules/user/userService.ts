@@ -1,20 +1,7 @@
 import { pool } from '../../db/pool';
+import type { CreateUserData, User } from '../../types/types';
 
-export interface CreateUserData {
-    firebase_uid: string; 
-    email: string;
-    first_name: string;
-    last_name: string; 
-}
 
-export interface User {
-    id: number;
-    firebase_uid: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    created_at: Date;
-}
 
 /* Creates new User in Postgre */
 export const createUser = async (userData: CreateUserData): Promise<User> => {
