@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/appointments-styles';
-
+import { Alert } from 'react-native';
 
 import { api } from '../../services/api';
 import type { AppointmentDetailed } from '../../types';
@@ -50,6 +50,16 @@ export default function AppointmentsScreen({ navigation }: any) {
     }
 
 
+  };
+
+
+  const handleCancel = async (appointmentId: number) => {
+    try {
+      await api.put(`/api/appointments/${appointmentId}/cancel`, {});
+      await loadAppointments(); 
+    } catch (err: any) {
+      console.error('Cancel appointment failed:', err);
+    }
   };
 
 
@@ -146,6 +156,7 @@ export default function AppointmentsScreen({ navigation }: any) {
                   key={appointment.id}
                   appointment={appointment}
                   isUpcoming={activeTab === 'upcoming'}
+                  onCancel={handleCancel}
                 />
               ))}
 
@@ -195,9 +206,11 @@ type AppointmentType = AppointmentDetailed;
 function AppointmentCard({
   appointment,
   isUpcoming,
+  onCancel,
 }: {
   appointment: AppointmentType;
   isUpcoming: boolean;
+  onCancel: (id: number) => void;
 }) {
   const formatDate = (dateString: string) => {
     const date = new Date(`${dateString}`);
@@ -270,25 +283,30 @@ function AppointmentCard({
 
       {isUpcoming && appointment.status !== 'cancelled' && (
         <View style={styles.appointmentActions}>
-          <TouchableOpacity style={styles.rescheduleButton} activeOpacity={0.7}>
-            <Ionicons name="calendar-outline" size={16} color="#0f172a" />
-            <Text style={styles.rescheduleButtonText}>Reschedule</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} activeOpacity={0.7}>
+        
+          <TouchableOpacity 
+            style={styles.cancelButton} 
+            activeOpacity={0.7} 
+            onPress={() =>
+              Alert.alert(
+                'Cancel appointment',
+                'Are you sure you want to cancel this appointment?',
+                [
+                  { text: 'No', style: 'cancel' },
+                  { text: 'Yes, cancel', style: 'destructive', onPress: () => onCancel(appointment.id) },
+                ]
+              )
+            }
+          >
+
             <Ionicons name="close-circle-outline" size={16} color="#dc2626" />
             <Text style={styles.cancelButtonText}>Cancel</Text>
+
           </TouchableOpacity>
         </View>
       )}
 
-      {!isUpcoming && appointment.status === 'completed' && (
-        <View style={styles.appointmentActions}>
-          <TouchableOpacity style={styles.rebookButton} activeOpacity={0.7}>
-            <Ionicons name="refresh-outline" size={16} color="#ffffff" />
-            <Text style={styles.rebookButtonText}>Book Again</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      
     </View>
   );
 }
