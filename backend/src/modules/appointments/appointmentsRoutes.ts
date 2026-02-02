@@ -7,6 +7,8 @@ const router = Router();
 // GET
 router.get('/upcoming', verifyToken, appointmentsController.getUpcomingAppointments);
 router.get('/past', verifyToken, appointmentsController.getPastAppointments);
+router.get('/barber/:barberId/booked', appointmentsController.getBookedTimes);
+
 
 // POST 
 router.post('/', verifyToken, appointmentsController.createAppointment);

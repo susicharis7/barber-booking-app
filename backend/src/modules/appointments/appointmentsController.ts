@@ -56,7 +56,7 @@ export const createAppointment = async(req: Request, res: Response) => {
         );
 
         if (!appointment) {
-            res.status(400).json({ message: 'Failed to create an appointment..'});
+            res.status(400).json({ message: 'Time slot is not available'});
             return;
         }
 
@@ -99,5 +99,22 @@ export const cancelAppointment = async (req: Request, res: Response) => {
   }
 };
 
+export const getBookedTimes = async (req: Request, res: Response) => {
+  try {
+    const barberId = Number(req.params.barberId);
+    const date = String(req.query.date || '');
+
+    if (!barberId || !date) {
+      res.status(400).json({ message: 'barberId and date are required' });
+      return;
+    }
+
+    const slots = await appointmentsService.getBookedTimesForBarber(barberId, date);
+    res.json({ slots });
+  } catch (error) {
+    console.error('Get booked times error:', error);
+    res.status(500).json({ message: 'Failed to fetch booked times' });
+  }
+};
 
 
