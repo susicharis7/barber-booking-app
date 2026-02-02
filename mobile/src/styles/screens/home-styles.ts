@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
   },
 
   bg: {
@@ -21,12 +22,12 @@ export const styles = StyleSheet.create({
   },
 
   heroSpacer: {
-    height: 30, // ovo "gura" dugme ispod hero slike kao na screenshotu
+    height: 30, 
   },
 
   primaryButton: {
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 10,
     paddingVertical: 16,
     alignItems: 'center',
@@ -35,7 +36,7 @@ export const styles = StyleSheet.create({
   },
 
   primaryButtonText: {
-    color: '#111',
+    color: colors.gray[900],
     fontSize: 16,
     letterSpacing: 1,
     fontWeight: '800',
@@ -54,7 +55,7 @@ export const styles = StyleSheet.create({
   },
   locationText: {
     textAlign: 'center',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 32,
     fontWeight: '900',
     letterSpacing: 1.6,
@@ -68,7 +69,7 @@ export const styles = StyleSheet.create({
 
   sectionTitle: {
     textAlign: 'center',
-    color: '#fff',
+    color: colors.white,
     fontSize: 44,
     fontWeight: '900',
     letterSpacing: 0.3,
@@ -164,7 +165,7 @@ export const styles = StyleSheet.create({
   },
 
   dayChipLight: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
 
   dayChipDark: {
@@ -186,7 +187,7 @@ export const styles = StyleSheet.create({
   },
 
   dayChipDayDarkText: {
-    color: '#111',
+    color: colors.gray[900],
   },
 
   dayChipDayLightText: {
@@ -233,8 +234,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 4,
@@ -243,7 +244,7 @@ export const styles = StyleSheet.create({
   recenterText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#111',
+    color: colors.gray[900],
   },
 
 

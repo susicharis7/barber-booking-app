@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
   },
   logoSection: {
     paddingTop: 24,
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 40,
     textAlign: 'center',
-    color: '#333',
+    color: colors.gray[800],
   },
   logo: {
     width: 240,
@@ -29,22 +30,22 @@ export const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.gray[300],
     borderRadius: 8,
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.gray[50],
   },
   loginButton: {
-    backgroundColor: '#000000',
+    backgroundColor: colors.black,
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
   },
   loginButtonText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -55,11 +56,11 @@ export const styles = StyleSheet.create({
     gap: 6,
   },
   registerText: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 14,
   },
   registerLink: {
-    color: '#000000',
+    color: colors.black,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -75,11 +76,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#fff',
+    borderColor: colors.gray[200],
+    backgroundColor: colors.white,
   },
   socialButtonText: {
-    color: '#111827',
+    color: colors.slate[950],
     fontSize: 16,
     fontWeight: '600',
   },
@@ -91,11 +92,11 @@ export const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: colors.gray[300],
   },
   dividerText: {
     marginHorizontal: 10,
-    color: '#888',
+    color: colors.gray[600],
     fontSize: 14,
   },
 });

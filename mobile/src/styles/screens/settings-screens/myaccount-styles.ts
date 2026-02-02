@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -80,7 +81,7 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 12,
     marginTop: 8,
     marginLeft: 4,
@@ -93,9 +94,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 18,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     marginBottom: 12,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -108,28 +109,28 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#eef2ff',
+    backgroundColor: colors.blue[50],
   },
 
   itemText: {
     flex: 1,
     fontSize: 16,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
     marginLeft: 14,
   },
 
   /* DANGER */
   dangerItem: {
-    backgroundColor: '#fff5f5',
+    backgroundColor: colors.red[50],
   },
 
   dangerIconContainer: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: colors.red[200],
   },
 
   dangerText: {
-    color: '#dc2626',
+    color: colors.error,
   },
 
   /* MODAL */
@@ -142,7 +143,7 @@ export const styles = StyleSheet.create({
   },
 
   modalContent: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 24,
     padding: 24,
     width: '100%',
@@ -154,7 +155,7 @@ export const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#fee2e2',
+    backgroundColor: colors.red[200],
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -163,13 +164,13 @@ export const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 12,
   },
 
   modalMessage: {
     fontSize: 15,
-    color: '#6B7280',
+    color: colors.gray[500],
     textAlign: 'center',
     marginBottom: 16,
     lineHeight: 22,
@@ -177,8 +178,8 @@ export const styles = StyleSheet.create({
 
   modalWarning: {
     fontSize: 13,
-    color: '#dc2626',
-    backgroundColor: '#fef2f2',
+    color: colors.error,
+    backgroundColor: colors.red[100],
     padding: 14,
     borderRadius: 12,
     marginBottom: 20,
@@ -196,27 +197,27 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.slate[100],
     alignItems: 'center',
   },
 
   cancelButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   deleteButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#dc2626',
+    backgroundColor: colors.error,
     alignItems: 'center',
   },
 
   deleteButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: colors.white,
   },
 });

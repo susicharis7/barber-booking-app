@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../colors';
 
 export const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     justifyContent: 'flex-start',
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
   },
 
   logoSection: {
@@ -23,7 +24,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 40,
     textAlign: 'center',
-    color: '#333',
+    color: colors.gray[800],
   },
 
   logo: {
@@ -34,12 +35,12 @@ export const styles = StyleSheet.create({
 
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.gray[300],
     borderRadius: 8,
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.gray[50],
   },
 
   passwordRow: {
@@ -52,7 +53,7 @@ export const styles = StyleSheet.create({
   },
 
   registerButton: {
-    backgroundColor: '#000000',
+    backgroundColor: colors.black,
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -60,7 +61,7 @@ export const styles = StyleSheet.create({
   },
 
   registerButtonText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -77,12 +78,12 @@ export const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 14,
   },
 
   footerLink: {
-    color: '#000000',
+    color: colors.black,
     fontSize: 14,
     fontWeight: '600',
   },

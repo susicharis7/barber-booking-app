@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -85,18 +86,18 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 12,
     marginLeft: 4,
   },
 
   /* CARD */
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 18,
     marginBottom: 16,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -107,12 +108,12 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '800',
     marginBottom: 8,
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   cardText: {
     fontSize: 15,
-    color: '#6B7280',
+    color: colors.gray[500],
     lineHeight: 22,
   },
 
@@ -123,9 +124,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 18,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     marginBottom: 12,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -138,14 +139,14 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#eef2ff',
+    backgroundColor: colors.blue[50],
   },
 
   itemText: {
     flex: 1,
     fontSize: 16,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
     marginLeft: 14,
   },
 
@@ -158,14 +159,14 @@ export const styles = StyleSheet.create({
 
   versionText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.gray[500],
     marginBottom: 6,
   },
 
   versionNumber: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   footerText: {
@@ -173,7 +174,7 @@ export const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 20,
     fontSize: 13,
-    color: '#9CA3AF',
+    color: colors.gray[400],
   },
 
 });

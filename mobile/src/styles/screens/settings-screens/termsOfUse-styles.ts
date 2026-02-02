@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -79,18 +80,18 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 12,
     marginLeft: 4,
   },
 
   /* CARD */
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 20,
     marginBottom: 16,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -104,7 +105,7 @@ export const styles = StyleSheet.create({
 
   termSectionBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: colors.slate[100],
   },
 
   termHeader: {
@@ -117,7 +118,7 @@ export const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 8,
-    backgroundColor: '#eef2ff',
+    backgroundColor: colors.blue[50],
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -126,18 +127,18 @@ export const styles = StyleSheet.create({
   termNumberText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   termTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   termText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.muted,
     lineHeight: 22,
     marginLeft: 40,
   },
@@ -147,7 +148,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f0fdf4',
+    backgroundColor: colors.green[100],
     borderRadius: 12,
     padding: 14,
     marginBottom: 32,
@@ -157,6 +158,6 @@ export const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#10b981',
+    color: colors.green[500],
   },
 });

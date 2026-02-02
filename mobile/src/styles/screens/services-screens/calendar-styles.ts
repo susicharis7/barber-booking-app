@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -79,18 +80,18 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 12,
     marginLeft: 4,
   },
 
   /* CALENDAR CARD */
   calendarCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 18,
     marginBottom: 20,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -107,7 +108,7 @@ export const styles = StyleSheet.create({
   calendarMonthYear: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   calendarWeekDays: {
@@ -119,7 +120,7 @@ export const styles = StyleSheet.create({
   calendarWeekDayText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94a3b8',
+    color: colors.slate[400],
     width: 40,
     textAlign: 'center',
   },
@@ -143,22 +144,22 @@ export const styles = StyleSheet.create({
   },
 
   calendarDaySelected: {
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     borderRadius: 12,
   },
 
   calendarDayText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   calendarDayTextDisabled: {
-    color: '#cbd5e1',
+    color: colors.slate[300],
   },
 
   calendarDayTextSelected: {
-    color: '#ffffff',
+    color: colors.white,
   },
 
   /* TIME SLOTS */
@@ -176,33 +177,33 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 10,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.slate[100],
     borderWidth: 2,
-    borderColor: '#f1f5f9',
+    borderColor: colors.slate[100],
   },
 
   timeSlotSelected: {
-    backgroundColor: '#0f172a',
-    borderColor: '#0f172a',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
 
   timeSlotText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   timeSlotTextSelected: {
-    color: '#ffffff',
+    color: colors.white,
   },
 
   /* SUMMARY CARD */
   summaryCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -212,7 +213,7 @@ export const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 16,
   },
 
@@ -221,20 +222,20 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: colors.slate[100],
     gap: 10,
   },
 
   summaryLabel: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.muted,
     flex: 1,
   },
 
   summaryValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
     textAlign: 'right',
     maxWidth: '50%',
   },
@@ -242,7 +243,7 @@ export const styles = StyleSheet.create({
   summaryValuePrice: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   noteSection: {
@@ -252,18 +253,18 @@ export const styles = StyleSheet.create({
   noteLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#64748b',
+    color: colors.muted,
     marginBottom: 10,
   },
 
   noteInput: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.slate[50],
     borderRadius: 12,
     padding: 14,
     fontSize: 14,
-    color: '#0f172a',
+    color: colors.primary,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: colors.slate[200],
     minHeight: 80,
     textAlignVertical: 'top',
   },
@@ -273,7 +274,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 14,
     marginBottom: 32,
@@ -281,12 +282,12 @@ export const styles = StyleSheet.create({
   },
 
   continueButtonDisabled: {
-    backgroundColor: '#cbd5e1',
+    backgroundColor: colors.slate[300],
   },
 
   continueButtonText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 });

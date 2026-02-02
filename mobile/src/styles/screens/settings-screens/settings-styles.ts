@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   headerImage: {
@@ -12,7 +13,7 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 2,
     marginBottom: -24,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 14 },
     shadowOpacity: 0.3,
     shadowRadius: 20,
@@ -38,7 +39,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -51,7 +52,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
     textShadowColor: 'rgba(0,0,0,0.45)',
     textShadowOffset: { width: 0, height: 2},
     textShadowRadius: 6,
@@ -79,7 +80,7 @@ export const styles = StyleSheet.create({
     top: 18,
     height: 2,
     borderRadius: 999, 
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     opacity: 0.5,
     alignSelf: 'stretch',
     marginHorizontal: -20,
@@ -89,11 +90,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingBottom: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -8,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
@@ -106,7 +107,7 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
   },
 
   menuItem: {
@@ -116,9 +117,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginHorizontal: 16,
     marginBottom: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -131,26 +132,26 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#eef2ff',
+    backgroundColor: colors.blue[50],
   },
 
   menuText: {
     flex: 1,
     fontSize: 16,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
     marginLeft: 14,
   },
 
   logoutItem: {
-    backgroundColor: '#fff5f5',
+    backgroundColor: colors.red[50],
   },
 
   logoutText: {
-    color: '#dc2626',
+    color: colors.error,
   },
 
   logoutIconContainer: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: colors.red[200],
   },
 });

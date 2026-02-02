@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -68,14 +69,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#ffffff',
+    borderColor: colors.white,
   },
 
   userName: {
     marginTop: 12,
     fontSize: 24,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
     textAlign: 'center',
   },
 
@@ -90,7 +91,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -108,7 +109,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -121,18 +122,18 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 12,
     marginLeft: 4,
   },
 
   /* INPUT CARD */
   inputCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 18,
     marginBottom: 20,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -147,35 +148,35 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0.5,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 8,
     marginLeft: 2,
   },
 
   input: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.slate[50],
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#0f172a',
+    color: colors.primary,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: colors.slate[200],
   },
 
   inputDisabled: {
-    backgroundColor: '#f1f5f9',
-    color: '#94a3b8',
+    backgroundColor: colors.slate[100],
+    color: colors.slate[400],
   },
 
   /* SAVE BUTTON */
   saveButton: {
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 'auto',
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
     shadowRadius: 14,
@@ -183,7 +184,7 @@ export const styles = StyleSheet.create({
   },
 
   saveButtonText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     fontWeight: '700',
   },

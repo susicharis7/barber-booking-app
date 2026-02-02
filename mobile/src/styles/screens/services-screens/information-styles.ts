@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -77,11 +78,11 @@ export const styles = StyleSheet.create({
 
   /* DETAILS CARD */
   detailsCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -91,7 +92,7 @@ export const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 20,
   },
 
@@ -100,14 +101,14 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: colors.slate[100],
   },
 
   detailIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: '#eef2ff',
+    backgroundColor: colors.blue[50],
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
@@ -120,14 +121,14 @@ export const styles = StyleSheet.create({
   detailLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 4,
   },
 
   detailValue: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   priceRow: {
@@ -137,24 +138,24 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     paddingTop: 16,
     borderTopWidth: 2,
-    borderTopColor: '#0f172a',
+    borderTopColor: colors.primary,
   },
 
   priceLabel: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   priceValue: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   /* POLICY CARD */
   policyCard: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.slate[50],
     borderRadius: 18,
     padding: 20,
     marginBottom: 20,
@@ -170,7 +171,7 @@ export const styles = StyleSheet.create({
   policyTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   policyItem: {
@@ -183,7 +184,7 @@ export const styles = StyleSheet.create({
   policyText: {
     flex: 1,
     fontSize: 14,
-    color: '#64748b',
+    color: colors.muted,
     lineHeight: 20,
   },
 
@@ -192,7 +193,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 14,
     marginBottom: 32,
@@ -202,7 +203,7 @@ export const styles = StyleSheet.create({
   reserveButtonText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   /* MODAL */
@@ -215,7 +216,7 @@ export const styles = StyleSheet.create({
   },
 
   modalContent: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 24,
     padding: 28,
     width: '100%',
@@ -227,7 +228,7 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#ecfdf5',
+    backgroundColor: colors.green[50],
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
@@ -236,20 +237,20 @@ export const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 12,
   },
 
   modalMessage: {
     fontSize: 15,
-    color: '#64748b',
+    color: colors.muted,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 20,
   },
 
   modalDetails: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.slate[50],
     borderRadius: 12,
     padding: 16,
     width: '100%',
@@ -259,13 +260,13 @@ export const styles = StyleSheet.create({
   modalDetailText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
     textAlign: 'center',
     marginBottom: 4,
   },
 
   modalButton: {
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 12,
@@ -276,6 +277,6 @@ export const styles = StyleSheet.create({
   modalButtonText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 });

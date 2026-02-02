@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
-  /* HERO */
+
   hero: {
     width: '100%',
     height: 220,
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -49,10 +50,10 @@ export const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.85)',
   },
 
-  /* CONTENT */
+
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -60,10 +61,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  /* TABS */
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.slate[100],
     borderRadius: 14,
     padding: 4,
     marginBottom: 20,
@@ -80,21 +80,21 @@ export const styles = StyleSheet.create({
   },
 
   tabActive: {
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
   },
 
   tabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#64748b',
+    color: colors.muted,
   },
 
   tabTextActive: {
-    color: '#ffffff',
+    color: colors.white,
   },
 
   tabBadge: {
-    backgroundColor: '#e2e8f0',
+    backgroundColor: colors.slate[200],
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
@@ -107,30 +107,29 @@ export const styles = StyleSheet.create({
   tabBadgeText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#64748b',
+    color: colors.muted,
   },
 
   tabBadgeTextActive: {
-    color: '#ffffff',
+    color: colors.white,
   },
 
-  /* SECTION */
   sectionLabel: {
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 16,
     marginLeft: 4,
   },
 
   /* APPOINTMENT CARD */
   appointmentCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 18,
     marginBottom: 16,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -153,7 +152,7 @@ export const styles = StyleSheet.create({
   dateText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   statusBadge: {
@@ -170,7 +169,7 @@ export const styles = StyleSheet.create({
   serviceName: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 12,
   },
 
@@ -187,13 +186,13 @@ export const styles = StyleSheet.create({
 
   detailText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.muted,
   },
 
   appointmentActions: {
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+    borderTopColor: colors.slate[100],
     paddingTop: 14,
     gap: 12,
   },
@@ -203,7 +202,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.slate[100],
     paddingVertical: 12,
     borderRadius: 10,
     gap: 6,
@@ -212,7 +211,7 @@ export const styles = StyleSheet.create({
   rescheduleButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   cancelButton: {
@@ -220,7 +219,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fef2f2',
+    backgroundColor: colors.red[100],
     paddingVertical: 12,
     borderRadius: 10,
     gap: 6,
@@ -229,7 +228,7 @@ export const styles = StyleSheet.create({
   cancelButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#dc2626',
+    color: colors.error,
   },
 
   rebookButton: {
@@ -237,7 +236,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     borderRadius: 10,
     gap: 6,
@@ -246,14 +245,14 @@ export const styles = StyleSheet.create({
   rebookButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   /* INFO CARD */
   infoCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: colors.blue[100],
     borderRadius: 14,
     padding: 16,
     marginBottom: 32,
@@ -263,7 +262,7 @@ export const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: 14,
-    color: '#1e40af',
+    color: colors.blue[700],
     lineHeight: 20,
   },
 
@@ -280,7 +279,7 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.slate[100],
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
@@ -289,13 +288,13 @@ export const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 8,
   },
 
   emptyText: {
     fontSize: 15,
-    color: '#64748b',
+    color: colors.muted,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 24,
@@ -304,7 +303,7 @@ export const styles = StyleSheet.create({
   bookButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 12,
@@ -314,6 +313,6 @@ export const styles = StyleSheet.create({
   bookButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: colors.white,
   },
 });

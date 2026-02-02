@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 const heroTextShadow = {
   textShadowColor: 'rgba(0, 0, 0, 0.75)',
@@ -9,7 +10,7 @@ const heroTextShadow = {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
     ...heroTextShadow,
@@ -49,7 +50,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -63,7 +64,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
     ...heroTextShadow,
   },
 
@@ -77,7 +78,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -89,18 +90,18 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 16,
     marginLeft: 4,
   },
 
   /* WAITING CARD */
   waitingCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 18,
     marginBottom: 16,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,
     shadowRadius: 14,
@@ -115,7 +116,7 @@ export const styles = StyleSheet.create({
   },
 
   positionBadge: {
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
@@ -124,13 +125,13 @@ export const styles = StyleSheet.create({
   positionNumber: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fef3c7',
+    backgroundColor: colors.amber[100],
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
@@ -141,19 +142,19 @@ export const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#f59e0b',
+    backgroundColor: colors.amber[500],
   },
 
   statusText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#b45309',
+    color: colors.amber[700],
   },
 
   serviceName: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 12,
   },
 
@@ -170,12 +171,12 @@ export const styles = StyleSheet.create({
 
   detailText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.muted,
   },
 
   waitingActions: {
     borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+    borderTopColor: colors.slate[100],
     paddingTop: 14,
   },
 
@@ -189,14 +190,14 @@ export const styles = StyleSheet.create({
   cancelButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#dc2626',
+    color: colors.error,
   },
 
   /* INFO CARD */
   infoCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: colors.blue[100],
     borderRadius: 14,
     padding: 16,
     marginBottom: 32,
@@ -206,7 +207,7 @@ export const styles = StyleSheet.create({
   infoText: {
     flex: 1,
     fontSize: 14,
-    color: '#1e40af',
+    color: colors.blue[700],
     lineHeight: 20,
   },
 
@@ -223,7 +224,7 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: colors.slate[100],
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
@@ -232,13 +233,13 @@ export const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 8,
   },
 
   emptyText: {
     fontSize: 15,
-    color: '#64748b',
+    color: colors.muted,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 24,
@@ -247,7 +248,7 @@ export const styles = StyleSheet.create({
   browseButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 12,
@@ -257,6 +258,6 @@ export const styles = StyleSheet.create({
   browseButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: colors.white,
   },
 });

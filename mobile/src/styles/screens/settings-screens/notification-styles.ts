@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 const heroTextShadow = {
   textShadowColor: 'rgba(0, 0, 0, 0.75)',
@@ -9,7 +10,7 @@ const heroTextShadow = {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -46,7 +47,7 @@ export const styles = StyleSheet.create({
 
   headerBadge: {
     backgroundColor: 'rgba(255,255,255,0.18)',
-    color: '#fff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -61,7 +62,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#fff',
+    color: colors.white,
     ...heroTextShadow,
   },
 
@@ -75,7 +76,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -89,23 +90,23 @@ export const styles = StyleSheet.create({
     gap: 14,
     padding: 16,
     borderRadius: 18,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginBottom: 14,
-    shadowColor: '#0f172a',
+    shadowColor: colors.primary,
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 3,
   },
 
   notificationRead: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.slate[50],
   },
 
   notificationIcon: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: '#eef2ff',
+    backgroundColor: colors.blue[50],
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -117,18 +118,18 @@ export const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 4,
   },
 
   notificationPreview: {
     fontSize: 14,
-    color: '#475569',
+    color: colors.slate[600],
     lineHeight: 20,
   },
 
   readText: {
-    color: '#94a3b8',
+    color: colors.slate[400],
   },
 
   /* MODAL */
@@ -140,7 +141,7 @@ export const styles = StyleSheet.create({
   },
 
   modalCard: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 22,
   },
@@ -149,12 +150,12 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '800',
     marginBottom: 10,
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   modalText: {
     fontSize: 15,
-    color: '#475569',
+    color: colors.slate[600],
     lineHeight: 22,
     marginBottom: 20,
   },
@@ -164,11 +165,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 10,
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
   },
 
   modalButtonText: {
-    color: '#fff',
+    color: colors.white,
     fontWeight: '700',
   },
 });

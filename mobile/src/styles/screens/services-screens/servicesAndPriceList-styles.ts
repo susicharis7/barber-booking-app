@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../colors';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: colors.background,
   },
 
   /* HERO */
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   },
 
   backText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
   headerBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.2,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 
   headerSubtitle: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
   /* CONTENT */
   content: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     marginTop: -24,
@@ -79,20 +80,20 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1,
-    color: '#94a3b8',
+    color: colors.slate[400],
     marginBottom: 16,
     marginLeft: 4,
   },
 
   /* SERVICE CARD */
   serviceCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.white,
     borderRadius: 18,
     padding: 18,
     marginBottom: 14,
     borderWidth: 2,
-    borderColor: '#f1f5f9',
-    shadowColor: '#0f172a',
+    borderColor: colors.slate[100],
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
     shadowRadius: 10,
@@ -100,8 +101,8 @@ export const styles = StyleSheet.create({
   },
 
   serviceCardSelected: {
-    borderColor: '#0f172a',
-    backgroundColor: '#f8fafc',
+    borderColor: colors.primary,
+    backgroundColor: colors.slate[50],
   },
 
   serviceHeader: {
@@ -115,7 +116,7 @@ export const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#cbd5e1',
+    borderColor: colors.slate[300],
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
@@ -123,14 +124,14 @@ export const styles = StyleSheet.create({
   },
 
   radioButtonSelected: {
-    borderColor: '#0f172a',
+    borderColor: colors.primary,
   },
 
   radioButtonInner: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
   },
 
   serviceInfo: {
@@ -140,17 +141,17 @@ export const styles = StyleSheet.create({
   serviceName: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#0f172a',
+    color: colors.primary,
     marginBottom: 4,
   },
 
   serviceNameSelected: {
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   serviceDescription: {
     fontSize: 13,
-    color: '#64748b',
+    color: colors.muted,
     lineHeight: 18,
   },
 
@@ -160,7 +161,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 14,
     borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+    borderTopColor: colors.slate[100],
     marginLeft: 38,
   },
 
@@ -172,17 +173,17 @@ export const styles = StyleSheet.create({
 
   durationText: {
     fontSize: 14,
-    color: '#64748b',
+    color: colors.muted,
   },
 
   priceText: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   priceTextSelected: {
-    color: '#0f172a',
+    color: colors.primary,
   },
 
   /* RESERVE BUTTON */
@@ -190,7 +191,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 14,
     marginTop: 8,
@@ -199,12 +200,12 @@ export const styles = StyleSheet.create({
   },
 
   reserveButtonDisabled: {
-    backgroundColor: '#cbd5e1',
+    backgroundColor: colors.slate[300],
   },
 
   reserveButtonText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.white,
   },
 });
