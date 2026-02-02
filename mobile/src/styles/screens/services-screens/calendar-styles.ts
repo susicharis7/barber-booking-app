@@ -290,4 +290,19 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.white,
   },
+
+
+
+  /* Time Slot */
+  timeSlotDisabled: {
+    backgroundColor: colors.slate[200],
+    borderColor: colors.slate[200],
+    opacity: 0.5,
+  },
+  timeSlotTextDisabled: {
+    color: colors.slate[400],
+  },
+
+  
+
 });
