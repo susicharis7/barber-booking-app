@@ -11,7 +11,7 @@ The app allows users to browse services, select a barber, book available time sl
 🟡 **In active development**
 
 Current focus:
-- Core app architecture
+- Core app architecture 
 - Authentication
 - Scalable navigation & styling system
 
@@ -54,18 +54,18 @@ Current focus:
 - Logout support
 
 ### Booking Flow
-1. Browse services
-2. Select barber (employee)
-3. View price list & duration
-4. Open calendar
-5. Select available time slot
-6. Confirm booking
+1. Browse services **(DONE)**
+2. Select barber (employee) **(DONE)**
+3. View price list & duration **(DONE)**
+4. Open calendar **(DONE)**
+5. Select available time slot **(DONE)**
+6. Confirm booking **(DONE)**
 
 ### Appointments
-- Upcoming appointments
-- Past appointments
-- Cancel / reschedule logic
-- Real-time availability updates
+- Upcoming appointments **(DONE)**
+- Past appointments **(DONE)**
+- Cancel logic **(DONE)**
+- Real-time availability updates **(DONE)**
 
 ### Notifications
 - Booking confirmation
@@ -74,9 +74,9 @@ Current focus:
 - Waiting list notifications
 
 ### User Profile
-- Update name & profile image
-- Phone number (required for bookings)
-- Read-only email
+- Update name & profile image 
+- Phone number (required for bookings) **(DONE)**
+- Read-only email **(DONE)**
 
 ### Waiting List
 - Join waiting list when slot is full
