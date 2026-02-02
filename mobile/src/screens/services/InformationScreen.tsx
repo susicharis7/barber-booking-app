@@ -10,6 +10,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/information-styles';
 
+import { api } from '../../services/api';
+
 const bgImage = require('../../../assets/images/settings-bg.png');
 
 export default function InformationScreen({ navigation, route }: any) {
@@ -37,9 +39,21 @@ export default function InformationScreen({ navigation, route }: any) {
     return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
   };
 
-  const handleReserve = () => {
-    // TODO: Send to backend
-    setShowSuccessModal(true);
+  const handleReserve = async () => {
+    
+    try {
+      await api.post('/api/appointments', {
+        barber_id: employee.id,
+        service_id: service.id,
+        date: appointmentDate.toISOString().split('T')[0],
+        start_time: time,
+        note,
+      });
+      setShowSuccessModal(true);
+    } catch(err: any) {
+      console.error("Create appointment failed: ", err);
+    }
+
   };
 
   const handleSuccessClose = () => {

@@ -200,7 +200,7 @@ function AppointmentCard({
   isUpcoming: boolean;
 }) {
   const formatDate = (dateString: string) => {
-    const date = new Date(`${dateString}T00:00:00`);
+    const date = new Date(`${dateString}`);
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
