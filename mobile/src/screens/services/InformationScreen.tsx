@@ -44,7 +44,8 @@ export default function InformationScreen({ navigation, route }: any) {
 
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
-    navigation.navigate('Home');
+    navigation.popToTop();
+    navigation.getParent()?.navigate('Appointments');
   };
 
   return (
