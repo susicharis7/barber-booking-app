@@ -67,3 +67,37 @@ export const createAppointment = async(req: Request, res: Response) => {
     }
 
 }
+
+export const cancelAppointment = async (req: Request, res: Response) => {
+  try {
+    const { user } = req as AuthRequest;
+    if (!user?.uid) {
+      res.status(401).json({ message: 'Unauthorized user!' });
+      return;
+    }
+
+    const appointmentId = Number(req.params.id);
+    if (!appointmentId) {
+      res.status(400).json({ message: 'Invalid appointment id' });
+      return;
+    }
+
+    const cancelled = await appointmentsService.cancelAppointmentByUid(
+      user.uid,
+      appointmentId
+    );
+
+    if (!cancelled) {
+      res.status(404).json({ message: 'Appointment not found or not cancellable' });
+      return;
+    }
+
+    res.json({ appointment: cancelled });
+  } catch (error) {
+    console.error('Cancel appointment error:', error);
+    res.status(500).json({ message: 'Failed to cancel appointment' });
+  }
+};
+
+
+

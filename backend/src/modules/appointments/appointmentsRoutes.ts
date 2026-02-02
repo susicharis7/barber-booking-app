@@ -11,5 +11,8 @@ router.get('/past', verifyToken, appointmentsController.getPastAppointments);
 // POST 
 router.post('/', verifyToken, appointmentsController.createAppointment);
 
+// UPDATE
+router.put('/:id/cancel', verifyToken, appointmentsController.cancelAppointment);
+
 
 export default router;

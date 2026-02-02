@@ -149,3 +149,22 @@ export const createAppointmentByUid = async (
 
   return result.rows[0] || null;
 };
+
+export const cancelAppointmentByUid = async (
+    firebaseUid: string,
+    appointmentId: number 
+) => {
+    const result = await pool.query(`
+        UPDATE appointments a 
+        SET status = 'cancelled' 
+        FROM users u 
+        WHERE a.customer_id = u.id
+            AND u.firebase_uid = $1
+            AND a.id = $2
+            AND a.status IN ('pending' , 'confirmed')
+        RETURNING a.id, a.status    
+    `, [firebaseUid, appointmentId]);
+
+    return result.rows[0] || null;
+};
+
