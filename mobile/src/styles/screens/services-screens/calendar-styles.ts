@@ -363,17 +363,22 @@ export const styles = StyleSheet.create({
 
 
   noSlotsCard: {
-    backgroundColor: colors.slate[50],
-    borderRadius: 14,
-    padding: 16,
+    backgroundColor: colors.white,
+    borderRadius: 16,
+    padding: 18,
     borderWidth: 1,
     borderColor: colors.slate[200],
     marginBottom: 12,
+    shadowColor: colors.primary,
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
   },
 
   noSlotsTitle: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '800',
     color: colors.primary,
     marginBottom: 6,
   },
@@ -381,21 +386,50 @@ export const styles = StyleSheet.create({
   noSlotsText: {
     fontSize: 13,
     color: colors.muted,
-    lineHeight: 18,
-    marginBottom: 12,
+    lineHeight: 19,
+    marginBottom: 14,
+  },
+
+  noSlotsActions: {
+    gap: 10,
+  },
+
+  nextAvailableButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.blue[50],
+    borderWidth: 1,
+    borderColor: colors.blue[100],
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    alignSelf: 'stretch',
+  },
+
+  nextAvailableButtonText: {
+    color: colors.blue[700],
+    fontSize: 13,
+    fontWeight: '700',
+    flexShrink: 1,
   },
 
   joinWaitlistButton: {
-    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
     backgroundColor: colors.primary,
     paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 10,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignSelf: 'stretch',
   },
 
   joinWaitlistButtonText: {
     color: colors.white,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '700',
   },
 
