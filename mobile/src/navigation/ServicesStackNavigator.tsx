@@ -4,6 +4,7 @@ import ServiceScreen from '../screens/services/ServiceScreen';
 import ServicesAndPriceListScreen from '../screens/services/ServicesAndPriceListScreen';
 import CalendarScreen from '../screens/services/CalendarScreen';
 import InformationScreen from '../screens/services/InformationScreen';
+import JoinWaitingListScreen from '../screens/services/JoinWaitingListScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function ServicesStackNavigator() {
       <Stack.Screen name="ServicesAndPriceList" component={ServicesAndPriceListScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Information" component={InformationScreen} />
+      <Stack.Screen name = "JoinWaitingListScreen" component={JoinWaitingListScreen} />
     </Stack.Navigator>
   );
 }
