@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/calendar-styles';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { api } from '../../services/api';
 
@@ -29,6 +30,8 @@ export default function CalendarScreen({ navigation, route }: any) {
 
   const serviceDuration = Number(service.duration) || 0;
   const servicePrice = Number(service.price) || 0;
+
+  
   
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -36,6 +39,7 @@ export default function CalendarScreen({ navigation, route }: any) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [note, setNote] = useState('');
+
 
 
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
@@ -62,6 +66,14 @@ export default function CalendarScreen({ navigation, route }: any) {
     );
   };
 
+
+  /* Helper - for Local Date (Needed only for my country) */
+  const toLocalDate = (d: Date) => {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  } 
 
 
   const fetchBookedSlots = async (dateStr: string) => {
@@ -108,7 +120,8 @@ export default function CalendarScreen({ navigation, route }: any) {
     if (!isDateDisabled(day)) {
       setSelectedDate(new Date(currentYear, currentMonth, day));
 
-      const dateStr = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+      const dateStr = toLocalDate(new Date(currentYear, currentMonth, day));
+    
       fetchBookedSlots(dateStr);
 
       setSelectedTime(null);
@@ -143,7 +156,7 @@ export default function CalendarScreen({ navigation, route }: any) {
       navigation.navigate('Information', {
         employee,
         service,
-        date: selectedDate.toISOString(),
+        date: toLocalDate(selectedDate),
         time: selectedTime,
         note,
       });
@@ -168,6 +181,24 @@ export default function CalendarScreen({ navigation, route }: any) {
     const finalMinutes = endMinutes % 60;
     return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
   };
+
+
+  const isSlotPast = (time: string) => {
+
+    if (!isTodaySelected()) return false;
+
+    const [h, m] = time.split(':').map(Number);
+    const slotTime = new Date();
+    slotTime.setHours(h, m, 0, 0);
+
+    return slotTime <= now;
+  };
+
+  const availableCount = selectedDate
+    ? timeSlots.filter((time) => !bookedSlots.includes(time) && !isSlotPast(time)).length : 0;
+
+
+
 
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
@@ -242,7 +273,15 @@ export default function CalendarScreen({ navigation, route }: any) {
       </ImageBackground>
 
       {/* WHITE CONTENT */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        style={styles.content}
+        enableOnAndroid
+        enableAutomaticScroll
+        extraScrollHeight={24}
+        extraHeight={12}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         {/* CALENDAR */}
         <View style={styles.calendarCard}>
           <View style={styles.calendarHeader}>
@@ -279,17 +318,23 @@ export default function CalendarScreen({ navigation, route }: any) {
         {/* TIME SLOTS */}
         {selectedDate && (
           <View style={styles.timeSlotsSection}>
-            <Text style={styles.sectionLabel}>AVAILABLE TIMES</Text>
+            <View style={styles.timeSlotsHeader}>
+              <Text style={[styles.sectionLabel, styles.sectionLabelTight]}>
+                AVAILABLE TIMES
+              </Text>
+              <View style={styles.timeSlotsBadge}>
+                <Text style={styles.timeSlotsBadgeText}>
+                  {availableCount} slots
+                </Text>
+              </View>
+            </View>
+
+            
+
             <View style={styles.timeSlotsGrid}>
               {timeSlots.map((time) => {
                 const isBooked = bookedSlots.includes(time);
-
-                const isPast = isTodaySelected() && (() => {
-                  const [h, m] = time.split(':').map(Number);
-                  const slotTime = new Date();
-                  slotTime.setHours(h, m, 0, 0);
-                  return slotTime <= now;
-                })();
+                const isPast = isSlotPast(time);
 
                 return (
                   <TouchableOpacity
@@ -297,8 +342,7 @@ export default function CalendarScreen({ navigation, route }: any) {
                     style={[
                       styles.timeSlot,
                       selectedTime === time && styles.timeSlotSelected,
-                      isBooked && styles.timeSlotDisabled,
-                      isPast && styles.timeSlotDisabled,
+                      (isBooked || isPast) && styles.timeSlotDisabled,
                     ]}
                     onPress={() => setSelectedTime(time)}
                     disabled={isBooked || isPast}
@@ -316,10 +360,19 @@ export default function CalendarScreen({ navigation, route }: any) {
                   </TouchableOpacity>
                 );
               })}
-
             </View>
+
+            {selectedTime && (
+              <View style={styles.selectedSummary}>
+                <Ionicons name="time-outline" size={16} color="#0f172a" />
+                <Text style={styles.selectedSummaryText}>
+                  Selected: {formatSelectedDate()} • {selectedTime} - {calculateEndTime()}
+                </Text>
+              </View>
+            )}
           </View>
         )}
+
 
         {/* BOOKING SUMMARY */}
         {selectedDate && selectedTime && (
@@ -367,6 +420,8 @@ export default function CalendarScreen({ navigation, route }: any) {
                 onChangeText={setNote}
                 multiline
                 numberOfLines={3}
+              
+                
               />
             </View>
           </View>
@@ -385,7 +440,7 @@ export default function CalendarScreen({ navigation, route }: any) {
           <Text style={styles.continueButtonText}>Continue</Text>
           <Ionicons name="arrow-forward" size={20} color="#ffffff" />
         </TouchableOpacity>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

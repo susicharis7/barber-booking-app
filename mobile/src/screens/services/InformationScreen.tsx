@@ -18,7 +18,7 @@ export default function InformationScreen({ navigation, route }: any) {
   const { employee, service, date, time, note } = route.params;
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const appointmentDate = new Date(date);
+  const appointmentDate = new Date(`${date}`);
   const serviceDuration = Number(service.duration) || 0;
   const servicePrice = Number(service.price) || 0;
 

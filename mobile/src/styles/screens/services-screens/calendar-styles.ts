@@ -170,17 +170,26 @@ export const styles = StyleSheet.create({
   timeSlotsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    justifyContent: 'space-between',
   },
 
   timeSlot: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 10,
-    backgroundColor: colors.slate[100],
-    borderWidth: 2,
-    borderColor: colors.slate[100],
+    width: '31%',         
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.slate[200],
+    alignItems: 'center',
+    marginBottom: 12,
+    shadowColor: colors.primary,
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
   },
+
+
 
   timeSlotSelected: {
     backgroundColor: colors.primary,
@@ -189,8 +198,9 @@ export const styles = StyleSheet.create({
 
   timeSlotText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: colors.primary,
+    letterSpacing: 0.3,
   },
 
   timeSlotTextSelected: {
@@ -302,6 +312,52 @@ export const styles = StyleSheet.create({
   timeSlotTextDisabled: {
     color: colors.slate[400],
   },
+
+  /* Additional Design */
+
+  timeSlotsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+
+  sectionLabelTight: {
+    marginBottom: 0,
+  },
+
+  timeSlotsBadge: {
+    backgroundColor: colors.slate[100],
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+
+  timeSlotsBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+
+
+  selectedSummary: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: colors.blue[50],
+    borderWidth: 1,
+    borderColor: colors.blue[100],
+  },
+
+  selectedSummaryText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.slate[700],
+  },
+
 
   
 

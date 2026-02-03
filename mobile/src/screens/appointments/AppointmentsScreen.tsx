@@ -37,9 +37,12 @@ export default function AppointmentsScreen({ navigation }: any) {
 
 
 
-  const loadAppointments = async () => {
-    setLoading(true);
-    setError(null);
+  const loadAppointments = async (silent = false) => {
+    if (!silent) {
+      setLoading(true);
+      setError(null);
+    }
+    
 
     try {
       const [upcomingRes, pastRes] = await Promise.all([
@@ -51,9 +54,14 @@ export default function AppointmentsScreen({ navigation }: any) {
       setPastAppointments(pastRes.appointments);
 
     } catch(err: any) {
-      setError(err?.message ?? 'Failed to load appointments..');
+      if (!silent) {
+       setError(err?.message ?? 'Failed to load appointments..');
+      } else {
+        console.error('Silent refresh failed: ', err);
+      }
+      
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
 
 
