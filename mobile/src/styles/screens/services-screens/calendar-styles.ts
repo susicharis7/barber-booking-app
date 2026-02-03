@@ -359,6 +359,48 @@ export const styles = StyleSheet.create({
   },
 
 
+
+
+
+  noSlotsCard: {
+    backgroundColor: colors.slate[50],
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.slate[200],
+    marginBottom: 12,
+  },
+
+  noSlotsTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.primary,
+    marginBottom: 6,
+  },
+
+  noSlotsText: {
+    fontSize: 13,
+    color: colors.muted,
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+
+  joinWaitlistButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+
+  joinWaitlistButtonText: {
+    color: colors.white,
+    fontSize: 13,
+    fontWeight: '700',
+  },
+
+
+
   
 
 });

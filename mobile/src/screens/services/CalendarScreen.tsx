@@ -4,7 +4,6 @@ import {
   Text,
   ImageBackground,
   TouchableOpacity,
-  ScrollView,
   TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,67 +30,55 @@ export default function CalendarScreen({ navigation, route }: any) {
   const serviceDuration = Number(service.duration) || 0;
   const servicePrice = Number(service.price) || 0;
 
-  
-  
+  const scrollRef = useRef<KeyboardAwareScrollView>(null);
+
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [note, setNote] = useState('');
-
-
-
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
 
-  /* For updating calendar at a real time */
+  /* Real-time updates */
   const [now, setNow] = useState(new Date());
-
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
     }, 60000);
-
     return () => clearInterval(interval);
   }, []);
 
   const isTodaySelected = () => {
     if (!selectedDate) return false;
-    const today = new Date();
-
+    const t = new Date();
     return (
-      selectedDate.getDate() === today.getDate() &&
-      selectedDate.getMonth() === today.getMonth() &&
-      selectedDate.getFullYear() === today.getFullYear()
+      selectedDate.getDate() === t.getDate() &&
+      selectedDate.getMonth() === t.getMonth() &&
+      selectedDate.getFullYear() === t.getFullYear()
     );
   };
 
-
-  /* Helper - for Local Date (Needed only for my country) */
   const toLocalDate = (d: Date) => {
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
-  } 
-
+  };
 
   const fetchBookedSlots = async (dateStr: string) => {
-  try {
-    const res = await api.get<{ slots: { start_time: string }[] }>(
-      `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
-      false
-    );
-
-   
-    const slots = res.slots.map((s) => s.start_time.slice(0, 5));
-    setBookedSlots(slots);
-  } catch (err) {
-    console.error('Fetch booked slots error:', err);
-    setBookedSlots([]);
-  }
-};
-
+    try {
+      const res = await api.get<{ slots: { start_time: string }[] }>(
+        `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
+        false
+      );
+      const slots = res.slots.map((s) => s.start_time.slice(0, 5));
+      setBookedSlots(slots);
+    } catch (err) {
+      console.error('Fetch booked slots error:', err);
+      setBookedSlots([]);
+    }
+  };
 
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
@@ -118,10 +105,10 @@ export default function CalendarScreen({ navigation, route }: any) {
 
   const handleSelectDate = (day: number) => {
     if (!isDateDisabled(day)) {
-      setSelectedDate(new Date(currentYear, currentMonth, day));
+      const newDate = new Date(currentYear, currentMonth, day);
+      setSelectedDate(newDate);
 
-      const dateStr = toLocalDate(new Date(currentYear, currentMonth, day));
-    
+      const dateStr = toLocalDate(newDate);
       fetchBookedSlots(dateStr);
 
       setSelectedTime(null);
@@ -147,7 +134,7 @@ export default function CalendarScreen({ navigation, route }: any) {
   };
 
   const canGoPrev = () => {
-    return currentYear > today.getFullYear() || 
+    return currentYear > today.getFullYear() ||
       (currentYear === today.getFullYear() && currentMonth > today.getMonth());
   };
 
@@ -182,35 +169,33 @@ export default function CalendarScreen({ navigation, route }: any) {
     return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
   };
 
-
   const isSlotPast = (time: string) => {
-
     if (!isTodaySelected()) return false;
-
     const [h, m] = time.split(':').map(Number);
     const slotTime = new Date();
     slotTime.setHours(h, m, 0, 0);
-
     return slotTime <= now;
   };
 
-  const availableCount = selectedDate
-    ? timeSlots.filter((time) => !bookedSlots.includes(time) && !isSlotPast(time)).length : 0;
+  const availableTimes = selectedDate
+    ? timeSlots.filter((time) => {
+        const isBooked = bookedSlots.includes(time);
+        const isPast = isSlotPast(time);
+        return !isBooked && !isPast;
+      })
+    : [];
 
-
-
+  const availableCount = availableTimes.length;
 
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
     const days = [];
 
-    // Empty cells for days before the first day
     for (let i = 0; i < firstDay; i++) {
       days.push(<View key={`empty-${i}`} style={styles.calendarDay} />);
     }
 
-    // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const disabled = isDateDisabled(day);
       const selected = isDateSelected(day);
@@ -243,9 +228,6 @@ export default function CalendarScreen({ navigation, route }: any) {
     return days;
   };
 
-
-
-
   return (
     <View style={styles.container}>
       {/* HERO */}
@@ -274,6 +256,7 @@ export default function CalendarScreen({ navigation, route }: any) {
 
       {/* WHITE CONTENT */}
       <KeyboardAwareScrollView
+        ref={scrollRef}
         style={styles.content}
         enableOnAndroid
         enableAutomaticScroll
@@ -329,38 +312,47 @@ export default function CalendarScreen({ navigation, route }: any) {
               </View>
             </View>
 
-            
+            {availableTimes.length === 0 ? (
+              <View style={styles.noSlotsCard}>
+                <Text style={styles.noSlotsTitle}>No available slots for this day</Text>
+                <Text style={styles.noSlotsText}>
+                  You can join the waiting list and we will notify you if a slot opens.
+                </Text>
 
-            <View style={styles.timeSlotsGrid}>
-              {timeSlots.map((time) => {
-                const isBooked = bookedSlots.includes(time);
-                const isPast = isSlotPast(time);
-
-                return (
+                <TouchableOpacity
+                  style={styles.joinWaitlistButton}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    // TODO: open waiting list request screen
+                  }}
+                >
+                  <Text style={styles.joinWaitlistButtonText}>Join Waiting List</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.timeSlotsGrid}>
+                {availableTimes.map((time) => (
                   <TouchableOpacity
                     key={time}
                     style={[
                       styles.timeSlot,
                       selectedTime === time && styles.timeSlotSelected,
-                      (isBooked || isPast) && styles.timeSlotDisabled,
                     ]}
                     onPress={() => setSelectedTime(time)}
-                    disabled={isBooked || isPast}
                     activeOpacity={0.7}
                   >
                     <Text
                       style={[
                         styles.timeSlotText,
                         selectedTime === time && styles.timeSlotTextSelected,
-                        (isBooked || isPast) && styles.timeSlotTextDisabled,
                       ]}
                     >
                       {time}
                     </Text>
                   </TouchableOpacity>
-                );
-              })}
-            </View>
+                ))}
+              </View>
+            )}
 
             {selectedTime && (
               <View style={styles.selectedSummary}>
@@ -372,7 +364,6 @@ export default function CalendarScreen({ navigation, route }: any) {
             )}
           </View>
         )}
-
 
         {/* BOOKING SUMMARY */}
         {selectedDate && selectedTime && (
@@ -420,8 +411,11 @@ export default function CalendarScreen({ navigation, route }: any) {
                 onChangeText={setNote}
                 multiline
                 numberOfLines={3}
-              
-                
+                onFocus={() => {
+                  setTimeout(() => {
+                    scrollRef.current?.scrollToEnd(true);
+                  }, 200);
+                }}
               />
             </View>
           </View>
