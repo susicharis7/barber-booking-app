@@ -224,4 +224,19 @@ export const getBookedTimesForBarber = async (
   return result.rows;
 };
 
+/* Reservation finished? - Update it to 'completed' status */
+export const markPastAppointmentsCompleted = async () => {
+  const result = await pool.query(`
+    UPDATE appointments
+    SET status = 'completed'
+    WHERE status = 'confirmed' 
+      AND (
+        date < CURRENT_DATE  
+        OR (date = CURRENT_DATE AND end_time <= CURRENT_TIME)
+      )  
+    RETURNING id
+  `);
+
+  return result.rowCount ?? 0;
+}
 
