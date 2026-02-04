@@ -4,6 +4,7 @@ import userRoutes from './modules/user/userRoutes';
 import barberRoutes from './modules/barber/barberRoutes';
 import servicesAndPriceListRoutes from './modules/servicesAndPriceList/servicesAndPriceListRoutes';
 import appointmentsRoutes from './modules/appointments/appointmentsRoutes';
+import waitingListRoutes from './modules/waitingList/waitingListRoutes';
 
 
 const app = express();
@@ -23,7 +24,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/barbers', barberRoutes);
 app.use('/api/servicesAndPriceListRoutes', servicesAndPriceListRoutes);
 app.use('/api/appointments', appointmentsRoutes);
-
+app.use('/api/waiting-list', waitingListRoutes);
 
 
 export default app;

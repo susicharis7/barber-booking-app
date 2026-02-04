@@ -11,9 +11,9 @@ app.listen(PORT, () => {
 });
 
 
-// Check every 2 minutes if the appointment should be completed 
+// Check every minute if the appointment should be completed 
 import { markPastAppointmentsCompleted } from './modules/appointments/appointmentsService';
-const runEveryMS = 120000;
+const runEveryMS = 60000;
 
 setInterval(async () => {
   try {
