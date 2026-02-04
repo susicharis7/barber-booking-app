@@ -59,3 +59,45 @@ export const createWaitingList = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to create waiting list' });
   }
 };
+
+
+
+
+export const cancelWaitingList = async (req: Request, res: Response) => {
+
+  try {
+
+    const { user } = req as AuthRequest; 
+
+    if (!user?.uid) {
+      res.status(401).json({ message: 'Unauthorized '});
+      return; 
+    }
+
+
+    const waitingListId = Number(req.params.id);
+    if (!waitingListId) {
+      res.status(400).json({ message: 'Invalid waiting list'});
+      return;
+    }
+
+    const cancelled = await waitingListService.cancelWaitingListByUid(
+      user.uid,
+      waitingListId
+    );
+
+    if (!cancelled) {
+      res.status(404).json({ message: 'Waiting list not found'});
+      return;
+    }
+
+    res.json({ waitingList: cancelled });
+
+  } catch(error) {
+    console.error('Cancel waiting list error: ', error);
+    res.status(500).json({ message: 'Failed to cancel waiting list'});
+  }
+
+
+
+}

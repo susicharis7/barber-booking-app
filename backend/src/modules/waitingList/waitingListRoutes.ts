@@ -6,5 +6,6 @@ const router = Router();
 
 router.get('/', verifyToken, waitingListController.getWaitingList);
 router.post('/', verifyToken, waitingListController.createWaitingList);
+router.put('/:id/cancel', verifyToken, waitingListController.cancelWaitingList);
 
 export default router;

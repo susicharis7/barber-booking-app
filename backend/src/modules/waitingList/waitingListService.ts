@@ -28,6 +28,7 @@ export const getWaitingListByUid = async (firebaseUid: string) => {
     LEFT JOIN users bu ON bu.id = b.user_id
     LEFT JOIN services s ON s.id = wl.service_id
     WHERE cu.firebase_uid = $1
+      AND wl.status = 'active'
     ORDER BY wl.created_at DESC
     `,
     [firebaseUid]
@@ -108,3 +109,24 @@ export const createWaitingListByUid = async (
 
   return result.rows[0] || null;
 };
+
+
+
+export const cancelWaitingListByUid = async (
+  firebaseUid: string,
+  waitingListId: number
+) => {
+  const result = await pool.query(`
+    UPDATE waiting_list wl
+    SET status = 'cancelled' 
+    FROM users u 
+    WHERE wl.customer_id = u.id
+      AND u.firebase_uid = $1
+      AND wl.id = $2 
+      AND wl.status = 'active' 
+    RETURNING wl.id, wl.status   
+  `, [firebaseUid, waitingListId]);
+
+  return result.rows[0] || null; 
+};
+
