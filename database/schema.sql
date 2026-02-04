@@ -64,6 +64,41 @@ CREATE TABLE IF NOT EXISTS working_hours (
     UNIQUE (barber_id, day_of_week)
 );
 
+-- NEW : waiting_list
+CREATE TABLE IF NOT EXISTS waiting_list (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  barber_id INTEGER REFERENCES barbers(id) ON DELETE CASCADE,
+  service_id INTEGER REFERENCES services(id) ON DELETE SET NULL,
+  start_date DATE NOT NULL,
+  end_date DATE,
+  status VARCHAR(20) NOT NULL DEFAULT 'active',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT waiting_list_status_check
+    CHECK (status IN ('active', 'cancelled', 'fulfilled')),
+  CONSTRAINT waiting_list_date_check
+    CHECK (end_date IS NULL OR end_date >= start_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_waiting_list_customer
+  ON waiting_list(customer_id);
+
+CREATE INDEX IF NOT EXISTS idx_waiting_list_barber
+  ON waiting_list(barber_id);
+
+CREATE INDEX IF NOT EXISTS idx_waiting_list_status
+  ON waiting_list(status);
+
+CREATE INDEX IF NOT EXISTS idx_waiting_list_start
+  ON waiting_list(start_date);
+
+CREATE INDEX IF NOT EXISTS idx_waiting_list_end
+  ON waiting_list(end_date);
+
+
+
+
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(date);
