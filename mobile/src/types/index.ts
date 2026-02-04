@@ -78,3 +78,13 @@ export type AppointmentDetailed = {
 };
 
 
+/* Waiting List */
+export type WaitingListItem = {
+  id: number;
+  start_date: string;
+  end_date: string | null;
+  status: 'active' | 'cancelled' | 'fulfilled';
+  barber: { id: number; first_name: string; last_name: string; title: string };
+  service: { id: number; name: string; duration: number; price: string };
+};
+
