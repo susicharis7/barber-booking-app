@@ -11,8 +11,10 @@ import {
   clampDate,
   formatDate,
   parseDate,
+  monthKey,
+  toLocalDate,
 } from '../../utils/calendar';
-
+import { api } from '../../services/api';
 
 
 
@@ -32,6 +34,26 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
 
   const endDateLabel = useMemo(() => formatDate(maxDate), [maxDate]);
   const startDateLabel = useMemo(() => formatDate(startDate), [startDate]);
+
+
+  const handleJoinWaitingList = async () => {
+  try {
+    const endDatePayload = nextAvailableDate ? toLocalDate(maxDate) : null;
+
+    await api.post('/api/waiting-list', {
+      barber_id: employee.id,
+      service_id: service?.id ?? null,
+      start_date: toLocalDate(startDate),
+      end_date: endDatePayload,
+    });
+
+    // Navigate to Settings -> WaitingList screen
+    navigation.navigate('Settings', { screen: 'WaitingList' });
+  } catch (err) {
+    console.error('Create waiting list error:', err);
+  }
+};
+
 
 
   const isDateDisabled = (day: number) => {
@@ -56,7 +78,6 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
     setShowCalendar(false);
   };
 
-  const monthKey = (year: number, month: number) => year * 12 + month;
   const minMonthKey = monthKey(minDate.getFullYear(), minDate.getMonth());
   const maxMonthKey = monthKey(maxDate.getFullYear(), maxDate.getMonth());
   const currentKey = monthKey(currentYear, currentMonth);
@@ -124,6 +145,9 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
 
     return days;
   };
+
+
+
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -252,9 +276,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
       <TouchableOpacity
         style={styles.ctaButton}
         activeOpacity={0.7}
-        onPress={() => {
-          // TODO: submit waiting list request
-        }}
+        onPress={handleJoinWaitingList}
       >
         <Text style={styles.ctaButtonText}>Join Waiting List</Text>
       </TouchableOpacity>
