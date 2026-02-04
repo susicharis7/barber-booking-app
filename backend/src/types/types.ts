@@ -22,3 +22,9 @@ export interface User {
     created_at: Date;
 }
 
+export interface CreateWaitingListData {
+    barber_id: number;
+    service_id?: number | null;
+    start_date: string;
+    end_date?: string | null;
+}
