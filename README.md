@@ -79,7 +79,7 @@ Current focus:
 - Read-only email **(DONE)**
 
 ### Waiting List
-- Join waiting list when slot is full
+- Join waiting list when slot is full **(DONE)**
 - Automatic notification when slot becomes available
 
 ### Admin / Barber Panel (Later Phase)
@@ -93,26 +93,5 @@ Current focus:
 ## Project Architecture
 
 ```text
-barber-booking-app/
-├── README.md
-│
-├── backend/
-│   └── src/
-│       ├── app.ts
-│       ├── index.ts
-│       ├── db/
-│       ├── firebase/
-│       ├── middleware/
-│       └── modules/
-└── mobile/
-    ├── assets/
-    └── src/
-        ├── context/
-        ├── navigation/
-        ├── screens/
-        │   ├── appointments/
-        │   ├── auth/
-        │   ├── home/
-        │   └── profile/
-        ├── services/
-        └── styles/
+Will post final structure when project is finished. 
+Reason : It is actively changing.
