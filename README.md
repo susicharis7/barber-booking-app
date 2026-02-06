@@ -54,18 +54,18 @@ Current focus:
 - Logout support
 
 ### Booking Flow
-1. Browse services **(DONE)**
-2. Select barber (employee) **(DONE)**
-3. View price list & duration **(DONE)**
-4. Open calendar **(DONE)**
-5. Select available time slot **(DONE)**
-6. Confirm booking **(DONE)**
+1. Browse services 
+2. Select barber (employee) 
+3. View price list & duration 
+4. Open calendar 
+5. Select available time slot 
+6. Confirm booking 
 
 ### Appointments
-- Upcoming appointments **(DONE)**
-- Past appointments **(DONE)**
-- Cancel logic **(DONE)**
-- Real-time availability updates **(DONE)**
+- Upcoming appointments 
+- Past appointments 
+- Cancel logic 
+- Real-time availability updates 
 
 ### Notifications
 - Booking confirmation
@@ -75,11 +75,11 @@ Current focus:
 
 ### User Profile
 - Update name & profile image 
-- Phone number (required for bookings) **(DONE)**
+- Phone number (required for bookings)
 - Read-only email **(DONE)**
 
 ### Waiting List
-- Join waiting list when slot is full **(DONE)**
+- Join waiting list when slot is full 
 - Automatic notification when slot becomes available
 
 ### Admin / Barber Panel (Later Phase)
