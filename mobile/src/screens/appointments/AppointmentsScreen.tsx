@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,15 +14,25 @@ import { Alert } from 'react-native';
 import { api } from '../../services/api';
 import type { AppointmentDetailed } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
+import { formatDateShort, formatTime } from '../../utils/calendar';
 
 
 
 /* Background Image */
 const bgImage = require('../../../assets/images/appoint-bg.png');
 
+const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  confirmed: { bg: '#dcfce7', text: '#15803d', label: 'Confirmed' },
+  pending:   { bg: '#fef3c7', text: '#b45309', label: 'Pending' },
+  completed: { bg: '#e0e7ff', text: '#4338ca', label: 'Completed' },
+  cancelled: { bg: '#fee2e2', text: '#dc2626', label: 'Cancelled' },
+};
 
+const getStatusStyle = (status: string) =>
+  STATUS_STYLES[status] ?? { bg: '#f1f5f9', text: '#64748b', label: status };
 
 type TabType = 'upcoming' | 'past';
+const PAGE_SIZE = 5;
 
 
 export default function AppointmentsScreen({ navigation }: any) {
@@ -33,52 +43,193 @@ export default function AppointmentsScreen({ navigation }: any) {
   const [error, setError] = useState<string | null>(null);
   const [cancelingId, setCancelingId] = useState<number | null>(null);
 
+  const [upcomingCursor, setUpcomingCursor] = useState<string | null>(null);
+  const [pastCursor, setPastCursor] = useState<string | null>(null);
+
+  const [upcomingHasMore, setUpcomingHasMore] = useState(true);
+  const [pastHasMore, setPastHasMore] = useState(true);
+
+  const [loadingUpcoming, setLoadingUpcoming] = useState(false);
+  const [loadingPast, setLoadingPast] = useState(false);
 
 
+  /* ─── Refs (source of truth for closures) ─── */
+  const loadingUpcomingRef = useRef(false);
+  const loadingPastRef = useRef(false);
+  const upcomingCursorRef = useRef<string | null>(null);
+  const pastCursorRef = useRef<string | null>(null);
+  const upcomingHasMoreRef = useRef(true);
+  const pastHasMoreRef = useRef(true);
 
 
-  const loadAppointments = async (silent = false) => {
-    if (!silent) {
-      setLoading(true);
-      setError(null);
-    }
-    
+  /* ─── Sync helpers (update ref + state together) ─── */
+  const setUpcomingLoadingSync = (val: boolean) => {
+    loadingUpcomingRef.current = val;
+    setLoadingUpcoming(val);
+  };
 
-    try {
-      const [upcomingRes, pastRes] = await Promise.all([
-        api.get<{ appointments: AppointmentDetailed[] }>('/api/appointments/upcoming'),
-        api.get<{ appointments: AppointmentDetailed[] }>('/api/appointments/past'),
-      ]);
+  const setPastLoadingSync = (val: boolean) => {
+    loadingPastRef.current = val;
+    setLoadingPast(val);
+  };
 
-      setUpcomingAppointments(upcomingRes.appointments);
-      setPastAppointments(pastRes.appointments);
+  const setUpcomingCursorSync = (val: string | null) => {
+    upcomingCursorRef.current = val;
+    setUpcomingCursor(val);
+  };
 
-    } catch(err: any) {
-      if (!silent) {
-       setError(err?.message ?? 'Failed to load appointments..');
-      } else {
-        console.error('Silent refresh failed: ', err);
-      }
-      
-    } finally {
-      if (!silent) setLoading(false);
-    }
+  const setPastCursorSync = (val: string | null) => {
+    pastCursorRef.current = val;
+    setPastCursor(val);
+  };
 
+  const setUpcomingHasMoreSync = (val: boolean) => {
+    upcomingHasMoreRef.current = val;
+    setUpcomingHasMore(val);
+  };
 
+  const setPastHasMoreSync = (val: boolean) => {
+    pastHasMoreRef.current = val;
+    setPastHasMore(val);
   };
 
 
+  /* ─── Data loaders (stable references, read from refs) ─── */
+
+  const loadUpcoming = React.useCallback(async ({
+    reset = false,
+    silent = false,
+  }: { reset?: boolean; silent?: boolean } = {}) => {
+
+    if (loadingUpcomingRef.current) return;
+    if (!reset && !upcomingHasMoreRef.current) return;
+
+    setUpcomingLoadingSync(true);
+
+    if (reset) {
+      setUpcomingCursorSync(null);
+      setUpcomingHasMoreSync(true);
+    }
+
+    try {
+      const cursor = reset ? null : upcomingCursorRef.current;
+      const query = cursor
+        ? `?limit=${PAGE_SIZE}&cursor=${encodeURIComponent(cursor)}`
+        : `?limit=${PAGE_SIZE}`;
+
+      const res = await api.get<{
+        appointments: AppointmentDetailed[];
+        nextCursor: string | null;
+      }>(`/api/appointments/upcoming${query}`);
+
+      const items = res.appointments ?? [];
+
+      setUpcomingAppointments((prev) => (reset ? items : [...prev, ...items]));
+      setUpcomingCursorSync(res.nextCursor ?? null);
+      setUpcomingHasMoreSync(Boolean(res.nextCursor));
+
+    } catch (err: any) {
+      if (!silent) {
+        setError(err?.message ?? 'Failed to load appointments..');
+      } else {
+        console.error('Silent refresh failed: ', err);
+      }
+    } finally {
+      setUpcomingLoadingSync(false);
+    }
+  }, []);
 
 
+  const loadPast = React.useCallback(async ({
+    reset = false,
+    silent = false,
+  }: { reset?: boolean; silent?: boolean } = {}) => {
+
+    if (loadingPastRef.current) return;
+    if (!reset && !pastHasMoreRef.current) return;
+
+    setPastLoadingSync(true);
+
+    if (reset) {
+      setPastCursorSync(null);
+      setPastHasMoreSync(true);
+    }
+
+    try {
+      const cursor = reset ? null : pastCursorRef.current;
+      const query = cursor
+        ? `?limit=${PAGE_SIZE}&cursor=${encodeURIComponent(cursor)}`
+        : `?limit=${PAGE_SIZE}`;
+
+      const res = await api.get<{
+        appointments: AppointmentDetailed[];
+        nextCursor: string | null;
+      }>(`/api/appointments/past${query}`);
+
+      const items = res.appointments ?? [];
+      setPastAppointments((prev) => (reset ? items : [...prev, ...items]));
+      setPastCursorSync(res.nextCursor ?? null);
+      setPastHasMoreSync(Boolean(res.nextCursor));
+
+    } catch (err: any) {
+      if (!silent) {
+        setError(err?.message ?? 'Failed to load appointments..');
+      } else {
+        console.error('Silent refresh failed: ', err);
+      }
+    } finally {
+      setPastLoadingSync(false);
+    }
+  }, []);
+
+
+  /* ─── Initial load ─── */
+
+  const loadInitial = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    await Promise.all([
+      loadUpcoming({ reset: true }),
+      loadPast({ reset: true }),
+    ]);
+
+    setLoading(false);
+  }, [loadUpcoming, loadPast]);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadInitial();
+
+      const interval = setInterval(() => {
+        Promise.all([
+          loadUpcoming({ reset: true, silent: true }),
+          loadPast({ reset: true, silent: true }),
+        ]);
+      }, 30000); 
+
+      return () => clearInterval(interval); 
+    }, [loadInitial])
+  );
+
+
+  /* ─── Cancel handler ─── */
 
   const handleCancel = async (appointmentId: number) => {
     setCancelingId(appointmentId);
+
     try {
       await api.put(`/api/appointments/${appointmentId}/cancel`, {});
-      await loadAppointments(); 
-      Alert.alert('Cancelled', 'Your appointment was cancelled.')
+      await Promise.all([
+        loadUpcoming({ reset: true, silent: true }),
+        loadPast({ reset: true, silent: true }),
+      ]);
+      Alert.alert('Cancelled', 'Your appointment was cancelled.');
+
     } catch (err: any) {
       Alert.alert('Error', err?.message ?? 'Failed to cancel appointment');
+
     } finally {
       setCancelingId(null);
     }
@@ -86,23 +237,8 @@ export default function AppointmentsScreen({ navigation }: any) {
 
 
 
-
-
-  useFocusEffect(
-  React.useCallback(() => {
-    loadAppointments();
-  }, [])
-);
-
-
   const appointments = activeTab === 'upcoming' ? upcomingAppointments : pastAppointments;
   const hasAppointments = appointments.length > 0;
-
-  
-
-
-
-
 
 
   return (
@@ -176,30 +312,52 @@ export default function AppointmentsScreen({ navigation }: any) {
               <Text style={{ color: '#dc2626' }}>{error}</Text>
             </View>
           ) : hasAppointments ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={styles.sectionLabel}>
-                {activeTab === 'upcoming' ? 'SCHEDULED' : 'HISTORY'}
-              </Text>
-
-              {appointments.map((appointment) => (
+            <FlatList
+              data={appointments}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
                 <AppointmentCard
-                  key={appointment.id}
-                  appointment={appointment}
+                  appointment={item}
                   isUpcoming={activeTab === 'upcoming'}
                   onCancel={handleCancel}
                   cancelingId={cancelingId}
                 />
-              ))}
-
-              {activeTab === 'upcoming' && (
-                <View style={styles.infoCard}>
-                  <Ionicons name="information-circle-outline" size={22} color="#3b82f6" />
-                  <Text style={styles.infoText}>
-                    You can cancel or reschedule up to 2 hours before your appointment.
-                  </Text>
-                </View>
               )}
-            </ScrollView>
+              showsVerticalScrollIndicator={false}
+              initialNumToRender={5}
+              removeClippedSubviews
+              onEndReachedThreshold={0.4}
+              onEndReached={() => {
+                if (activeTab === 'upcoming') {
+                  if (!loadingUpcomingRef.current && upcomingHasMoreRef.current) loadUpcoming({ silent: true });
+                } else {
+                  if (!loadingPastRef.current && pastHasMoreRef.current) loadPast({ silent: true });
+                }
+              }}
+              ListHeaderComponent={
+                <Text style={styles.sectionLabel}>
+                  {activeTab === 'upcoming' ? 'SCHEDULED' : 'HISTORY'}
+                </Text>
+              }
+              ListFooterComponent={
+                <>
+                  {activeTab === 'upcoming' && (
+                    <View style={styles.infoCard}>
+                      <Ionicons name="information-circle-outline" size={22} color="#3b82f6" />
+                      <Text style={styles.infoText}>
+                        You can cancel or reschedule up to 2 hours before your appointment.
+                      </Text>
+                    </View>
+                  )}
+                  {(activeTab === 'upcoming' ? loadingUpcoming : loadingPast) && (
+                    <View style={{ paddingVertical: 12 }}>
+                      <ActivityIndicator />
+                    </View>
+                  )}
+                </>
+              }
+            />
+
           ) : (
 
           <View style={styles.emptyState}>
@@ -236,11 +394,9 @@ export default function AppointmentsScreen({ navigation }: any) {
 
 
 
-
-/* APPOINTMENT CARD COMPONENT */
 type AppointmentType = AppointmentDetailed;
 
-function AppointmentCard({
+const AppointmentCard = React.memo(function AppointmentCard({
   appointment,
   isUpcoming,
   onCancel,
@@ -251,45 +407,15 @@ function AppointmentCard({
   onCancel: (id: number) => void;
   cancelingId: number | null;
 }) {
-  const formatDate = (dateString: string) => {
-    const date = new Date(`${dateString}`);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (timeString: string) => timeString.slice(0, 5);
-
-
-
-  const getStatusStyle = (status: string) => {
-    switch (status) {
-      case 'confirmed':
-        return { bg: '#dcfce7', text: '#15803d', label: 'Confirmed' };
-      case 'pending':
-        return { bg: '#fef3c7', text: '#b45309', label: 'Pending' };
-      case 'completed':
-        return { bg: '#e0e7ff', text: '#4338ca', label: 'Completed' };
-      case 'cancelled':
-        return { bg: '#fee2e2', text: '#dc2626', label: 'Cancelled' };
-      default:
-        return { bg: '#f1f5f9', text: '#64748b', label: status };
-    }
-  };
-
   const status = getStatusStyle(appointment.status);
   const isCancelling = cancelingId === appointment.id;
-
-
 
   return (
     <View style={styles.appointmentCard}>
       <View style={styles.appointmentHeader}>
         <View style={styles.dateContainer}>
           <Ionicons name="calendar" size={16} color="#0f172a" />
-          <Text style={styles.dateText}>{formatDate(appointment.date)}</Text>
+          <Text style={styles.dateText}>{formatDateShort(appointment.date)}</Text>
         </View>
         <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
           <Text style={[styles.statusText, { color: status.text }]}>{status.label}</Text>
@@ -300,37 +426,30 @@ function AppointmentCard({
 
       <View style={styles.appointmentDetails}>
         <View style={styles.detailRow}>
-
           <Ionicons name="person-outline" size={16} color="#64748b" />
-
           <Text style={styles.detailText}>
             {appointment.barber.first_name} {appointment.barber.last_name}
           </Text>
-
         </View>
         <View style={styles.detailRow}>
           <Ionicons name="time-outline" size={16} color="#64748b" />
-          
           <Text style={styles.detailText}>
             {formatTime(appointment.start_time)} • {appointment.service.duration} min
           </Text>
-
         </View>
         <View style={styles.detailRow}>
           <Ionicons name="cash-outline" size={16} color="#64748b" />
-         <Text style={styles.detailText}>
+          <Text style={styles.detailText}>
             {Number(appointment.service.price).toFixed(2)} BAM
-         </Text>
-
+          </Text>
         </View>
       </View>
 
       {isUpcoming && appointment.status !== 'cancelled' && (
         <View style={styles.appointmentActions}>
-        
-          <TouchableOpacity 
-            style={styles.cancelButton} 
-            activeOpacity={0.7} 
+          <TouchableOpacity
+            style={styles.cancelButton}
+            activeOpacity={0.7}
             disabled={isCancelling}
             onPress={() =>
               Alert.alert(
@@ -343,15 +462,11 @@ function AppointmentCard({
               )
             }
           >
-
             <Ionicons name="close-circle-outline" size={16} color="#dc2626" />
             <Text style={styles.cancelButtonText}>Cancel</Text>
-
           </TouchableOpacity>
         </View>
       )}
-
-      
     </View>
   );
-}
+});
