@@ -78,3 +78,4 @@ export const parseDate = (value: DateParam) => {
   return coerceDate(value);
 };
 
+export const formatTime = (timeString: string) => timeString.slice(0, 5);
