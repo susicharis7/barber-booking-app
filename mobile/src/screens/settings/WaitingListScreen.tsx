@@ -12,7 +12,10 @@ import { api } from '../../services/api';
 import type { WaitingListItem } from '../../types';
 import { formatDate } from '../../utils/calendar';
 import { colors } from '../../styles/colors';
+
 import { useFocusEffect } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
+
 
 const bgImage = require('../../../assets/images/waiting-list.png');
 
@@ -48,6 +51,49 @@ export default function WaitingListScreen({ navigation }: any) {
     }
   };
 
+
+
+
+    const goToServicesMain = () => {
+    const parent = navigation.getParent();
+    if (!parent) return;
+
+    parent.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Services',
+            state: {
+              routes: [{ name: 'ServiceMain' }],
+            },
+          },
+        ],
+      })
+    );
+  };
+
+
+  const goToSettingsMain = () => {
+    const parent = navigation.getParent();
+    if (!parent) return;
+
+    parent.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Settings',
+            state: {
+              routes: [{ name: 'SettingsMain' }],
+            },
+          },
+        ],
+      })
+    );
+  };
+
+
   return (
     <View style={styles.container}>
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
@@ -56,7 +102,7 @@ export default function WaitingListScreen({ navigation }: any) {
         {/* Back Button */}
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
+          onPress={goToSettingsMain}
           activeOpacity={0.7}
         >
           <Ionicons name="chevron-back" size={22} color={colors.white} />
@@ -106,7 +152,7 @@ export default function WaitingListScreen({ navigation }: any) {
             </Text>
             <TouchableOpacity
               style={styles.browseButton}
-              onPress={() => navigation.navigate('Services')}
+              onPress={goToServicesMain}
               activeOpacity={0.7}
             >
               <Text style={styles.browseButtonText}>
