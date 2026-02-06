@@ -5,16 +5,27 @@ import * as appointmentsService from './appointmentsService';
 export const getUpcomingAppointments = async (req: Request, res: Response) => {
   try {
     const { user } = req as AuthRequest;
+
     if (!user?.uid) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
     }
 
-    const appointments = await appointmentsService.getUpcomingAppointments(
-      user.uid
-    );
+    const limit = Number(req.query.limit) || 5;
+    const cursor = typeof req.query.cursor === 'string' ? req.query.cursor : undefined;
 
-    res.json({ appointments });
+    const result = await appointmentsService.getUpcomingAppointments(
+      user.uid, 
+      limit,
+      cursor
+    )
+
+   
+
+    res.json({ 
+      appointments: result.appointments,
+      nextCursor: result.nextCursor,
+     });
   } catch (error) {
     console.error('Get upcoming appointments error:', error);
     res.status(500).json({ message: 'Failed to fetch upcoming appointments' });
@@ -29,11 +40,19 @@ export const getPastAppointments = async (req: Request, res: Response) => {
       return;
     }
 
-    const appointments = await appointmentsService.getPastAppointments(
-      user.uid
+    const limit = Number(req.query.limit) || 5;
+    const cursor = typeof req.query.cursor === 'string' ? req.query.cursor : undefined;
+
+    const result = await appointmentsService.getPastAppointments(
+      user.uid,
+      limit,
+      cursor
     );
 
-    res.json({ appointments });
+    res.json({
+      appointments: result.appointments,
+      nextCursor: result.nextCursor,
+    });
   } catch (error) {
     console.error('Get past appointments error:', error);
     res.status(500).json({ message: 'Failed to fetch past appointments' });
