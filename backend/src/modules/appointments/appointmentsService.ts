@@ -1,7 +1,18 @@
 import { pool } from '../../db/pool';
 import  type { CreateAppointmentData }  from '../../types/types';
+import { parseCursor, makeCursor } from './helperFunctions';
 
-export const getUpcomingAppointments = async (firebaseUid: string) => {
+
+export const getUpcomingAppointments = async (
+  firebaseUid: string,
+  limit = 5,
+  cursor?: string
+) => {
+  const parsed = parseCursor(cursor);
+  const pageSize = Math.min(Math.max(limit, 1), 50);
+  const limitPlus = pageSize + 1;
+
+
   const result = await pool.query(
     `
     SELECT
@@ -36,15 +47,36 @@ export const getUpcomingAppointments = async (firebaseUid: string) => {
     JOIN services s ON s.id = a.service_id
     WHERE cu.firebase_uid = $1
       AND a.status = 'confirmed'
-    ORDER BY a.date ASC, a.start_time ASC
+      AND (a.date > CURRENT_DATE OR (a.date = CURRENT_DATE AND a.end_time > CURRENT_TIME))
+      AND (
+        $2::date IS NULL OR 
+        (a.date, a.start_time, a.id) > ($2::date, $3::time, $4::int)
+      )
+    ORDER BY a.date ASC, a.start_time ASC, a.id ASC
+    LIMIT $5
     `,
-    [firebaseUid]
+    [firebaseUid, parsed?.date ?? null, parsed?.time ?? null, parsed?.id ?? null, limitPlus]
   );
 
-  return result.rows;
+  const rows = result.rows;
+  const hasMore = rows.length > pageSize;
+  if (hasMore) rows.pop();
+
+  const nextCursor = hasMore ? makeCursor(rows[rows.length - 1]) : null;
+
+  return { appointments: rows, nextCursor};
 };
 
-export const getPastAppointments = async (firebaseUid: string) => {
+export const getPastAppointments = async (
+  firebaseUid: string,
+  limit = 5,
+  cursor?: string
+) => {
+  const parsed = parseCursor(cursor);
+  const pageSize = Math.min(Math.max(limit, 1), 50);
+  const limitPlus = pageSize + 1;
+
+
   const result = await pool.query(
     `
     SELECT
@@ -79,12 +111,23 @@ export const getPastAppointments = async (firebaseUid: string) => {
     JOIN services s ON s.id = a.service_id
     WHERE cu.firebase_uid = $1
       AND a.status IN ('completed', 'cancelled')
-    ORDER BY a.date DESC, a.start_time DESC
+      AND (
+        $2::date IS NULL OR
+        (a.date, a.start_time, a.id) < ($2::date, $3::time, $4::int)
+      )
+    ORDER BY a.date DESC, a.start_time DESC, a.id DESC
+    LIMIT $5
     `,
-    [firebaseUid]
+    [firebaseUid, parsed?.date ?? null, parsed?.time ?? null, parsed?.id ?? null, limitPlus]
   );
 
-  return result.rows;
+  const rows = result.rows;
+  const hasMore = rows.length > pageSize;
+  if (hasMore) rows.pop();
+
+  const nextCursor = hasMore ? makeCursor(rows[rows.length - 1]) : null;
+
+  return { appointments: rows, nextCursor };
 };
 
 export const createAppointmentByUid = async (
