@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/information-styles';
@@ -45,13 +46,17 @@ export default function InformationScreen({ navigation, route }: any) {
       await api.post('/api/appointments', {
         barber_id: employee.id,
         service_id: service.id,
-        date: appointmentDate.toISOString().split('T')[0],
+        date: date,
         start_time: time,
         note,
       });
       setShowSuccessModal(true);
     } catch(err: any) {
       console.error("Create appointment failed: ", err);
+
+      Alert.alert('Reservation failed',
+        err?.message ?? 'Unable to reserve this time slot.'
+      )
     }
 
   };
