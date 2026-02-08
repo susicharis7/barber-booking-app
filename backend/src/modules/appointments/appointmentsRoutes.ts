@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { verifyToken } from '../../middleware/authMiddleware';
 import * as appointmentsController from './appointmentsController';
+import { createAppointmentLimiter } from '../../middleware/rateLimiters';
+
 
 /* Server side protection */
 import { validateRequest } from '../../middleware/validateRequest';
@@ -43,6 +45,7 @@ router.get(
 router.post(
   '/',
   verifyToken,
+  createAppointmentLimiter,
   createAppointmentValidation,
   validateRequest,
   appointmentsController.createAppointment

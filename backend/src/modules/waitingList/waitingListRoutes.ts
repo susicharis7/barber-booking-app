@@ -3,6 +3,7 @@ import { verifyToken } from '../../middleware/authMiddleware';
 import * as waitingListController from './waitingListController';
 import { validateRequest } from '../../middleware/validateRequest';
 import { cancelWaitingListValidation, createWaitingListValidation } from './waitingListValidation';
+import { createWaitingListLimiter } from '../../middleware/rateLimiters';
 
 
 const router = Router();
@@ -12,6 +13,7 @@ router.get('/', verifyToken, waitingListController.getWaitingList);
 router.post(
     '/', 
     verifyToken, 
+    createWaitingListLimiter,
     createWaitingListValidation,
     validateRequest,
     waitingListController.createWaitingList

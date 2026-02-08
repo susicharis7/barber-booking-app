@@ -3,6 +3,7 @@ import { verifyToken } from '../../middleware/authMiddleware';
 import * as userController from './userController';
 import { validateRequest } from '../../middleware/validateRequest';
 import { registerUserValidation, updateMeValidation } from './userValidation';
+import { registerLimiter } from '../../middleware/rateLimiters';
 
 
 
@@ -12,6 +13,7 @@ const router = Router();
 router.post(
     '/register', 
     verifyToken,
+    registerLimiter,
     registerUserValidation, 
     validateRequest, 
     userController.register
