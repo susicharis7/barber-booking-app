@@ -2,19 +2,60 @@ import { Router } from 'express';
 import { verifyToken } from '../../middleware/authMiddleware';
 import * as appointmentsController from './appointmentsController';
 
+/* Server side protection */
+import { validateRequest } from '../../middleware/validateRequest';
+import { 
+    createAppointmentValidation,
+    cancelAppointmentValidation,
+    getBookedTimesValidation,
+    getAppointmentsValidation,
+} from './appointmentsValidation';
+
 const router = Router();
 
 // GET
-router.get('/upcoming', verifyToken, appointmentsController.getUpcomingAppointments);
-router.get('/past', verifyToken, appointmentsController.getPastAppointments);
-router.get('/barber/:barberId/booked', appointmentsController.getBookedTimes);
+router.get(
+    '/upcoming', 
+    verifyToken, 
+    getAppointmentsValidation,
+    validateRequest,
+    appointmentsController.getUpcomingAppointments
+);
+
+router.get(
+    '/past', 
+    verifyToken, 
+    getAppointmentsValidation,
+    validateRequest,    
+    appointmentsController.getPastAppointments
+);
+
+router.get(
+    '/barber/:barberId/booked', 
+    verifyToken,
+    getBookedTimesValidation,
+    validateRequest,
+    appointmentsController.getBookedTimes
+);
 
 
-// POST 
-router.post('/', verifyToken, appointmentsController.createAppointment);
+// POST
+router.post(
+  '/',
+  verifyToken,
+  createAppointmentValidation,
+  validateRequest,
+  appointmentsController.createAppointment
+);
 
 // UPDATE
-router.put('/:id/cancel', verifyToken, appointmentsController.cancelAppointment);
+router.put(
+  '/:id/cancel',
+  verifyToken,
+  cancelAppointmentValidation,
+  validateRequest,
+  appointmentsController.cancelAppointment
+);
 
 
 export default router;
