@@ -21,7 +21,7 @@ export const getAllActiveBarbers = async () => {
     return result.rows;
 };
 
-export const getBarberById = async (id: Number) => {
+export const getBarberById = async (id: number) => {
     const result = await pool.query(`
         SELECT 
         b.id,
@@ -34,6 +34,7 @@ export const getBarberById = async (id: Number) => {
         FROM barbers b
         JOIN users u ON b.user_id = u.id
         WHERE b.id = $1 AND b.is_active = true
+        LIMIT 1
         `, [id]);
 
         return result.rows[0] || null;

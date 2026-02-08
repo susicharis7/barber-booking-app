@@ -13,11 +13,12 @@ export const getBarbers = async (req: Request, res: Response): Promise<void> => 
 
 export const getBarber = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const barber = await barberService.getBarberById(parseInt(id));
+    const barberId = Number(req.params.id);
+    const barber = await barberService.getBarberById(barberId);
+
 
     if (!barber) {
-      res.status(404).json({ message: 'Barber not found' });
+      res.status(404).json({ code: 'BARBER_NOT_FOUND', message: 'Barber not found' });
       return;
     }
 
