@@ -6,9 +6,12 @@ import servicesAndPriceListRoutes from './modules/servicesAndPriceList/servicesA
 import appointmentsRoutes from './modules/appointments/appointmentsRoutes';
 import waitingListRoutes from './modules/waitingList/waitingListRoutes';
 import { apiLimiter } from './middleware/rateLimiters';
+import helmet from 'helmet';
 
 
 const app = express();
+app.use(helmet());
+
 
 /* Middleware Configuration */
 const allowedOrigins = (process.env.FRONTEND_URLS || 'https://localhost:3000')
