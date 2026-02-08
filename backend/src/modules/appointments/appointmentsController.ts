@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../../middleware/authMiddleware';
 import * as appointmentsService from './appointmentsService';
+import { toLocalYmd } from './helperFunctions';
 
 export const getUpcomingAppointments = async (req: Request, res: Response) => {
   try {
@@ -70,14 +71,36 @@ export const createAppointment = async(req: Request, res: Response) => {
 
         const { barber_id , service_id, date, start_time, note} = req.body;
 
-        /* Prevent POST for appointments in the past */
-        const today = new Date();
-        const nowDate = today.toISOString().split('T')[0];
+        const [barberOk, serviceOk] = await Promise.all([
+          appointmentsService.barberExists(barber_id),
+          appointmentsService.serviceExists(service_id),
+        ]);
 
-        if (date === nowDate) {
+        if (!barberOk) {
+          res.status(400).json({ message: 'Invalid barber_id' });
+          return;
+        }
+
+        if (!serviceOk) {
+          res.status(400).json({ message: 'Invalid service_id' });
+          return;
+        }
+
+
+        /* Prevent POST for appointments in the past */
+        const now = new Date();
+        const todayLocal = toLocalYmd(now);
+
+        if (date < todayLocal) {
+          res.status(409).json({ message: 'Date is in the past.'});
+          return;
+        }
+
+
+
+        if (date === todayLocal) {
           const [h,m] = String(start_time).split(':').map(Number);
-          const now = new Date();
-          const slotTime = new Date();
+          const slotTime = new Date(now);
           slotTime.setHours(h, m, 0, 0);
 
           if (slotTime <= now) {
@@ -91,7 +114,7 @@ export const createAppointment = async(req: Request, res: Response) => {
         );
 
         if (!appointment) {
-            res.status(400).json({ message: 'Time slot is not available'});
+            res.status(409).json({ message: 'Time slot is not available'});
             return;
         }
 
@@ -112,10 +135,7 @@ export const cancelAppointment = async (req: Request, res: Response) => {
     }
 
     const appointmentId = Number(req.params.id);
-    if (!appointmentId) {
-      res.status(400).json({ message: 'Invalid appointment id' });
-      return;
-    }
+    
 
     const cancelled = await appointmentsService.cancelAppointmentByUid(
       user.uid,
@@ -137,12 +157,8 @@ export const cancelAppointment = async (req: Request, res: Response) => {
 export const getBookedTimes = async (req: Request, res: Response) => {
   try {
     const barberId = Number(req.params.barberId);
-    const date = String(req.query.date || '');
+    const date = String(req.query.date);
 
-    if (!barberId || !date) {
-      res.status(400).json({ message: 'barberId and date are required' });
-      return;
-    }
 
     const slots = await appointmentsService.getBookedTimesForBarber(barberId, date);
     res.json({ slots });
