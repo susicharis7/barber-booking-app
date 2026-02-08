@@ -8,6 +8,21 @@ type RequestOptions = {
   requiresAuth?: boolean;
 };
 
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  errors?: unknown;
+
+  constructor(message: string, status: number, code?: string, errors?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.code = code;
+    this.errors = errors;
+  }
+}
+
+
 class ApiService {
   private async getToken(): Promise<string | null> {
     const user = firebaseAuth.currentUser;
@@ -42,7 +57,12 @@ class ApiService {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || 'Something went wrong');
+      throw new ApiError(
+        data.message || 'Something went wrong',
+        response.status,
+        data?.code,
+        data?.errors
+      );
     }
 
     return data;
