@@ -107,8 +107,7 @@ export default function CalendarScreen({ navigation, route }: any) {
   const fetchBookedSlots = async (dateStr: string) => {
     try {
       const res = await api.get<{ slots: { start_time: string }[] }>(
-        `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
-        false
+        `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
       );
       const slots = res.slots.map((s) => s.start_time.slice(0, 5));
       setBookedSlots(slots);
@@ -122,8 +121,7 @@ export default function CalendarScreen({ navigation, route }: any) {
   const hasFreeSlot = async (date: Date) => {
     const dateStr = toLocalDate(date);
     const res = await api.get<{ slots: { start_time: string }[] }>(
-      `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
-      false
+      `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
     );
     const slots = res.slots.map((s) => s.start_time.slice(0, 5));
     const available = timeSlots.filter(
