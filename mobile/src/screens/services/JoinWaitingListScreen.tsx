@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/joinWaitingList-styles';
 import {
@@ -32,6 +32,22 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
   const [currentMonth, setCurrentMonth] = useState(initialStart.getMonth());
   const [currentYear, setCurrentYear] = useState(initialStart.getFullYear());
 
+
+  // Alert Notif for existing Waiting List
+  const [existsModalVisible, setExistsModalVisible] = useState(false);
+  const [existsModalMessage, setExistsModalMessage] = useState(
+    'You already have an active waiting list request for this barber and date.'
+  );
+
+  const goToWaitingList = () => {
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.navigate('Settings', { screen: 'WaitingList'});
+      return;
+    }
+    navigation.navigate('Settings', { screen: 'WaitingList'})
+  }
+
   const endDateLabel = useMemo(() => formatDate(maxDate), [maxDate]);
   const startDateLabel = useMemo(() => formatDate(startDate), [startDate]);
 
@@ -49,8 +65,18 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
 
     // Navigate to Settings -> WaitingList screen
     navigation.navigate('Settings', { screen: 'WaitingList' });
-  } catch (err) {
-    console.error('Create waiting list error:', err);
+  } catch (err: any) {
+    const message = err?.message ?? 'Failed to join waiting list';
+
+    if (message.toLowerCase().includes('already exists')) {
+      setExistsModalMessage(message);
+      setExistsModalVisible(true);
+      return;
+    }
+
+    console.error('Create waiting list error: ', err);
+    Alert.alert('Error', message);
+
   }
 };
 
@@ -280,6 +306,45 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
       >
         <Text style={styles.ctaButtonText}>Join Waiting List</Text>
       </TouchableOpacity>
+
+      <Modal
+        visible={existsModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setExistsModalVisible(false)}
+      >
+        <View style={styles.existsModalOverlay}>
+          <View style={styles.existsModalCard}>
+            <View style={styles.existsIconWrap}>
+              <Ionicons name="alert-circle-outline" size={28} color="#dc2626" />
+            </View>
+
+            <Text style={styles.existsTitle}>Already on waiting list</Text>
+            <Text style={styles.existsText}>{existsModalMessage}</Text>
+            <Text style={styles.existsHint}>
+              Open Waiting List to review or cancel your current request.
+            </Text>
+
+            <TouchableOpacity
+              style={styles.existsButton}
+              activeOpacity={0.8}
+              onPress={() => {
+                setExistsModalVisible(false);
+                goToWaitingList();
+              }}
+            >
+              <Text style={styles.existsButtonText}>Open Waiting List</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </ScrollView>
+
+
+        
   );
+
+
+  
 }
