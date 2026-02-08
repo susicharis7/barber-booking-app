@@ -2,6 +2,28 @@ import { pool } from '../../db/pool';
 import  type { CreateAppointmentData }  from '../../types/types';
 import { parseCursor, makeCursor } from './helperFunctions';
 
+// Fix race condition (for 2+ parralel request to not be able to make the same appointment)
+type QueryExecutor = Pick<typeof pool, 'query'>;
+const toDateLockKey = (date: string) => Number(date.replace(/-/g, ''));
+
+// Validation for barber_id & service_id (backend)
+export const barberExists = async (barberId: number) => {
+  const result = await pool.query(
+    `SELECT 1 FROM barbers WHERE id = $1 LIMIT 1`,
+    [barberId]
+  );
+  return (result.rowCount ?? 0) > 0;
+};
+
+export const serviceExists = async (serviceId: number) => {
+  const result = await pool.query(
+    `SELECT 1 FROM services WHERE id = $1 LIMIT 1`,
+    [serviceId]
+  );
+  return (result.rowCount ?? 0) > 0;
+};
+
+
 
 export const getUpcomingAppointments = async (
   firebaseUid: string,
@@ -136,73 +158,99 @@ export const createAppointmentByUid = async (
 ) => {
   const { barber_id, service_id, date, start_time, note = null } = data;
 
-  const hasConflict = await hasAppointmentConflict(
-    barber_id,
-    date,
-    start_time,
-    service_id
-  );
+  const client = await pool.connect();
+  const dateLockKey = toDateLockKey(date);
 
-  if (hasConflict) {
-    return null;
-  }
+  try {
+    await client.query('BEGIN');
 
-  const result = await pool.query(
-    `
-    WITH new_appt AS (
-      INSERT INTO appointments (
-        customer_id, barber_id, service_id, date, start_time, end_time, status, note
+    // Serialize booking attempts per barber + date.
+    await client.query(
+      'SELECT pg_advisory_xact_lock($1::int, $2::int)',
+      [barber_id, dateLockKey]
+    );
+
+    const hasConflict = await hasAppointmentConflict(
+      barber_id,
+      date,
+      start_time,
+      service_id,
+      client
+    );
+
+    if (hasConflict) {
+      await client.query('ROLLBACK');
+      return null;
+    }
+
+    const result = await client.query(
+      `
+      WITH new_appt AS (
+        INSERT INTO appointments (
+          customer_id, barber_id, service_id, date, start_time, end_time, status, note
+        )
+        SELECT
+          u.id,
+          $2,
+          $3,
+          $4::date,
+          $5::time,
+          ($5::time + (s.duration || ' minutes')::interval)::time,
+          'confirmed',
+          $6
+        FROM users u
+        JOIN services s ON s.id = $3
+        WHERE u.firebase_uid = $1
+        RETURNING *
       )
       SELECT
-        u.id,
-        $2,
-        $3,
-        $4::date,
-        $5::time,
-        ($5::time + (s.duration || ' minutes')::interval)::time,
-        'confirmed',
-        $6
-      FROM users u
-      JOIN services s ON s.id = $3
-      WHERE u.firebase_uid = $1
-      RETURNING *
-    )
-    SELECT
-      a.id,
-      a.date,
-      a.start_time,
-      a.end_time,
-      a.status,
-      a.note,
-      json_build_object(
-        'id', cu.id,
-        'first_name', cu.first_name,
-        'last_name', cu.last_name,
-        'email', cu.email
-      ) AS customer,
-      json_build_object(
-        'id', b.id,
-        'first_name', bu.first_name,
-        'last_name', bu.last_name,
-        'title', b.title
-      ) AS barber,
-      json_build_object(
-        'id', s.id,
-        'name', s.name,
-        'duration', s.duration,
-        'price', s.price
-      ) AS service
-    FROM new_appt a
-    JOIN users cu ON cu.id = a.customer_id
-    JOIN barbers b ON b.id = a.barber_id
-    JOIN users bu ON bu.id = b.user_id
-    JOIN services s ON s.id = a.service_id
-    `,
-    [firebaseUid, barber_id, service_id, date, start_time, note]
-  );
+        a.id,
+        a.date,
+        a.start_time,
+        a.end_time,
+        a.status,
+        a.note,
+        json_build_object(
+          'id', cu.id,
+          'first_name', cu.first_name,
+          'last_name', cu.last_name,
+          'email', cu.email
+        ) AS customer,
+        json_build_object(
+          'id', b.id,
+          'first_name', bu.first_name,
+          'last_name', bu.last_name,
+          'title', b.title
+        ) AS barber,
+        json_build_object(
+          'id', s.id,
+          'name', s.name,
+          'duration', s.duration,
+          'price', s.price
+        ) AS service
+      FROM new_appt a
+      JOIN users cu ON cu.id = a.customer_id
+      JOIN barbers b ON b.id = a.barber_id
+      JOIN users bu ON bu.id = b.user_id
+      JOIN services s ON s.id = a.service_id
+      `,
+      [firebaseUid, barber_id, service_id, date, start_time, note]
+    );
 
-  return result.rows[0] || null;
+    await client.query('COMMIT');
+    return result.rows[0] || null;
+  } catch (error) {
+    try {
+      await client.query('ROLLBACK');
+    } catch {
+      // ignore rollback errors
+    }
+    throw error;
+  } finally {
+    client.release();
+  }
 };
+
 
 export const cancelAppointmentByUid = async (
     firebaseUid: string,
@@ -227,9 +275,10 @@ export const hasAppointmentConflict = async (
   barberId: number,
   date: string,
   startTime: string,
-  serviceId: number
+  serviceId: number,
+  db: QueryExecutor = pool
 ) => {
-  const result = await pool.query(
+  const result = await db.query(
     `
     SELECT 1
     FROM appointments a
