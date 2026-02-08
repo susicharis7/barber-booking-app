@@ -257,4 +257,76 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '800',
   },
+
+  existsModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+
+  existsModalCard: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: colors.white,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: colors.red[200],
+    shadowColor: colors.black,
+    shadowOpacity: 0.18,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+  },
+
+  existsIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 999,
+    backgroundColor: colors.red[100],
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
+    alignSelf: 'center',
+  },
+
+  existsTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: colors.primary,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+
+  existsText: {
+    fontSize: 14,
+    lineHeight: 21,
+    color: colors.slate[700],
+    textAlign: 'center',
+  },
+
+  existsHint: {
+    marginTop: 10,
+    fontSize: 12,
+    lineHeight: 18,
+    color: colors.slate[500],
+    textAlign: 'center',
+  },
+
+  existsButton: {
+    marginTop: 18,
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+
+  existsButtonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '800',
+  },
+
 });
