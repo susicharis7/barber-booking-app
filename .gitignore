@@ -71,6 +71,10 @@ Thumbs.db
 /mobile/web-build/
 /mobile/dist/
 /mobile/src/services/firebase.ts
+/mobile/.env
+/mobile/.env.*
+!/mobile/.env.example
+
 
 ####################################
 # Backend (Node.js)
@@ -83,3 +87,4 @@ Thumbs.db
 /backend/.env
 /backend/.env.*
 /backend/src/firebase/firebase-service-account.json
+!/backend/.env.example
