@@ -17,11 +17,12 @@ export const getServices = async (req: Request, res: Response): Promise<void> =>
 export const getService = async (req: Request, res: Response): Promise<void> => {
 
     try {
-        const { id } = req.params;
-        const service = await servicesAndPriceListService.getServiceById(parseInt(id));
+        const serviceId = Number(req.params.id);
+        const service = await servicesAndPriceListService.getServiceById(serviceId);
+
 
         if (!service) {
-            res.status(404).json({ message: 'Service not found'});
+            res.status(404).json({ code: 'SERVICE_NOT_FOUND', message: 'Service not found' });
             return;
         }
 

@@ -12,11 +12,12 @@ export const getAllActiveServicesAndPriceList = async () => {
 }
 
 
-export const getServiceById = async (id: Number) => {
+export const getServiceById = async (id: number) => {
     const result = await pool.query(`
         SELECT id, name, description, duration, price
         FROM services
         WHERE id = $1 AND is_active = true
+        LIMIT 1
         `, [id]);
 
 
