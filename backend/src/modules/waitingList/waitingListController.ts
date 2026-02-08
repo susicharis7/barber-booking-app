@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../../middleware/authMiddleware';
 import * as waitingListService from './waitingListService';
+import { barberExists, serviceExists } from '../../db/repositoryUtils';
+
 
 export const getWaitingList = async (req: Request, res: Response) => {
   try {
@@ -31,15 +33,22 @@ export const createWaitingList = async (req: Request, res: Response) => {
 
     const { barber_id, service_id, start_date, end_date } = req.body;
 
-    if (!barber_id || !start_date) {
-      res.status(400).json({ message: 'barber_id and start_date are required' });
+    const [barberOk, serviceOk] = await Promise.all([
+      barberExists(barber_id),
+      service_id ? serviceExists(service_id) : Promise.resolve(true),
+    ]);
+
+    if (!barberOk) {
+      res.status(400).json({ message: 'Invalid barber_id' });
       return;
     }
 
-    if (end_date && new Date(end_date) < new Date(start_date)) {
-      res.status(400).json({ message: 'end_date must be >= start_date' });
+    if (!serviceOk) {
+      res.status(400).json({ message: 'Invalid service_id' });
       return;
     }
+
+
 
     const created = await waitingListService.createWaitingListByUid(user.uid, {
       barber_id,
@@ -49,7 +58,10 @@ export const createWaitingList = async (req: Request, res: Response) => {
     });
 
     if (!created) {
-      res.status(409).json({ message: 'Waiting list already exists for this range' });
+      res.status(409).json({ 
+        code: 'WAITING_LIST_EXISTS',
+        message: 'Waiting list already exists for this range' 
+      });
       return;
     }
 
@@ -76,10 +88,7 @@ export const cancelWaitingList = async (req: Request, res: Response) => {
 
 
     const waitingListId = Number(req.params.id);
-    if (!waitingListId) {
-      res.status(400).json({ message: 'Invalid waiting list'});
-      return;
-    }
+    
 
     const cancelled = await waitingListService.cancelWaitingListByUid(
       user.uid,
@@ -87,7 +96,10 @@ export const cancelWaitingList = async (req: Request, res: Response) => {
     );
 
     if (!cancelled) {
-      res.status(404).json({ message: 'Waiting list not found'});
+      res.status(404).json({ 
+        code: 'WAITING_LIST_NOT_FOUND',
+        message: 'Waiting list not found'
+      });
       return;
     }
 
