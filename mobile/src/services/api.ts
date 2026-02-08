@@ -1,6 +1,6 @@
 import { firebaseAuth } from './firebase';
 
-const API_URL = 'http://172.20.10.11:5000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000';
 
 type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
