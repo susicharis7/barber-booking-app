@@ -55,7 +55,7 @@ export default function InformationScreen({ navigation, route }: any) {
       console.error("Create appointment failed: ", err);
 
       Alert.alert('Reservation failed',
-        err?.message ?? 'Unable to reserve this time slot.'
+        err?.message ?? 'Unable to reserve this time slot'
       )
     }
 
