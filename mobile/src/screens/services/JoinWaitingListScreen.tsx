@@ -14,7 +14,7 @@ import {
   monthKey,
   toLocalDate,
 } from '../../utils/calendar';
-import { api , ApiError } from '../../services/api';
+import { api , isApiError } from '../../services/api';
 
 
 
@@ -66,14 +66,18 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
     // Navigate to Settings -> WaitingList screen
     goToWaitingList();
   } catch (err: any) {
-     if (err instanceof ApiError && err.code === 'WAITING_LIST_EXISTS') {
+     if (isApiError(err) && err.code === 'WAITING_LIST_EXISTS') {
       setExistsModalMessage(err.message);
       setExistsModalVisible(true);
       return;
     }
 
-    console.error('Create waiting list error:', err);
-    Alert.alert('Error', err?.message ?? 'Failed to join waiting list');
+    if (isApiError(err)) {
+      Alert.alert('Error', err.message);
+      return;
+    }
+    Alert.alert('Error', 'Unexpected error');
+
 
   }
 };

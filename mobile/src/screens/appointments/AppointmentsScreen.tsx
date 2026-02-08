@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/appointments-styles';
 import { Alert } from 'react-native';
 
-import { api } from '../../services/api';
+import { api, isApiError } from '../../services/api';
 import type { AppointmentDetailed } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
 import { formatDateShort, formatTime } from '../../utils/calendar';
@@ -128,16 +128,24 @@ export default function AppointmentsScreen({ navigation }: any) {
       setUpcomingCursorSync(res.nextCursor ?? null);
       setUpcomingHasMoreSync(Boolean(res.nextCursor));
 
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (isApiError(err)) {
+        if (!silent) {
+          setError(err.message);
+        } else {
+          console.error('Silent refresh failed:', err.status, err.code, err.message);
+        }
+        return;
+      }
+
       if (!silent) {
-        setError(err?.message ?? 'Failed to load appointments..');
+        setError('Failed to load appointments.');
       } else {
-        console.error('Silent refresh failed: ', err);
+        console.error('Silent refresh failed:', err);
       }
     } finally {
       setUpcomingLoadingSync(false);
-    }
-  }, []);
+      }}, []);
 
 
   const loadPast = React.useCallback(async ({
@@ -171,16 +179,24 @@ export default function AppointmentsScreen({ navigation }: any) {
       setPastCursorSync(res.nextCursor ?? null);
       setPastHasMoreSync(Boolean(res.nextCursor));
 
-    } catch (err: any) {
+    } catch (err: unknown) {
+      if (isApiError(err)) {
+        if (!silent) {
+          setError(err.message);
+        } else {
+          console.error('Silent refresh failed:', err.status, err.code, err.message);
+        }
+        return;
+      }
+
       if (!silent) {
-        setError(err?.message ?? 'Failed to load appointments..');
+        setError('Failed to load appointments.');
       } else {
-        console.error('Silent refresh failed: ', err);
+        console.error('Silent refresh failed:', err);
       }
     } finally {
       setPastLoadingSync(false);
-    }
-  }, []);
+      }}, []);
 
 
   /* ─── Initial load ─── */
@@ -227,13 +243,15 @@ export default function AppointmentsScreen({ navigation }: any) {
       ]);
       Alert.alert('Cancelled', 'Your appointment was cancelled.');
 
-    } catch (err: any) {
-      Alert.alert('Error', err?.message ?? 'Failed to cancel appointment');
-
+    } catch (err: unknown) {
+      if (isApiError(err)) {
+        Alert.alert('Error', err.message);
+        return;
+      }
+      Alert.alert('Error', 'Unexpected error');
     } finally {
       setCancelingId(null);
-    }
-  };
+      }};
 
 
 

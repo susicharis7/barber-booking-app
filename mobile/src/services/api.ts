@@ -22,6 +22,11 @@ export class ApiError extends Error {
   }
 }
 
+// Type-guard 
+export const isApiError = (err: unknown): err is ApiError =>
+  err instanceof ApiError;
+
+
 
 class ApiService {
   private async getToken(): Promise<string | null> {
@@ -54,7 +59,18 @@ class ApiService {
     }
 
     const response = await fetch(`${API_URL}${endpoint}`, config);
-    const data = await response.json();
+
+    const raw = await response.text();
+    let data: any = null;
+
+    if (raw) {
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = { message: raw };
+      }
+    }
+
 
     if (!response.ok) {
       throw new ApiError(

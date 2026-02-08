@@ -12,7 +12,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { firebaseAuth } from '../../services/firebase';
-import { api } from '../../services/api';
+import { api , isApiError } from '../../services/api';
 import { styles } from '../../styles/screens/register-styles';
 
 const logo = require('../../../assets/images/logo.png');
@@ -39,10 +39,10 @@ export default function RegisterScreen({ navigation }: any) {
     setLoading(true);
 
     try {
-      // 1. Kreiraj usera na Firebase
+   
       await createUserWithEmailAndPassword(firebaseAuth, email.trim(), password);
 
-      // 2. Registruj usera u PostgreSQL
+ 
       const data = await api.post('/api/users/register', {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
@@ -51,13 +51,16 @@ export default function RegisterScreen({ navigation }: any) {
       console.log('User registered successfully:', data);
       Alert.alert('Success', 'Account created successfully!');
 
-    } catch (error: any) {
-      console.error('Registration error:', error);
-      Alert.alert('Registration failed', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    } catch (error: unknown) {
+        if (isApiError(error)) {
+          Alert.alert('Registration failed', error.message);
+          return;
+        }
+
+        Alert.alert('Registration failed', 'Unexpected error');
+      } finally {
+         setLoading(false);
+      }};
 
   return (
     <KeyboardAwareScrollView

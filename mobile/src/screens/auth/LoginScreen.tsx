@@ -14,7 +14,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from '../../services/firebase';
 import { styles } from '../../styles/screens/login-styles';
 
-import { useEffect } from "react";
+import { api, isApiError } from '../../services/api';
 
 const logo = require('../../../assets/images/logo.png');
 
@@ -33,12 +33,16 @@ export default function LoginScreen({ navigation }: any) {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(firebaseAuth, email, password);
-    } catch (error: any) {
-      Alert.alert('Login failed', error.message);
+    } catch (error: unknown) {
+      if (isApiError(error)) {
+        Alert.alert('Login failed', error.message);
+        return;
+      }
+
+      Alert.alert('Login failed', 'Unexpected error');
     } finally {
       setLoading(false);
-    }
-  };
+    }};
 
   
 

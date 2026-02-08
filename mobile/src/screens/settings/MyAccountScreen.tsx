@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/myaccount-styles';
-import { api } from '../../services/api';
+import { api , isApiError } from '../../services/api';
 import { logout } from '../../services/auth-service';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
@@ -25,13 +25,18 @@ export default function MyAccountScreen({ navigation }: any) {
     try {
       await api.delete('/api/users/me');
       await logout();
-    } catch (error: any) {
-      console.error('Delete account error:', error);
-      Alert.alert('Error', error.message || 'Failed to delete account');
+    } catch (error: unknown) {
+      if (isApiError(error)) {
+        Alert.alert('Delete failed', error.message);
+      } else {
+        Alert.alert('Delete failed', 'Unexpected error');
+      }
+    } finally {
       setDeleting(false);
       setShowDeleteModal(false);
     }
   };
+
 
   return (
     <View style={styles.container}>

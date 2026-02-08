@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/waitingList-styles';
-import { api } from '../../services/api';
+import { api, isApiError } from '../../services/api';
 import type { WaitingListItem } from '../../types';
 import { formatDate } from '../../utils/calendar';
 import { colors } from '../../styles/colors';
@@ -27,8 +27,12 @@ export default function WaitingListScreen({ navigation }: any) {
     try {
       const res = await api.get<{ waitingList: WaitingListItem[] }>('/api/waiting-list');
       setWaitingList(res.waitingList || []);
-    } catch (err) {
-      console.error('Fetch waiting list error:', err);
+    } catch (err: unknown) {
+      if (isApiError(err)) {
+        console.error('Fetch waiting list error: ', err.status);
+        return;
+      }
+      console.error('Fetch waiting list error: ', err);
     } 
   };
 
@@ -46,9 +50,18 @@ export default function WaitingListScreen({ navigation }: any) {
     try {
       await api.put(`/api/waiting-list/${id}/cancel`, {});
       await loadWaitingList();
-    } catch (err) {
+    } catch (err: unknown) {
+      if (isApiError(err)) {
+        if (err.code === 'WAITING_LIST_NOT_FOUND') {
+          await loadWaitingList();
+          return;
+        }
+        console.error('Cancel waiting list error:', err.status, err.code, err.message);
+        return;
+      }
       console.error('Cancel waiting list error:', err);
     }
+
   };
 
 

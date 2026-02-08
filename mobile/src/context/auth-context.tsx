@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { firebaseAuth } from '../services/firebase';
-import { api } from '../services/api';
+import { api, isApiError } from '../services/api';
 import { DatabaseUser } from '../types';
 
 type AuthContextType = {
@@ -27,11 +27,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const data = await api.get<{ user: DatabaseUser }>('/api/users/me');
       setDbUser(data.user);
-    } catch (error) {
-      console.log('Backend Auth Error:', error);
+    } catch (error: unknown) {
+      if (isApiError(error)) {
+        console.log('Backend Auth Error:', error.status, error.code, error.message);
+      } else {
+        console.log('Backend Auth Error:', error);
+      }
       setDbUser(null);
     }
   };
+
 
   const refreshDbUser = async () => {
     if (user) {

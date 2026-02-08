@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { styles } from '../../styles/screens/settings-screens/profile-styles';
 import { useAuth } from '../../context/auth-context';
-import { api } from '../../services/api';
+import { api, isApiError } from '../../services/api';
 
 const headerImage = require('../../../assets/images/settings-bg.png');
 
@@ -61,9 +61,13 @@ export default function UserProfileScreen({ navigation }: any) {
 
       await refreshDbUser();
       Alert.alert('Success', 'Profile updated successfully');
-    } catch (error: any) {
-      console.error('Save error:', error);
-      Alert.alert('Error', error.message || 'Failed to update profile');
+    } catch (error: unknown) {
+      if (isApiError(error)) {
+        Alert.alert('Update failed', error.message);
+        return;
+      }
+
+      Alert.alert('Update failed' , 'Unexpected error')
     } finally {
       setSaving(false);
     }

@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/information-styles';
 
-import { api } from '../../services/api';
+import { api, isApiError } from '../../services/api';
 
 const bgImage = require('../../../assets/images/settings-bg.png');
 
@@ -51,12 +51,23 @@ export default function InformationScreen({ navigation, route }: any) {
         note,
       });
       setShowSuccessModal(true);
-    } catch(err: any) {
-      console.error("Create appointment failed: ", err);
+    } catch(err: unknown) {
+      if (isApiError(err)) {
+        if (err.status === 409) {
+          Alert.alert('Slot unavailable', err.message);
+          return;
+        }
 
-      Alert.alert('Reservation failed',
-        err?.message ?? 'Unable to reserve this time slot'
-      )
+        if (err.status === 401) {
+          Alert.alert('Session expired', 'Please log in again');
+          return;
+        }
+
+        Alert.alert('Error', err.message);
+        return;
+      }
+
+      Alert.alert('Error', 'Unexpected error');
     }
 
   };
