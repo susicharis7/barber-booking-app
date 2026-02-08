@@ -18,22 +18,46 @@ export const createUser = async (userData: CreateUserData): Promise<User> => {
 };
 
 /* Updates User in DB */
-export const updateUser = async(
-    firebase_uid: string,
-    data: { first_name: string; last_name: string; phone: string | null}
-) : Promise<User | null> => {
-    const { first_name, last_name, phone } = data;
+export const updateUser = async (
+  firebase_uid: string,
+  data: { first_name?: string; last_name?: string; phone?: string | null }
+): Promise<User | null> => {
+  const updates: string[] = [];
+  const values: Array<string | null> = [];
+  let i = 1;
 
-    const result = await pool.query(
-        `UPDATE users
-         SET first_name = $1, last_name = $2, phone = $3
-         WHERE firebase_uid = $4
-         RETURNING *`,
-         [first_name, last_name, phone, firebase_uid]
-    );
+  if (data.first_name !== undefined) {
+    updates.push(`first_name = $${i++}`);
+    values.push(data.first_name);
+  }
 
-    return result.rows[0] || null;
-}
+  if (data.last_name !== undefined) {
+    updates.push(`last_name = $${i++}`);
+    values.push(data.last_name);
+  }
+
+  if (data.phone !== undefined) {
+    updates.push(`phone = $${i++}`);
+    values.push(data.phone);
+  }
+
+  if (updates.length === 0) return null;
+
+  values.push(firebase_uid);
+
+  const result = await pool.query(
+    `
+    UPDATE users
+    SET ${updates.join(', ')}
+    WHERE firebase_uid = $${i}
+    RETURNING *
+    `,
+    values
+  );
+
+  return result.rows[0] || null;
+};
+
 
 /* Deletes User in DB */
 export const deleteUser = async(firebase_uid: string): Promise<boolean> => {
@@ -48,7 +72,7 @@ export const deleteUser = async(firebase_uid: string): Promise<boolean> => {
 /* Finds user by Firebase UID */
 export const findUserByFirebaseUID = async (firebase_uid: string): Promise<User | null> => {
     const result = await pool.query(
-        `SELECT * FROM users WHERE firebase_uid = $1`,
+        `SELECT * FROM users WHERE firebase_uid = $1 LIMIT 1`,
         [firebase_uid]
     );
 
@@ -58,7 +82,7 @@ export const findUserByFirebaseUID = async (firebase_uid: string): Promise<User 
 /* Finds user by EMAIL */
 export const findUserByEmail = async (email: string): Promise<User | null> => {
     const result = await pool.query(
-        `SELECT * FROM users WHERE email = $1`,
+        `SELECT * FROM users WHERE email = $1 LIMIT 1`,
         [email]
     );
 
