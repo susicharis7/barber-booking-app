@@ -60,7 +60,7 @@ export const createWaitingList = async (req: Request, res: Response) => {
     if (!created) {
       res.status(409).json({ 
         code: 'WAITING_LIST_EXISTS',
-        message: 'Waiting list already exists for this range' 
+        message: 'You already have an active waiting list request for this date range' 
       });
       return;
     }
@@ -98,7 +98,7 @@ export const cancelWaitingList = async (req: Request, res: Response) => {
     if (!cancelled) {
       res.status(404).json({ 
         code: 'WAITING_LIST_NOT_FOUND',
-        message: 'Waiting list not found'
+        message: 'Waiting list request not found or already cancelled'
       });
       return;
     }

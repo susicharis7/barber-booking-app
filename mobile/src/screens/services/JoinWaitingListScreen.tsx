@@ -64,7 +64,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
     });
 
     // Navigate to Settings -> WaitingList screen
-    navigation.navigate('Settings', { screen: 'WaitingList' });
+    goToWaitingList();
   } catch (err: any) {
      if (err instanceof ApiError && err.code === 'WAITING_LIST_EXISTS') {
       setExistsModalMessage(err.message);
