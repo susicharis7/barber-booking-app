@@ -1,27 +1,8 @@
 import { pool } from '../../db/pool';
 import  type { CreateAppointmentData }  from '../../types/types';
 import { parseCursor, makeCursor } from './helperFunctions';
+import { QueryExecutor, toDateLockKey } from '../../db/repositoryUtils';
 
-// Fix race condition (for 2+ parralel request to not be able to make the same appointment)
-type QueryExecutor = Pick<typeof pool, 'query'>;
-const toDateLockKey = (date: string) => Number(date.replace(/-/g, ''));
-
-// Validation for barber_id & service_id (backend)
-export const barberExists = async (barberId: number) => {
-  const result = await pool.query(
-    `SELECT 1 FROM barbers WHERE id = $1 LIMIT 1`,
-    [barberId]
-  );
-  return (result.rowCount ?? 0) > 0;
-};
-
-export const serviceExists = async (serviceId: number) => {
-  const result = await pool.query(
-    `SELECT 1 FROM services WHERE id = $1 LIMIT 1`,
-    [serviceId]
-  );
-  return (result.rowCount ?? 0) > 0;
-};
 
 
 

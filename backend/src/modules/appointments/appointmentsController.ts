@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { AuthRequest } from '../../middleware/authMiddleware';
 import * as appointmentsService from './appointmentsService';
 import { toLocalYmd } from './helperFunctions';
+import { barberExists, serviceExists } from '../../db/repositoryUtils';
 
 export const getUpcomingAppointments = async (req: Request, res: Response) => {
   try {
@@ -72,8 +73,8 @@ export const createAppointment = async(req: Request, res: Response) => {
         const { barber_id , service_id, date, start_time, note} = req.body;
 
         const [barberOk, serviceOk] = await Promise.all([
-          appointmentsService.barberExists(barber_id),
-          appointmentsService.serviceExists(service_id),
+          barberExists(barber_id),
+          serviceExists(service_id),
         ]);
 
         if (!barberOk) {
