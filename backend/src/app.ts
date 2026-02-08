@@ -5,6 +5,7 @@ import barberRoutes from './modules/barber/barberRoutes';
 import servicesAndPriceListRoutes from './modules/servicesAndPriceList/servicesAndPriceListRoutes';
 import appointmentsRoutes from './modules/appointments/appointmentsRoutes';
 import waitingListRoutes from './modules/waitingList/waitingListRoutes';
+import { apiLimiter } from './middleware/rateLimiters';
 
 
 const app = express();
@@ -36,6 +37,8 @@ app.use(express.urlencoded( { extended: false }));
 app.get('/health', (req, res) => {
     res.json ({ status: 'OK' , timestamp: new Date().toISOString() });
 });
+
+app.use('/api', apiLimiter);
 
 /* API Routes */
 app.use('/api/users', userRoutes);
