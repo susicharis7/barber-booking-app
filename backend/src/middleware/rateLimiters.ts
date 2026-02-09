@@ -1,4 +1,4 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import type { AuthRequest } from './authMiddleware';
 
 const baseLimiterConfig = {
@@ -23,7 +23,7 @@ export const createAppointmentLimiter = rateLimit({
   max: 10,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
-    return authReq.user?.uid ?? req.ip ?? 'unknown';
+    return authReq.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'unknown');
   },
   message: {
     code: 'APPOINTMENT_RATE_LIMITED',
@@ -37,7 +37,7 @@ export const createWaitingListLimiter = rateLimit({
   max: 10,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
-    return authReq.user?.uid ?? req.ip ?? 'unknown';
+    return authReq.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'unknown');
   },
   message: {
     code: 'WAITING_LIST_RATE_LIMITED',
@@ -51,7 +51,7 @@ export const registerLimiter = rateLimit({
   max: 20,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
-    return authReq.user?.uid ?? req.ip ?? 'unknown';
+    return authReq.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'unknown');
   },
   message: {
     code: 'REGISTER_RATE_LIMITED',
