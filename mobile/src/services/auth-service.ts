@@ -29,3 +29,17 @@ export const logout = async(): Promise<void> => {
 export const getCurrentUser = (): User | null => {
     return firebaseAuth.currentUser;
 }
+
+/* Registration */
+export const registerWithEmailAndPassword = async (
+    email: string,
+    password: string
+): Promise<User> => {
+    const userCredential = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email.trim(),
+        password
+    );
+
+    return userCredential.user;
+}
