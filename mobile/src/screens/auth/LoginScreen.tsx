@@ -9,12 +9,11 @@ import {
   Image,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { signInWithEmailAndPassword } from "firebase/auth";
 
-import { firebaseAuth } from '../../services/firebase';
 import { styles } from '../../styles/screens/login-styles';
+import { login } from '../../services/auth-service';
 
-import { api, isApiError } from '../../services/api';
+import { isApiError } from '../../services/api';
 
 const logo = require('../../../assets/images/logo.png');
 
@@ -32,7 +31,7 @@ export default function LoginScreen({ navigation }: any) {
 
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
+      await login(email, password);
     } catch (error: unknown) {
       if (isApiError(error)) {
         Alert.alert('Login failed', error.message);
