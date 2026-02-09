@@ -9,12 +9,13 @@ import {
   Image,
   Modal,
 } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { firebaseAuth } from '../../services/firebase';
 import { api , isApiError } from '../../services/api';
 import { styles } from '../../styles/screens/register-styles';
+
+import { registerWithEmailAndPassword } from '../../services/auth-service';
 
 const logo = require('../../../assets/images/logo.png');
 
@@ -47,8 +48,7 @@ export default function RegisterScreen({ navigation }: any) {
 
     try {
    
-      await createUserWithEmailAndPassword(firebaseAuth, email.trim(), password);
-
+      await registerWithEmailAndPassword(email, password);
  
       const data = await api.post('/api/users/register', {
         first_name: firstName.trim(),
