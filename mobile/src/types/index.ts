@@ -88,3 +88,17 @@ export type WaitingListItem = {
   service: { id: number; name: string; duration: number; price: string };
 };
 
+/* Staff Dashboard - OVERVIEW */
+export type StaffDashboardOverview = {
+  users_total: number;
+  customers_total: number;
+  barbers_total: number;
+  admins_total: number;
+  staff_total: number;
+  appointments_today: number;
+  upcoming_confirmed: number;
+  waiting_list_active: number;
+};
+
+
+
