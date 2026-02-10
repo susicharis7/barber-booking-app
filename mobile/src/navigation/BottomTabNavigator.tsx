@@ -8,12 +8,20 @@ import SettingsStackNavigator from './SettingsStackNavigator';
 import ServicesStackNavigator from './ServicesStackNavigator';
 import NotificationsScreen from '../screens/settings/NotificationsScreen';
 
+import { useAuth } from '../context/auth-context';
+import StaffDashboardScreen from '../screens/staff/StaffDashboardScreen';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
+  
+  const { dbUser } = useAuth();
+  const isStaff = dbUser?.role === 'barber' || dbUser?.role === 'admin';
+
+
   return (
     <Tab.Navigator
+  
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ color, size, focused }) => {
@@ -25,6 +33,8 @@ export default function BottomTabNavigator() {
             iconName = 'cut-outline';
           } else if (route.name === 'Appointments') {
             iconName = 'calendar-outline';
+          } else if (route.name === 'Dashboard') {
+            iconName = focused ? 'speedometer' : 'speedometer-outline'
           } else if (route.name === 'Notifications') {
             iconName = focused ? 'notifications' : 'notifications-outline';
           } else {
@@ -36,6 +46,8 @@ export default function BottomTabNavigator() {
         tabBarActiveTintColor: '#000000',
         tabBarInactiveTintColor: '#6B7280',
       })}
+
+      
     >
       <Tab.Screen name="Home" component={HomeScreen} />
 
@@ -49,6 +61,14 @@ export default function BottomTabNavigator() {
           ),
         }}
       />
+
+      {isStaff && (
+        <Tab.Screen
+          name="Dashboard"
+          component={StaffDashboardScreen}
+          options={{ title: 'Dashboard' }}
+        />
+      )}   
 
       <Tab.Screen
         name="Appointments"
