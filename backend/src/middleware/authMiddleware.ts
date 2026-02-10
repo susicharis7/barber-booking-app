@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { firebaseAdminAuth } from '../firebase/firebase-admin';
+import type { User } from '../types/types';
 
 export interface AuthRequest extends Request {
     user?: {
@@ -7,6 +8,7 @@ export interface AuthRequest extends Request {
         email: string | undefined;
         provider: string;
     };
+    dbUser?: User;
 }
 
 
