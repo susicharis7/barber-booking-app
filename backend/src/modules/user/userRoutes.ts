@@ -4,6 +4,7 @@ import * as userController from './userController';
 import { validateRequest } from '../../middleware/validateRequest';
 import { registerUserValidation, updateMeValidation } from './userValidation';
 import { registerLimiter } from '../../middleware/rateLimiters';
+import { requireRegisteredUser } from '../../middleware/rbacMiddleware';
 
 
 
@@ -20,12 +21,17 @@ router.post(
 );
 
 // Fetch Current User (Also needs Firebase Token)
-router.get('/me', verifyToken, userController.getMe);
+router.get(
+    '/me',
+    verifyToken, 
+    requireRegisteredUser,
+    userController.getMe);
 
 // Update Current User
 router.put(
     '/me', 
     verifyToken, 
+    requireRegisteredUser,
     updateMeValidation,
     validateRequest,
     userController.updateMe
