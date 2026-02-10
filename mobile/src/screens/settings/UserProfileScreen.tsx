@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { styles } from '../../styles/screens/settings-screens/profile-styles';
 import { useAuth } from '../../context/auth-context';
 import { api, isApiError } from '../../services/api';
+import { colors } from '../../styles/colors';
 
 const headerImage = require('../../../assets/images/settings-bg.png');
 
@@ -96,7 +97,7 @@ export default function UserProfileScreen({ navigation }: any) {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="chevron-back" size={22} color="#ffffff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -104,10 +105,10 @@ export default function UserProfileScreen({ navigation }: any) {
         <View style={styles.avatarSection}>
           <View style={styles.avatarWrapper}>
             <View style={styles.avatar}>
-              <Ionicons name="person" size={50} color="#ffffff" />
+              <Ionicons name="person" size={50} color={colors.white} />
             </View>
             <TouchableOpacity style={styles.cameraButton}>
-              <Ionicons name="camera" size={16} color="#ffffff" />
+              <Ionicons name="camera" size={16} color={colors.white} />
             </TouchableOpacity>
           </View>
           <Text style={styles.userName}>{fullName || 'Loading...'}</Text>
@@ -170,7 +171,7 @@ export default function UserProfileScreen({ navigation }: any) {
           disabled={saving}
         >
           {saving ? (
-            <ActivityIndicator color="#ffffff" />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <Text style={styles.saveButtonText}>Save Changes</Text>
           )}

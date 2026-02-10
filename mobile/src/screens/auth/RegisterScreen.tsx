@@ -14,6 +14,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { api , isApiError } from '../../services/api';
 import { styles } from '../../styles/screens/register-styles';
+import { colors } from '../../styles/colors';
 
 import { registerWithEmailAndPassword } from '../../services/auth-service';
 
@@ -145,7 +146,7 @@ export default function RegisterScreen({ navigation }: any) {
             style={styles.registerButton}
           >
             {loading ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={colors.white} />
             ) : (
               <Text style={styles.registerButtonText}>Registrujte se</Text>
             )}

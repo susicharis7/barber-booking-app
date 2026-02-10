@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/service-styles';
+import { colors } from '../../styles/colors';
 
 import type { Barber } from '../../types';
 import { api } from '../../services/api';
@@ -67,7 +68,7 @@ export default function ServiceScreen({ navigation }: any) {
       <View style={styles.content}>
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0f172a" />
+            <ActivityIndicator size="large" color={colors.primary} />
             <Text style={styles.loadingText}>Loading barbers...</Text>
           </View>
         ) : (
@@ -88,7 +89,7 @@ export default function ServiceScreen({ navigation }: any) {
                       style={styles.avatarImage}
                     />
                   ) : (
-                    <Ionicons name="person" size={32} color="#ffffff" />
+                    <Ionicons name="person" size={32} color={colors.white} />
                   )}
                 </View>
 
@@ -102,7 +103,7 @@ export default function ServiceScreen({ navigation }: any) {
                 <Ionicons
                   name="chevron-forward"
                   size={22}
-                  color="#94a3b8"
+                  color={colors.slate[400]}
                 />
               </TouchableOpacity>
             ))}
@@ -111,7 +112,7 @@ export default function ServiceScreen({ navigation }: any) {
               <Ionicons
                 name="information-circle-outline"
                 size={22}
-                color="#3b82f6"
+                color={colors.blue[500]}
               />
               <Text style={styles.infoText}>
                 All our barbers are certified professionals with years of

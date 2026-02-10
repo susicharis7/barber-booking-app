@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/aboutApp-styles';
 import Constants from 'expo-constants';
+import { colors } from '../../styles/colors';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
 
@@ -32,7 +33,7 @@ export default function AboutAppScreen({ navigation }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -120,10 +121,10 @@ function InfoItem({
       onPress={onPress}
     >
       <View style={styles.itemIconContainer}>
-        <Ionicons name={icon} size={20} color="#0f172a" />
+        <Ionicons name={icon} size={20} color={colors.primary} />
       </View>
       <Text style={styles.itemText}>{label}</Text>
-      <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
+      <Ionicons name="chevron-forward" size={18} color={colors.slate[400]} />
     </TouchableOpacity>
   );
 }

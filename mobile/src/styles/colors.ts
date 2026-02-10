@@ -56,6 +56,11 @@ export const colors = {
     100: '#fef3c7',
   },
 
+  alpha: {
+    white65: 'rgba(255,255,255,0.65)',
+    white45: 'rgba(255,255,255,0.45)',
+  },
+
  
   primary: '#0f172a',
   secondary: '#2563eb',

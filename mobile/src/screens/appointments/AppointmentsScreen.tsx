@@ -15,6 +15,7 @@ import { api, isApiError } from '../../services/api';
 import type { AppointmentDetailed } from '../../types';
 import { useFocusEffect } from '@react-navigation/native';
 import { formatDateShort, formatTime } from '../../utils/calendar';
+import { colors } from '../../styles/colors';
 
 
 
@@ -22,14 +23,14 @@ import { formatDateShort, formatTime } from '../../utils/calendar';
 const bgImage = require('../../../assets/images/appoint-bg.png');
 
 const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }> = {
-  confirmed: { bg: '#dcfce7', text: '#15803d', label: 'Confirmed' },
-  pending:   { bg: '#fef3c7', text: '#b45309', label: 'Pending' },
-  completed: { bg: '#e0e7ff', text: '#4338ca', label: 'Completed' },
-  cancelled: { bg: '#fee2e2', text: '#dc2626', label: 'Cancelled' },
+  confirmed: { bg: colors.green[100], text: colors.green[500], label: 'Confirmed' },
+  pending:   { bg: colors.amber[100], text: colors.amber[700], label: 'Pending' },
+  completed: { bg: colors.blue[50], text: colors.blue[700], label: 'Completed' },
+  cancelled: { bg: colors.red[200], text: colors.red[600], label: 'Cancelled' },
 };
 
 const getStatusStyle = (status: string) =>
-  STATUS_STYLES[status] ?? { bg: '#f1f5f9', text: '#64748b', label: status };
+  STATUS_STYLES[status] ?? { bg: colors.slate[100], text: colors.muted, label: status };
 
 type TabType = 'upcoming' | 'past';
 const PAGE_SIZE = 5;
@@ -287,7 +288,7 @@ export default function AppointmentsScreen({ navigation }: any) {
             <Ionicons
               name="calendar-outline"
               size={18}
-              color={activeTab === 'upcoming' ? '#ffffff' : '#64748b'}
+              color={activeTab === 'upcoming' ? colors.white : colors.muted}
             />
             <Text style={[styles.tabText, activeTab === 'upcoming' && styles.tabTextActive]}>
               Upcoming
@@ -309,7 +310,7 @@ export default function AppointmentsScreen({ navigation }: any) {
             <Ionicons
               name="time-outline"
               size={18}
-              color={activeTab === 'past' ? '#ffffff' : '#64748b'}
+              color={activeTab === 'past' ? colors.white : colors.muted}
             />
             <Text style={[styles.tabText, activeTab === 'past' && styles.tabTextActive]}>
               Past
@@ -321,13 +322,13 @@ export default function AppointmentsScreen({ navigation }: any) {
         {loading ? (
             <View style={{ paddingTop: 40, alignItems: 'center' }}>
               <ActivityIndicator size="large" />
-              <Text style={{ marginTop: 12, color: '#64748b' }}>
+              <Text style={{ marginTop: 12, color: colors.muted }}>
                 Loading appointments...
               </Text>
             </View>
           ) : error ? (
             <View style={{ paddingTop: 40, alignItems: 'center' }}>
-              <Text style={{ color: '#dc2626' }}>{error}</Text>
+              <Text style={{ color: colors.error }}>{error}</Text>
             </View>
           ) : hasAppointments ? (
             <FlatList
@@ -361,7 +362,7 @@ export default function AppointmentsScreen({ navigation }: any) {
                 <>
                   {activeTab === 'upcoming' && (
                     <View style={styles.infoCard}>
-                      <Ionicons name="information-circle-outline" size={22} color="#3b82f6" />
+                      <Ionicons name="information-circle-outline" size={22} color={colors.blue[500]} />
                       <Text style={styles.infoText}>
                         You can cancel or reschedule up to 2 hours before your appointment.
                       </Text>
@@ -383,7 +384,7 @@ export default function AppointmentsScreen({ navigation }: any) {
               <Ionicons
                 name={activeTab === 'upcoming' ? 'calendar-outline' : 'time-outline'}
                 size={48}
-                color="#94a3b8"
+                color={colors.slate[400]}
               />
             </View>
             <Text style={styles.emptyTitle}>
@@ -397,7 +398,7 @@ export default function AppointmentsScreen({ navigation }: any) {
             {activeTab === 'upcoming' && (
               <TouchableOpacity style={styles.bookButton} activeOpacity={0.7} onPress={() => navigation.navigate('Services')}>
                 <Text style={styles.bookButtonText}>Book Now</Text>
-                <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+                <Ionicons name="arrow-forward" size={18} color={colors.white} />
               </TouchableOpacity>
             )}
           </View>
@@ -432,7 +433,7 @@ const AppointmentCard = React.memo(function AppointmentCard({
     <View style={styles.appointmentCard}>
       <View style={styles.appointmentHeader}>
         <View style={styles.dateContainer}>
-          <Ionicons name="calendar" size={16} color="#0f172a" />
+          <Ionicons name="calendar" size={16} color={colors.primary} />
           <Text style={styles.dateText}>{formatDateShort(appointment.date)}</Text>
         </View>
         <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
@@ -444,19 +445,19 @@ const AppointmentCard = React.memo(function AppointmentCard({
 
       <View style={styles.appointmentDetails}>
         <View style={styles.detailRow}>
-          <Ionicons name="person-outline" size={16} color="#64748b" />
+          <Ionicons name="person-outline" size={16} color={colors.muted} />
           <Text style={styles.detailText}>
             {appointment.barber.first_name} {appointment.barber.last_name}
           </Text>
         </View>
         <View style={styles.detailRow}>
-          <Ionicons name="time-outline" size={16} color="#64748b" />
+          <Ionicons name="time-outline" size={16} color={colors.muted} />
           <Text style={styles.detailText}>
             {formatTime(appointment.start_time)} • {appointment.service.duration} min
           </Text>
         </View>
         <View style={styles.detailRow}>
-          <Ionicons name="cash-outline" size={16} color="#64748b" />
+          <Ionicons name="cash-outline" size={16} color={colors.muted} />
           <Text style={styles.detailText}>
             {Number(appointment.service.price).toFixed(2)} BAM
           </Text>
@@ -480,7 +481,7 @@ const AppointmentCard = React.memo(function AppointmentCard({
               )
             }
           >
-            <Ionicons name="close-circle-outline" size={16} color="#dc2626" />
+            <Ionicons name="close-circle-outline" size={16} color={colors.error} />
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>

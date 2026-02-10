@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/termsOfUse-styles';
+import { colors } from '../../styles/colors';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
 
@@ -24,7 +25,7 @@ export default function TermsOfUse({ navigation }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -83,7 +84,7 @@ export default function TermsOfUse({ navigation }: any) {
           </View>
 
           <View style={styles.footerCard}>
-            <Ionicons name="checkmark-circle" size={24} color="#10b981" />
+            <Ionicons name="checkmark-circle" size={24} color={colors.green[500]} />
             <Text style={styles.footerText}>
               Last updated: January 2026
             </Text>

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/home-styles';
+import { colors } from '../../styles/colors';
 
 import MapView, { Marker } from 'react-native-maps';
 
@@ -138,7 +139,7 @@ export default function HomeScreen({ navigation }: any) {
                 <Ionicons
                   name="call-outline"
                   size={28}
-                  color="rgba(255,255,255,0.65)"
+                  color={colors.alpha.white65}
                 />
                 <Text style={styles.contactText}>+387 61 537 551</Text>
               </View>
@@ -147,7 +148,7 @@ export default function HomeScreen({ navigation }: any) {
                 <Ionicons
                   name="logo-instagram"
                   size={34}
-                  color="rgba(255,255,255,0.45)"
+                  color={colors.alpha.white45}
                 />
                 <Text style={styles.socialText}>@una_barberina_studio</Text>
               </View>
@@ -156,7 +157,7 @@ export default function HomeScreen({ navigation }: any) {
                 <Ionicons
                   name="logo-tiktok"
                   size={34}
-                  color="rgba(255,255,255,0.45)"
+                  color={colors.alpha.white45}
                 />
                 <Text style={styles.socialText}>@unabarberina</Text>
               </View>
@@ -190,7 +191,7 @@ export default function HomeScreen({ navigation }: any) {
                   onPress={recenterMap}
                   activeOpacity={0.85}
                 >
-                  <Ionicons name="locate-outline" size={20} color="#111" />
+                  <Ionicons name="locate-outline" size={20} color={colors.gray[900]} />
                 </TouchableOpacity>
 
               </View>

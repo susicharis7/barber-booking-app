@@ -2,6 +2,7 @@ import { View, Text, Alert, TouchableOpacity, ImageBackground } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { logout } from '../../services/auth-service';
 import { styles } from '../../styles/screens/settings-screens/settings-styles';
+import { colors } from '../../styles/colors';
 
 
 const headerImage = require('../../../assets/images/settings-bg.png');
@@ -99,7 +100,7 @@ export default function SettingsScreen({ navigation }: any) {
               <Ionicons
                 name={item.icon}
                 size={20}
-                color={item.isLogout ? '#dc2626' : '#0f172a'}
+                color={item.isLogout ? colors.error : colors.primary}
               />
             </View>
             <Text style={[styles.menuText, item.isLogout && styles.logoutText]}>
@@ -108,7 +109,7 @@ export default function SettingsScreen({ navigation }: any) {
             <Ionicons
               name="chevron-forward"
               size={18}
-              color={item.isLogout ? '#dc2626' : '#94a3b8'}
+              color={item.isLogout ? colors.error : colors.slate[400]}
             />
           </TouchableOpacity>
         ))}

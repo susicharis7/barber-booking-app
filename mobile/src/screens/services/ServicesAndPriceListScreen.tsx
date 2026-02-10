@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/servicesAndPriceList-styles';
+import { colors } from '../../styles/colors';
 
 import type { ServicesAndPriceList } from '../../types';
 import { api } from '../../services/api';
@@ -61,7 +62,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -79,7 +80,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
       <View style={styles.content}>
         {loading ? (
           <View style={{ paddingTop: 40 }}>
-            <Text style={{ textAlign: 'center', color: '#64748b' }}>
+            <Text style={{ textAlign: 'center', color: colors.muted }}>
               Loading services...
             </Text>
           </View>
@@ -136,7 +137,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
                       <Ionicons
                         name="time-outline"
                         size={16}
-                        color="#64748b"
+                        color={colors.muted}
                       />
                       <Text style={styles.durationText}>
                         {service.duration} min
@@ -169,7 +170,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
               disabled={!selectedService || loading}
             >
               <Text style={styles.reserveButtonText}>Continue</Text>
-              <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+              <Ionicons name="arrow-forward" size={20} color={colors.white} />
             </TouchableOpacity>
           </>
         )}

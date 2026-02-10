@@ -20,6 +20,7 @@ import {
   getFirstDayOfMonth,
   isSameDay,
   toLocalDate,
+  formatDate,
 } from '../../utils/calendar';
 
 
@@ -218,7 +219,7 @@ export default function CalendarScreen({ navigation, route }: any) {
   
   const formatSelectedDate = () => {
     if (!selectedDate) return '';
-    return selectedDate.toLocaleDateString('en-US', {
+    return formatDate(selectedDate, {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
@@ -357,7 +358,7 @@ export default function CalendarScreen({ navigation, route }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -393,14 +394,14 @@ export default function CalendarScreen({ navigation, route }: any) {
               <Ionicons
                 name="chevron-back"
                 size={24}
-                color={canGoPrev() ? '#0f172a' : '#cbd5e1'}
+                color={canGoPrev() ? colors.primary : colors.slate[300]}
               />
             </TouchableOpacity>
             <Text style={styles.calendarMonthYear}>
               {months[currentMonth]} {currentYear}
             </Text>
             <TouchableOpacity onPress={handleNextMonth} activeOpacity={0.7}>
-              <Ionicons name="chevron-forward" size={24} color="#0f172a" />
+              <Ionicons name="chevron-forward" size={24} color={colors.primary} />
             </TouchableOpacity>
           </View>
 
@@ -444,7 +445,7 @@ export default function CalendarScreen({ navigation, route }: any) {
                     >
                       <Ionicons name="calendar-outline" size={16} color={colors.secondary} />
                       <Text style={styles.nextAvailableButtonText}>
-                        Next available: {nextAvailableDate.toLocaleDateString('en-US', {
+                        Next available: {formatDate(nextAvailableDate, {
                           weekday: 'short',
                           month: 'short',
                           day: 'numeric',
@@ -469,7 +470,7 @@ export default function CalendarScreen({ navigation, route }: any) {
                     >
                       <Ionicons name="calendar-outline" size={16} color={colors.secondary} />
                       <Text style={styles.nextAvailableButtonText}>
-                        Next available: {nextAvailableDate.toLocaleDateString('en-US', {
+                        Next available: {formatDate(nextAvailableDate, {
                           weekday: 'short',
                           month: 'short',
                           day: 'numeric',
@@ -525,7 +526,7 @@ export default function CalendarScreen({ navigation, route }: any) {
 
             {selectedTime && (
               <View style={styles.selectedSummary}>
-                <Ionicons name="time-outline" size={16} color="#0f172a" />
+                <Ionicons name="time-outline" size={16} color={colors.primary} />
                 <Text style={styles.selectedSummaryText}>
                   Selected: {formatSelectedDate()} - {selectedTime} - {calculateEndTime()}
                 </Text>
@@ -540,25 +541,25 @@ export default function CalendarScreen({ navigation, route }: any) {
             <Text style={styles.summaryTitle}>Booking Summary</Text>
 
             <View style={styles.summaryRow}>
-              <Ionicons name="cut-outline" size={18} color="#64748b" />
+              <Ionicons name="cut-outline" size={18} color={colors.muted} />
               <Text style={styles.summaryLabel}>Service</Text>
               <Text style={styles.summaryValue}>{service.name}</Text>
             </View>
 
             <View style={styles.summaryRow}>
-              <Ionicons name="person-outline" size={18} color="#64748b" />
+              <Ionicons name="person-outline" size={18} color={colors.muted} />
               <Text style={styles.summaryLabel}>Barber</Text>
               <Text style={styles.summaryValue}>{employee.name}</Text>
             </View>
 
             <View style={styles.summaryRow}>
-              <Ionicons name="calendar-outline" size={18} color="#64748b" />
+              <Ionicons name="calendar-outline" size={18} color={colors.muted} />
               <Text style={styles.summaryLabel}>Date</Text>
               <Text style={styles.summaryValue}>{formatSelectedDate()}</Text>
             </View>
 
             <View style={styles.summaryRow}>
-              <Ionicons name="time-outline" size={18} color="#64748b" />
+              <Ionicons name="time-outline" size={18} color={colors.muted} />
               <Text style={styles.summaryLabel}>Time</Text>
               <Text style={styles.summaryValue}>
                 {selectedTime} - {calculateEndTime()}
@@ -566,7 +567,7 @@ export default function CalendarScreen({ navigation, route }: any) {
             </View>
 
             <View style={styles.summaryRow}>
-              <Ionicons name="cash-outline" size={18} color="#64748b" />
+              <Ionicons name="cash-outline" size={18} color={colors.muted} />
               <Text style={styles.summaryLabel}>Price</Text>
               <Text style={styles.summaryValuePrice}>{servicePrice.toFixed(2)} BAM</Text>
             </View>
@@ -601,7 +602,7 @@ export default function CalendarScreen({ navigation, route }: any) {
           disabled={!selectedDate || !selectedTime}
         >
           <Text style={styles.continueButtonText}>Continue</Text>
-          <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+          <Ionicons name="arrow-forward" size={20} color={colors.white} />
         </TouchableOpacity>
       </KeyboardAwareScrollView>
     </View>

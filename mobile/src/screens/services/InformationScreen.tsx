@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/information-styles';
+import { colors } from '../../styles/colors';
+import { formatDate, formatTime } from '../../utils/calendar';
 
 import { api, isApiError } from '../../services/api';
 
@@ -19,18 +21,15 @@ export default function InformationScreen({ navigation, route }: any) {
   const { employee, service, date, time, note } = route.params;
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const appointmentDate = new Date(`${date}`);
   const serviceDuration = Number(service.duration) || 0;
   const servicePrice = Number(service.price) || 0;
-
-  const formatDate = () => {
-    return appointmentDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
+  const appointmentDateLabel = formatDate(date, {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  const startTimeLabel = formatTime(time);
 
   const calculateEndTime = () => {
     const [hours, minutes] = time.split(':').map(Number);
@@ -90,7 +89,7 @@ export default function InformationScreen({ navigation, route }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -112,7 +111,7 @@ export default function InformationScreen({ navigation, route }: any) {
 
           <View style={styles.detailItem}>
             <View style={styles.detailIconContainer}>
-              <Ionicons name="cut-outline" size={20} color="#0f172a" />
+              <Ionicons name="cut-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Service</Text>
@@ -122,7 +121,7 @@ export default function InformationScreen({ navigation, route }: any) {
 
           <View style={styles.detailItem}>
             <View style={styles.detailIconContainer}>
-              <Ionicons name="person-outline" size={20} color="#0f172a" />
+              <Ionicons name="person-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Barber</Text>
@@ -132,27 +131,27 @@ export default function InformationScreen({ navigation, route }: any) {
 
           <View style={styles.detailItem}>
             <View style={styles.detailIconContainer}>
-              <Ionicons name="calendar-outline" size={20} color="#0f172a" />
+              <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Date</Text>
-              <Text style={styles.detailValue}>{formatDate()}</Text>
+              <Text style={styles.detailValue}>{appointmentDateLabel}</Text>
             </View>
           </View>
 
           <View style={styles.detailItem}>
             <View style={styles.detailIconContainer}>
-              <Ionicons name="time-outline" size={20} color="#0f172a" />
+              <Ionicons name="time-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Time</Text>
-              <Text style={styles.detailValue}>{time} - {calculateEndTime()}</Text>
+              <Text style={styles.detailValue}>{startTimeLabel} - {calculateEndTime()}</Text>
             </View>
           </View>
 
           <View style={styles.detailItem}>
             <View style={styles.detailIconContainer}>
-              <Ionicons name="hourglass-outline" size={20} color="#0f172a" />
+              <Ionicons name="hourglass-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Duration</Text>
@@ -163,7 +162,7 @@ export default function InformationScreen({ navigation, route }: any) {
           {note ? (
             <View style={styles.detailItem}>
               <View style={styles.detailIconContainer}>
-                <Ionicons name="document-text-outline" size={20} color="#0f172a" />
+                <Ionicons name="document-text-outline" size={20} color={colors.primary} />
               </View>
               <View style={styles.detailInfo}>
                 <Text style={styles.detailLabel}>Note</Text>
@@ -181,26 +180,26 @@ export default function InformationScreen({ navigation, route }: any) {
         {/* CANCELLATION POLICY */}
         <View style={styles.policyCard}>
           <View style={styles.policyHeader}>
-            <Ionicons name="shield-checkmark-outline" size={22} color="#0f172a" />
+            <Ionicons name="shield-checkmark-outline" size={22} color={colors.primary} />
             <Text style={styles.policyTitle}>Cancellation Policy</Text>
           </View>
 
           <View style={styles.policyItem}>
-            <Ionicons name="checkmark-circle" size={18} color="#10b981" />
+            <Ionicons name="checkmark-circle" size={18} color={colors.green[500]} />
             <Text style={styles.policyText}>
               Free cancellation up to 2 hours before the appointment.
             </Text>
           </View>
 
           <View style={styles.policyItem}>
-            <Ionicons name="checkmark-circle" size={18} color="#10b981" />
+            <Ionicons name="checkmark-circle" size={18} color={colors.green[500]} />
             <Text style={styles.policyText}>
               Reschedule anytime before the appointment starts.
             </Text>
           </View>
 
           <View style={styles.policyItem}>
-            <Ionicons name="alert-circle" size={18} color="#f59e0b" />
+            <Ionicons name="alert-circle" size={18} color={colors.amber[500]} />
             <Text style={styles.policyText}>
               No-shows may result in restricted booking privileges.
             </Text>
@@ -214,7 +213,7 @@ export default function InformationScreen({ navigation, route }: any) {
           onPress={handleReserve}
         >
           <Text style={styles.reserveButtonText}>Confirm Reservation</Text>
-          <Ionicons name="checkmark-circle" size={20} color="#ffffff" />
+          <Ionicons name="checkmark-circle" size={20} color={colors.white} />
         </TouchableOpacity>
       </ScrollView>
 
@@ -228,7 +227,7 @@ export default function InformationScreen({ navigation, route }: any) {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.successIconContainer}>
-              <Ionicons name="checkmark-circle" size={60} color="#10b981" />
+              <Ionicons name="checkmark-circle" size={60} color={colors.green[500]} />
             </View>
 
             <Text style={styles.modalTitle}>Booking Confirmed!</Text>
@@ -239,7 +238,7 @@ export default function InformationScreen({ navigation, route }: any) {
 
             <View style={styles.modalDetails}>
               <Text style={styles.modalDetailText}>
-                {formatDate()} at {time}
+                {appointmentDateLabel} at {startTimeLabel}
               </Text>
               <Text style={styles.modalDetailText}>
                 {service.name} with {employee.name}

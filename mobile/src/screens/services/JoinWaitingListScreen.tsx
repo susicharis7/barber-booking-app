@@ -15,6 +15,7 @@ import {
   toLocalDate,
 } from '../../utils/calendar';
 import { api , isApiError } from '../../services/api';
+import { colors } from '../../styles/colors';
 
 
 
@@ -185,7 +186,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#0f172a" />
+          <Ionicons name="chevron-back" size={22} color={colors.primary} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -229,7 +230,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
               activeOpacity={0.7}
               onPress={() => setShowCalendar((prev) => !prev)}
             >
-              <Ionicons name="calendar-outline" size={16} color="#0f172a" />
+              <Ionicons name="calendar-outline" size={16} color={colors.primary} />
               <Text style={styles.pickHintText}>
                 {showCalendar ? 'Hide calendar' : 'Pick date'}
               </Text>
@@ -244,7 +245,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
               <Text style={styles.windowValue}>{endDateLabel}</Text>
             </View>
             <View style={styles.lockedBadge}>
-              <Ionicons name="lock-closed-outline" size={14} color="#64748b" />
+              <Ionicons name="lock-closed-outline" size={14} color={colors.muted} />
               <Text style={styles.lockedText}>Fixed</Text>
             </View>
           </View>
@@ -261,7 +262,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
                 <Ionicons
                   name="chevron-back"
                   size={20}
-                  color={canGoPrev ? '#0f172a' : '#cbd5e1'}
+                  color={canGoPrev ? colors.primary : colors.slate[300]}
                 />
               </TouchableOpacity>
               <Text style={styles.calendarMonthYear}>
@@ -275,7 +276,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
                 <Ionicons
                   name="chevron-forward"
                   size={20}
-                  color={canGoNext ? '#0f172a' : '#cbd5e1'}
+                  color={canGoNext ? colors.primary : colors.slate[300]}
                 />
               </TouchableOpacity>
             </View>
@@ -294,7 +295,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
       </View>
 
       <View style={styles.tipCard}>
-        <Ionicons name="information-circle-outline" size={18} color="#2563eb" />
+        <Ionicons name="information-circle-outline" size={18} color={colors.secondary} />
         <Text style={styles.tipText}>
           We will notify you when any slot becomes available between your start
           date and the first open day.
@@ -318,7 +319,7 @@ export default function JoinWaitingListScreen({ navigation, route }: any) {
         <View style={styles.existsModalOverlay}>
           <View style={styles.existsModalCard}>
             <View style={styles.existsIconWrap}>
-              <Ionicons name="alert-circle-outline" size={28} color="#dc2626" />
+              <Ionicons name="alert-circle-outline" size={28} color={colors.error} />
             </View>
 
             <Text style={styles.existsTitle}>Already on waiting list</Text>

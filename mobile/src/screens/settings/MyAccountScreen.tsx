@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/myaccount-styles';
 import { api , isApiError } from '../../services/api';
 import { logout } from '../../services/auth-service';
+import { colors } from '../../styles/colors';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
 
@@ -50,7 +51,7 @@ export default function MyAccountScreen({ navigation }: any) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -94,10 +95,10 @@ export default function MyAccountScreen({ navigation }: any) {
           onPress={() => setShowDeleteModal(true)}
         >
           <View style={[styles.itemIconContainer, styles.dangerIconContainer]}>
-            <Ionicons name="trash-outline" size={20} color="#dc2626" />
+            <Ionicons name="trash-outline" size={20} color={colors.error} />
           </View>
           <Text style={[styles.itemText, styles.dangerText]}>Delete My Account</Text>
-          <Ionicons name="chevron-forward" size={18} color="#dc2626" />
+          <Ionicons name="chevron-forward" size={18} color={colors.error} />
         </TouchableOpacity>
       </View>
 
@@ -111,7 +112,7 @@ export default function MyAccountScreen({ navigation }: any) {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalIconContainer}>
-              <Ionicons name="warning" size={40} color="#dc2626" />
+              <Ionicons name="warning" size={40} color={colors.error} />
             </View>
 
             <Text style={styles.modalTitle}>Delete Account?</Text>
@@ -141,7 +142,7 @@ export default function MyAccountScreen({ navigation }: any) {
                 disabled={deleting}
               >
                 {deleting ? (
-                  <ActivityIndicator color="#ffffff" />
+                  <ActivityIndicator color={colors.white} />
                 ) : (
                   <Text style={styles.deleteButtonText}>Delete</Text>
                 )}
@@ -171,10 +172,10 @@ function MenuItem({
       onPress={onPress}
     >
       <View style={styles.itemIconContainer}>
-        <Ionicons name={icon} size={20} color="#0f172a" />
+        <Ionicons name={icon} size={20} color={colors.primary} />
       </View>
       <Text style={styles.itemText}>{label}</Text>
-      <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
+      <Ionicons name="chevron-forward" size={18} color={colors.slate[400]} />
     </TouchableOpacity>
   );
 }

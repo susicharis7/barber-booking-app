@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/notification-styles';
+import { colors } from '../../styles/colors';
 
 const bgImage = require('../../../assets/images/notif-bg.png');
 
@@ -65,7 +66,7 @@ export default function NotificationsScreen({ navigation }: any) {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons name="chevron-back" size={22} color="#fff" />
+          <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -103,7 +104,7 @@ export default function NotificationsScreen({ navigation }: any) {
                       : 'notifications'
                   }
                   size={20}
-                  color={item.read ? '#94a3b8' : '#0f172a'}
+                  color={item.read ? colors.slate[400] : colors.primary}
                 />
               </View>
 

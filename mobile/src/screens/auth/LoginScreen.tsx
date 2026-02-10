@@ -12,6 +12,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import { styles } from '../../styles/screens/login-styles';
 import { login } from '../../services/auth-service';
+import { colors } from '../../styles/colors';
 
 import { isApiError } from '../../services/api';
 
@@ -87,7 +88,7 @@ export default function LoginScreen({ navigation }: any) {
           disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <Text style={styles.loginButtonText}>Prijavi se</Text>
           )}
@@ -102,12 +103,12 @@ export default function LoginScreen({ navigation }: any) {
 
         <View style={styles.socialSection}>
           <TouchableOpacity style={styles.socialButton} activeOpacity={0.8}>
-            <FontAwesome name="google" size={18} color="#000" />
+            <FontAwesome name="google" size={18} color={colors.black} />
             <Text style={styles.socialButtonText}>Nastavite sa Googleom</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.socialButton} activeOpacity={0.8}>
-            <FontAwesome name="facebook" size={18} color="#000" />
+            <FontAwesome name="facebook" size={18} color={colors.black} />
             <Text style={styles.socialButtonText}>Nastavite sa Facebookom</Text>
           </TouchableOpacity>
         </View>

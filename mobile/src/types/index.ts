@@ -100,5 +100,26 @@ export type StaffDashboardOverview = {
   waiting_list_active: number;
 };
 
+/* Staff Appointment */
+export type StaffAppointmentItem = {
+  appointment_id: number;
+  date: string;
+  start_time: string;
+  end_time: string;
+  status: 'confirmed' | 'completed' | 'cancelled';
+  note: string | null;
+  customer: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  } | null;
+  service: {
+    id: number;
+    name: string;
+    duration: number;
+    price: number | string;
+  } | null;
+};
 
 
