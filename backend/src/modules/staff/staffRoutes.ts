@@ -13,4 +13,21 @@ router.get(
   staffController.getDashboardOverview
 );
 
+router.get(
+  '/me/appointments',
+  verifyToken,
+  requireRegisteredUser,
+  requireStaff,
+  staffController.getMyAppointments
+);
+
+router.put(
+  '/appointments/:id/cancel',
+  verifyToken,
+  requireRegisteredUser,
+  requireStaff,
+  staffController.cancelMyAppointment
+);
+
+
 export default router;
