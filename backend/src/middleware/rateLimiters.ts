@@ -20,7 +20,7 @@ export const apiLimiter = rateLimit({
 export const createAppointmentLimiter = rateLimit({
   ...baseLimiterConfig,
   windowMs:60 * 60 * 1000, // 1h
-  max: 10,
+  max: 5,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
     return authReq.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'unknown');
