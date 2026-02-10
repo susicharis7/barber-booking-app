@@ -8,6 +8,8 @@ import waitingListRoutes from './modules/waitingList/waitingListRoutes';
 import { apiLimiter } from './middleware/rateLimiters';
 import helmet from 'helmet';
 
+import staffRoutes from './modules/staff/staffRoutes';
+
 
 const app = express();
 app.use(helmet());
@@ -49,6 +51,7 @@ app.use('/api/barbers', barberRoutes);
 app.use('/api/servicesAndPriceListRoutes', servicesAndPriceListRoutes);
 app.use('/api/appointments', appointmentsRoutes);
 app.use('/api/waiting-list', waitingListRoutes);
+app.use('/api/staff', staffRoutes);
 
 
 export default app;
