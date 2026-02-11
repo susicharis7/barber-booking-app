@@ -14,6 +14,14 @@ router.get(
 );
 
 router.get(
+  '/me/appointment-days',
+  verifyToken,
+  requireRegisteredUser,
+  requireStaff,
+  staffController.getMyAppointmentDays
+);
+
+router.get(
   '/me/appointments',
   verifyToken,
   requireRegisteredUser,

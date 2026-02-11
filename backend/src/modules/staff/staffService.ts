@@ -1,5 +1,6 @@
 import { pool } from '../../db/pool';
 import { StaffDashboardOverview } from '../../types/types';
+import { makeCursor, parseCursor } from '../appointments/helperFunctions';
 
 export const getDashboardOverview = async (): Promise<StaffDashboardOverview> => {
   const result = await pool.query(`
@@ -25,8 +26,19 @@ export const getDashboardOverview = async (): Promise<StaffDashboardOverview> =>
   return result.rows[0];
 };
 
-export const getMyAppointments = async (firebaseUid: string, limit = 20) => {
-  const safeLimit = Math.min(Math.max(limit, 1), 200);
+type GetMyAppointmentsOptions = {
+  limit?: number;
+  cursor?: string;
+  date?: string;
+};
+
+export const getMyAppointments = async (
+  firebaseUid: string,
+  options: GetMyAppointmentsOptions = {}
+) => {
+  const parsed = parseCursor(options.cursor);
+  const safeLimit = Math.min(Math.max(options.limit ?? 5, 1), 50);
+  const limitPlus = safeLimit + 1;
 
   const result = await pool.query(
     `
@@ -55,13 +67,59 @@ export const getMyAppointments = async (firebaseUid: string, limit = 20) => {
     LEFT JOIN users cu ON cu.id = a.customer_id
     LEFT JOIN services s ON s.id = a.service_id
     WHERE bu.firebase_uid = $1
+      AND ($2::date IS NULL OR a.date = $2::date)
+      AND (
+        $3::date IS NULL OR
+        (a.date, a.start_time, a.id) < ($3::date, $4::time, $5::int)
+      )
     ORDER BY a.date DESC, a.start_time DESC, a.id DESC
-    LIMIT $2
+    LIMIT $6
     `,
-    [firebaseUid, safeLimit]
+    [
+      firebaseUid,
+      options.date ?? null,
+      parsed?.date ?? null,
+      parsed?.time ?? null,
+      parsed?.id ?? null,
+      limitPlus,
+    ]
   );
 
-  return result.rows;
+  const rows = result.rows;
+  const hasMore = rows.length > safeLimit;
+  if (hasMore) rows.pop();
+
+  const nextCursor = hasMore
+    ? makeCursor({
+        date: rows[rows.length - 1].date,
+        start_time: rows[rows.length - 1].start_time,
+        id: rows[rows.length - 1].appointment_id,
+      })
+    : null;
+
+  return { appointments: rows, nextCursor };
+};
+
+export const getMyAppointmentDays = async (
+  firebaseUid: string,
+  fromDate: string,
+  toDate: string
+) => {
+  const result = await pool.query(
+    `
+    SELECT a.date, COUNT(*)::int AS count
+    FROM appointments a
+    JOIN barbers b ON b.id = a.barber_id
+    JOIN users bu ON bu.id = b.user_id
+    WHERE bu.firebase_uid = $1
+      AND a.date BETWEEN $2::date AND $3::date
+    GROUP BY a.date
+    ORDER BY a.date ASC
+    `,
+    [firebaseUid, fromDate, toDate]
+  );
+
+  return result.rows as Array<{ date: string; count: number }>;
 };
 
 export const cancelMyAppointment = async (

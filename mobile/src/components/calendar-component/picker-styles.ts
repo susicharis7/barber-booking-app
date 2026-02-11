@@ -53,6 +53,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 2,
+    position: 'relative',
   },
 
   calendarDayDisabled: {
@@ -76,5 +77,17 @@ export const styles = StyleSheet.create({
 
   calendarDayTextSelected: {
     color: colors.white,
+  },
+
+  dayDot: {
+    position: 'absolute',
+    top: 6,
+    width: 5,
+    height: 5,
+    borderRadius: 999,
+    backgroundColor: colors.secondary,
+  },
+  dayDotSelected: {
+    backgroundColor: colors.white,
   },
 });

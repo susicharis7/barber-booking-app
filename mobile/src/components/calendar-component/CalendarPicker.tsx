@@ -9,6 +9,7 @@ import {
   getDaysInMonth,
   getFirstDayOfMonth,
   isSameDay,
+  toLocalDate,
 } from '../../utils/calendar';
 import { styles } from './picker-styles';
 
@@ -18,6 +19,8 @@ type CalendarPickerProps = {
   minDate?: Date;
   maxDate?: Date;
   isDateDisabled?: (date: Date) => boolean;
+  markedDates?: string[];
+  onMonthChange?: (year: number, month: number) => void;
 };
 
 const startOfDay = (date: Date) =>
@@ -31,6 +34,8 @@ export default function CalendarPicker({
   minDate,
   maxDate,
   isDateDisabled,
+  markedDates,
+  onMonthChange,
 }: CalendarPickerProps) {
   const baseDate = value ?? minDate ?? new Date();
   const [currentMonth, setCurrentMonth] = useState(baseDate.getMonth());
@@ -42,8 +47,13 @@ export default function CalendarPicker({
     setCurrentYear(value.getFullYear());
   }, [value]);
 
+  useEffect(() => {
+    onMonthChange?.(currentYear, currentMonth);
+  }, [currentYear, currentMonth, onMonthChange]);
+
   const min = useMemo(() => (minDate ? startOfDay(minDate) : null), [minDate]);
   const max = useMemo(() => (maxDate ? startOfDay(maxDate) : null), [maxDate]);
+  const markerSet = useMemo(() => new Set(markedDates ?? []), [markedDates]);
 
   const currentKey = toMonthKey(currentYear, currentMonth);
   const minKey = min
@@ -102,6 +112,7 @@ export default function CalendarPicker({
       const date = new Date(currentYear, currentMonth, day);
       const disabled = isDisabled(date);
       const selected = value ? isSameDay(value, date) : false;
+      const hasMarker = markerSet.has(toLocalDate(date));
 
       items.push(
         <TouchableOpacity
@@ -115,6 +126,9 @@ export default function CalendarPicker({
           disabled={disabled}
           activeOpacity={0.7}
         >
+          {hasMarker && (
+            <View style={[styles.dayDot, selected && styles.dayDotSelected]} />
+          )}
           <Text
             style={[
               styles.calendarDayText,
