@@ -7,16 +7,16 @@ import {
   ActivityIndicator,
   Alert,
   Image,
-  Modal,
 } from 'react-native';
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { api , isApiError } from '../../services/api';
+import { api, isApiError } from '../../services/api';
 import { styles } from '../../styles/screens/register-styles';
 import { colors } from '../../styles/colors';
-
-import { registerWithEmailAndPassword } from '../../services/auth-service';
+import {
+  registerWithEmailAndPassword,
+  deleteCurrentUserAccount,
+} from '../../services/auth-service';
 
 const logo = require('../../../assets/images/logo.png');
 
@@ -28,11 +28,13 @@ export default function RegisterScreen({ navigation }: any) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
-  const [feedbackTitle, setFeedbackTitle] = useState('');
-  const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [feedbackType, setFeedbackType] = useState<'success' | 'error'>('error');
-
+  const rollbackFirebaseRegistration = async () => {
+    try {
+      await deleteCurrentUserAccount();
+    } catch (rollbackError) {
+      console.error('Registration rollback failed:', rollbackError);
+    }
+  };
 
   const handleRegister = async () => {
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
@@ -47,28 +49,42 @@ export default function RegisterScreen({ navigation }: any) {
 
     setLoading(true);
 
+    let firebaseCreated = false;
+
     try {
-   
-      await registerWithEmailAndPassword(email, password);
- 
-      const data = await api.post('/api/users/register', {
+      const firebaseUser = await registerWithEmailAndPassword(email, password);
+      firebaseCreated = true;
+
+      // Ensure fresh token exists before backend call
+      await firebaseUser.getIdToken(true);
+
+      await api.post('/api/users/register', {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
       });
 
-      console.log('User registered successfully:', data);
       Alert.alert('Success', 'Account created successfully!');
-
     } catch (error: unknown) {
-        if (isApiError(error)) {
-          Alert.alert('Registration failed', error.message);
-          return;
-        }
 
-        Alert.alert('Registration failed', 'Unexpected error');
-      } finally {
-         setLoading(false);
-      }};
+      if (isApiError(error) && error.code === 'USER_ALREADY_EXISTS') {
+        Alert.alert('Success', 'Account already exists and is ready to use.');
+        return;
+      }
+
+      if (firebaseCreated) {
+        await rollbackFirebaseRegistration();
+      }
+
+      if (isApiError(error)) {
+        Alert.alert('Registration failed', error.message);
+        return;
+      }
+
+      Alert.alert('Registration failed', 'Unexpected error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -104,8 +120,8 @@ export default function RegisterScreen({ navigation }: any) {
 
           <TextInput
             placeholder="Email"
-            textContentType='emailAddress'
-            autoComplete='email'
+            textContentType="emailAddress"
+            autoComplete="email"
             autoCorrect={false}
             autoCapitalize="none"
             keyboardType="email-address"
@@ -117,9 +133,9 @@ export default function RegisterScreen({ navigation }: any) {
           <View style={styles.passwordRow}>
             <TextInput
               placeholder="Šifra"
-              textContentType='newPassword'
-              autoComplete='password-new'
-              autoCapitalize='none'
+              textContentType="newPassword"
+              autoComplete="password-new"
+              autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry
               value={password}
@@ -133,10 +149,10 @@ export default function RegisterScreen({ navigation }: any) {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               style={[styles.input, styles.halfInput]}
-              autoComplete='password-new'
-              autoCapitalize='none'
+              autoComplete="password-new"
+              autoCapitalize="none"
               autoCorrect={false}
-              textContentType='newPassword'
+              textContentType="newPassword"
             />
           </View>
 
