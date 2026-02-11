@@ -88,6 +88,10 @@ export type WaitingListItem = {
   service: { id: number; name: string; duration: number; price: string };
 };
 
+
+
+
+
 /* Staff Dashboard - OVERVIEW */
 export type StaffDashboardOverview = {
   users_total: number;
