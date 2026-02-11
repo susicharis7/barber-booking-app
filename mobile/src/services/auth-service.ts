@@ -2,6 +2,7 @@ import {
     signInWithEmailAndPassword,
     signOut,
     createUserWithEmailAndPassword,
+    deleteUser,
     User,
 } from 'firebase/auth';
 
@@ -42,4 +43,12 @@ export const registerWithEmailAndPassword = async (
     );
 
     return userCredential.user;
+}
+
+/* Deletes currently signed in Firebase User => for Registration rollback */
+export const deleteCurrentUserAccount = async(): Promise<void> => {
+    const currentUser = firebaseAuth.currentUser;
+
+    if (!currentUser) return;
+    await deleteUser(currentUser);
 }
