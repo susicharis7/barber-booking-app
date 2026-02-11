@@ -48,3 +48,18 @@ export const getBarberWorkingHours = async (
     res.status(500).json({ message: 'Failed to fetch barber working hours' });
   }
 };
+
+
+
+export const getStudioWeeklyWorkingHours = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const weeklyHours = await barberService.getStudioWeeklyWorkingHours();
+    res.json({ weeklyHours });
+  } catch (error) {
+    console.error('Get studio weekly working hours error:', error);
+    res.status(500).json({ message: 'Failed to fetch studio weekly working hours' });
+  }
+};

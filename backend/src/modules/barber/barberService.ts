@@ -62,3 +62,23 @@ export const getWorkingHoursByBarberId = async (barberId: number) => {
 
     return result.rows;
 };
+
+
+export const getStudioWeeklyWorkingHours = async () => {
+  const result = await pool.query(
+    `
+    SELECT
+      wh.day_of_week,
+      MIN(wh.start_time) AS start_time,
+      MAX(wh.end_time) AS end_time
+    FROM working_hours wh
+    JOIN barbers b ON b.id = wh.barber_id
+    WHERE wh.is_working = true
+      AND b.is_active = true
+    GROUP BY wh.day_of_week
+    ORDER BY wh.day_of_week ASC
+    `
+  );
+
+  return result.rows;
+};

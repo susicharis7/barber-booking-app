@@ -7,6 +7,8 @@ const router = Router();
 
 router.get('/', barberController.getBarbers);
 
+router.get('/weekly-hours', barberController.getStudioWeeklyWorkingHours);
+
 router.get(
     '/:id/working-hours',
     getBarberByIdValidation,
