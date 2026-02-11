@@ -1,222 +1,229 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import { styles } from '../../styles/screens/services-screens/calendar-styles';
 import { colors } from '../../styles/colors';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { api } from '../../services/api';
-
-
-import {
-  daysOfWeek,
-  months,
-  getDaysInMonth,
-  getFirstDayOfMonth,
-  isSameDay,
-  toLocalDate,
-  formatDate,
-} from '../../utils/calendar';
-
-
-/* --- Constants --- */
+import { formatDate, isSameDay, toLocalDate } from '../../utils/calendar';
+import type { WorkingHours } from '../../types';
+import CalendarPicker from '../../components/calendar-component/CalendarPicker';
 
 const bgImage = require('../../../assets/images/settings-bg.png');
-const timeSlots = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-  '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-  '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
-];
 
+const SLOT_STEP_MINUTES = 30;
 
+type BookedSlot = {
+  start_time: string;
+  end_time: string;
+};
 
+type TimeWindow = {
+  start: number;
+  end: number;
+};
 
+const timeToMinutes = (value: string) => {
+  const [h, m] = value.split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+};
 
-/* --- main Component --- */
+const minutesToTime = (value: number) => {
+  const h = Math.floor(value / 60);
+  const m = value % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+};
+
+const overlaps = (aStart: number, aEnd: number, bStart: number, bEnd: number) =>
+  !(aEnd <= bStart || aStart >= bEnd);
+
 export default function CalendarScreen({ navigation, route }: any) {
-
-  // data from previous screens
   const { employee, service } = route.params;
-  
-  // duration & price from chosen service 
-  const serviceDuration = Number(service.duration) || 0;
+
+  const serviceDuration = Math.max(1, Number(service.duration) || 0);
   const servicePrice = Number(service.price) || 0;
 
-  // for `Add a note` to be seen when keyboard on view
   const scrollRef = useRef<KeyboardAwareScrollView>(null);
 
-
-  const today = new Date();
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [note, setNote] = useState('');
-  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+
+  const [workingHours, setWorkingHours] = useState<WorkingHours[]>([]);
+  const [workingHoursLoading, setWorkingHoursLoading] = useState(true);
+
+  const [bookedSlots, setBookedSlots] = useState<BookedSlot[]>([]);
+  const [isAvailabilityLoading, setIsAvailabilityLoading] = useState(false);
+
   const [nextAvailableDate, setNextAvailableDate] = useState<Date | null>(null);
   const [isSearchingNext, setIsSearchingNext] = useState(false);
 
-
-
-  /* --- Time Helpers (date + time Logic) --- */
-
- 
-
-  // the day is finished as soon as last slot exceeds 1 minute
-  const getLastSlotCutoff = () => {
-    const lastSlot = timeSlots[timeSlots.length - 1]; // "17:30"
-    const [h, m] = lastSlot.split(':').map(Number);
-    const cutoff = new Date();
-    cutoff.setHours(h, m + 1, 0, 0); // 17:31
-    return cutoff;
-  };
-
-  const isDayOver = (date: Date) => {
-    const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    if (targetDate.getTime() !== todayDate.getTime()) return false;
-    return now >= getLastSlotCutoff();
-  };
-
-  // helper for `isSlotPast` & `isDayOver` 
   const [now, setNow] = useState(new Date());
+
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(new Date());
     }, 60000);
+
     return () => clearInterval(interval);
   }, []);
 
-  const isSlotPast = (time: string, date: Date | null) => {
-    if (!date) return false;
-    if (!isSameDay(date, now)) return false;
-    const [h, m] = time.split(':').map(Number);
-    const slotTime = new Date(now);
-    slotTime.setHours(h, m, 0, 0);
-    return slotTime <= now;
-  };
-  
-  
-  /* --- Data Helpers --- */
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-  // we use this to hide booked slots in the UI
-  const fetchBookedSlots = async (dateStr: string) => {
+  const fetchWorkingHours = useCallback(async () => {
+    setWorkingHoursLoading(true);
     try {
-      const res = await api.get<{ slots: { start_time: string }[] }>(
+      const res = await api.get<{ workingHours: WorkingHours[] }>(
+        `/api/barbers/${employee.id}/working-hours`,
+        false
+      );
+      setWorkingHours(res.workingHours ?? []);
+    } catch (err) {
+      console.error('Fetch working hours error:', err);
+      setWorkingHours([]);
+    } finally {
+      setWorkingHoursLoading(false);
+    }
+  }, [employee.id]);
+
+  useEffect(() => {
+    fetchWorkingHours();
+  }, [fetchWorkingHours]);
+
+  const getWindowForDate = useCallback(
+    (date: Date): TimeWindow | null => {
+      const day = date.getDay();
+      const dayHours = workingHours.find((w) => w.day_of_week === day && w.is_working);
+
+      if (!dayHours) return null;
+
+      const start = timeToMinutes(dayHours.start_time);
+      const end = timeToMinutes(dayHours.end_time);
+
+      if (end <= start) return null;
+
+      return { start, end };
+    },
+    [workingHours]
+  );
+
+  const isSlotPastByStartMinutes = useCallback(
+    (slotStartMinutes: number, date: Date) => isSameDay(date, now) && slotStartMinutes <= nowMinutes,
+    [now, nowMinutes]
+  );
+
+  const buildAvailableTimes = useCallback(
+    (date: Date, busySlots: BookedSlot[]) => {
+      const window = getWindowForDate(date);
+      if (!window) return [];
+
+      const available: string[] = [];
+
+      for (
+        let slotStart = window.start;
+        slotStart + serviceDuration <= window.end;
+        slotStart += SLOT_STEP_MINUTES
+      ) {
+        if (isSlotPastByStartMinutes(slotStart, date)) continue;
+
+        const slotEnd = slotStart + serviceDuration;
+
+        const hasConflict = busySlots.some((busy) => {
+          const busyStart = timeToMinutes(busy.start_time);
+          const busyEnd = timeToMinutes(busy.end_time);
+          return overlaps(slotStart, slotEnd, busyStart, busyEnd);
+        });
+
+        if (!hasConflict) {
+          available.push(minutesToTime(slotStart));
+        }
+      }
+
+      return available;
+    },
+    [getWindowForDate, isSlotPastByStartMinutes, serviceDuration]
+  );
+
+  const fetchBookedSlots = useCallback(
+    async (dateStr: string) => {
+      setIsAvailabilityLoading(true);
+      try {
+        const res = await api.get<{ slots: BookedSlot[] }>(
+          `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
+        );
+        setBookedSlots(res.slots ?? []);
+      } catch (err) {
+        console.error('Fetch booked slots error:', err);
+        setBookedSlots([]);
+      } finally {
+        setIsAvailabilityLoading(false);
+      }
+    },
+    [employee.id]
+  );
+
+  const hasFreeSlot = useCallback(
+    async (date: Date) => {
+      const window = getWindowForDate(date);
+      if (!window) return false;
+
+      const dateStr = toLocalDate(date);
+      const res = await api.get<{ slots: BookedSlot[] }>(
         `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
       );
-      const slots = res.slots.map((s) => s.start_time.slice(0, 5));
-      setBookedSlots(slots);
-    } catch (err) {
-      console.error('Fetch booked slots error:', err);
-      setBookedSlots([]);
-    }
-  };
 
-  // used in `findNextAvailableDate` to find the first day that has free appointment
-  const hasFreeSlot = async (date: Date) => {
-    const dateStr = toLocalDate(date);
-    const res = await api.get<{ slots: { start_time: string }[] }>(
-      `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
-    );
-    const slots = res.slots.map((s) => s.start_time.slice(0, 5));
-    const available = timeSlots.filter(
-      (time) => !slots.includes(time) && !isSlotPast(time, date)
-    );
-    return available.length > 0;
-  };
+      const available = buildAvailableTimes(date, res.slots ?? []);
+      return available.length > 0;
+    },
+    [buildAvailableTimes, employee.id, getWindowForDate]
+  );
 
+  const isDateDisabled = useCallback(
+    (date: Date) => {
+      const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  /* --- Calendar Helpers --- */
+      if (targetDate < todayStart) return true;
 
- 
+      const window = getWindowForDate(targetDate);
+      if (!window) return true;
 
-  const isDateDisabled = (day: number) => {
-    const date = new Date(currentYear, currentMonth, day);
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      if (isSameDay(targetDate, now) && nowMinutes >= window.end) return true;
 
-    if (date < todayStart) return true;
-    if (date.getTime() === todayStart.getTime() && isDayOver(date)) return true;
+      return false;
+    },
+    [getWindowForDate, now, nowMinutes]
+  );
 
-    return false;
-  };
-
-  const isDateSelected = (day: number) => {
-    if (!selectedDate) return false;
-    return (
-      selectedDate.getDate() === day &&
-      selectedDate.getMonth() === currentMonth &&
-      selectedDate.getFullYear() === currentYear
-    );
-  };
-
-
-  /* --- Selection Helpers --- */
-
-  const selectDate = (date: Date) => {
-    setCurrentMonth(date.getMonth());
-    setCurrentYear(date.getFullYear());
-    setSelectedDate(date);
-    fetchBookedSlots(toLocalDate(date));
-    setSelectedTime(null);
-  };
-
-  const handleSelectDate = (day: number) => {
-    if (!isDateDisabled(day)) {
-      const newDate = new Date(currentYear, currentMonth, day);
-      selectDate(newDate);
-    }
-  };
-
-
-  /* --- Month Navigation --- */
-
-  const handlePrevMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
-
-  const canGoPrev = () => {
-    return currentYear > now.getFullYear() ||
-      (currentYear === now.getFullYear() && currentMonth > now.getMonth());
-  };
-
-  /* --- Selection / UI Actions --- */
+  const selectDate = useCallback(
+    (date: Date) => {
+      setSelectedDate(date);
+      setSelectedTime(null);
+      fetchBookedSlots(toLocalDate(date));
+    },
+    [fetchBookedSlots]
+  );
 
   const handleContinue = () => {
-    if (selectedDate && selectedTime) {
-      navigation.navigate('Information', {
-        employee,
-        service,
-        date: toLocalDate(selectedDate),
-        time: selectedTime,
-        note,
-      });
-    }
+    if (!selectedDate || !selectedTime) return;
+
+    navigation.navigate('Information', {
+      employee,
+      service,
+      date: toLocalDate(selectedDate),
+      time: selectedTime,
+      note,
+    });
   };
 
-
-
-  /* --- UI Helpers --- */
-  
   const formatSelectedDate = () => {
     if (!selectedDate) return '';
     return formatDate(selectedDate, {
@@ -229,32 +236,35 @@ export default function CalendarScreen({ navigation, route }: any) {
 
   const calculateEndTime = () => {
     if (!selectedTime) return '';
+
     const [hours, minutes] = selectedTime.split(':').map(Number);
-    const endMinutes = minutes + serviceDuration;
-    const endHours = hours + Math.floor(endMinutes / 60);
-    const finalMinutes = endMinutes % 60;
-    return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
+    const endMinutesTotal = minutes + serviceDuration;
+    const endHours = hours + Math.floor(endMinutesTotal / 60);
+    const finalMinutes = endMinutesTotal % 60;
+
+    return `${String(endHours).padStart(2, '0')}:${String(finalMinutes).padStart(2, '0')}`;
   };
 
-  /* --- Derived Values --- */
-
-  const isSelectedDayOver = selectedDate ? isDayOver(selectedDate) : false;
-
-  const availableTimes = selectedDate
-    ? timeSlots.filter((time) => {
-        const isBooked = bookedSlots.includes(time);
-        const isPast = isSlotPast(time, selectedDate);
-        return !isBooked && !isPast;
-      })
-    : [];
+  const availableTimes = useMemo(() => {
+    if (!selectedDate) return [];
+    return buildAvailableTimes(selectedDate, bookedSlots);
+  }, [bookedSlots, buildAvailableTimes, selectedDate]);
 
   const availableCount = availableTimes.length;
 
-  
-  /* --- Effects --- */
-  
+  const isSelectedDayOver = useMemo(() => {
+    if (!selectedDate) return false;
+
+    const window = getWindowForDate(selectedDate);
+    if (!window) return true;
+
+    if (!isSameDay(selectedDate, now)) return false;
+
+    return nowMinutes >= window.end;
+  }, [getWindowForDate, now, nowMinutes, selectedDate]);
+
   useEffect(() => {
-    let isCancelled = false;
+    let cancelled = false;
 
     const findNextAvailableDate = async () => {
       if (!selectedDate) {
@@ -276,12 +286,11 @@ export default function CalendarScreen({ navigation, route }: any) {
       for (let i = 1; i <= maxLookaheadDays; i++) {
         const candidate = new Date(start);
         candidate.setDate(start.getDate() + i);
+
         try {
           const hasSlot = await hasFreeSlot(candidate);
           if (hasSlot) {
-            if (!isCancelled) {
-              setNextAvailableDate(candidate);
-            }
+            if (!cancelled) setNextAvailableDate(candidate);
             break;
           }
         } catch (err) {
@@ -290,69 +299,26 @@ export default function CalendarScreen({ navigation, route }: any) {
         }
       }
 
-      if (!isCancelled) {
-        setIsSearchingNext(false);
-      }
+      if (!cancelled) setIsSearchingNext(false);
     };
 
     findNextAvailableDate();
+
     return () => {
-      isCancelled = true;
+      cancelled = true;
     };
-  }, [selectedDate, availableTimes.length, isSelectedDayOver, employee.id]);
+  }, [availableTimes.length, hasFreeSlot, isSelectedDayOver, selectedDate]);
 
-  
-
-  
-
-  const renderCalendar = () => {
-    const daysInMonth = getDaysInMonth(currentMonth, currentYear);
-    const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
-    const days = [];
-
-    for (let i = 0; i < firstDay; i++) {
-      days.push(<View key={`empty-${i}`} style={styles.calendarDay} />);
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const disabled = isDateDisabled(day);
-      const selected = isDateSelected(day);
-
-      days.push(
-        <TouchableOpacity
-          key={day}
-          style={[
-            styles.calendarDay,
-            disabled && styles.calendarDayDisabled,
-            selected && styles.calendarDaySelected,
-          ]}
-          onPress={() => handleSelectDate(day)}
-          disabled={disabled}
-          activeOpacity={0.7}
-        >
-          <Text
-            style={[
-              styles.calendarDayText,
-              disabled && styles.calendarDayTextDisabled,
-              selected && styles.calendarDayTextSelected,
-            ]}
-          >
-            {day}
-          </Text>
-        </TouchableOpacity>
-      );
-    }
-
-    return days;
-  };
+  const minDate = useMemo(
+    () => new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+    [now]
+  );
 
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
 
-        {/* BACK BUTTON */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -362,7 +328,6 @@ export default function CalendarScreen({ navigation, route }: any) {
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
-        {/* HEADER CONTENT */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>SCHEDULE</Text>
           <Text style={styles.headerTitle}>Select Date & Time</Text>
@@ -372,7 +337,6 @@ export default function CalendarScreen({ navigation, route }: any) {
         </View>
       </ImageBackground>
 
-      {/* WHITE CONTENT */}
       <KeyboardAwareScrollView
         ref={scrollRef}
         style={styles.content}
@@ -383,40 +347,19 @@ export default function CalendarScreen({ navigation, route }: any) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* CALENDAR */}
-        <View style={styles.calendarCard}>
-          <View style={styles.calendarHeader}>
-            <TouchableOpacity
-              onPress={handlePrevMonth}
-              disabled={!canGoPrev()}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color={canGoPrev() ? colors.primary : colors.slate[300]}
-              />
-            </TouchableOpacity>
-            <Text style={styles.calendarMonthYear}>
-              {months[currentMonth]} {currentYear}
-            </Text>
-            <TouchableOpacity onPress={handleNextMonth} activeOpacity={0.7}>
-              <Ionicons name="chevron-forward" size={24} color={colors.primary} />
-            </TouchableOpacity>
+        {workingHoursLoading ? (
+          <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+            <ActivityIndicator size="small" color={colors.primary} />
           </View>
+        ) : (
+          <CalendarPicker
+            value={selectedDate}
+            onChange={selectDate}
+            minDate={minDate}
+            isDateDisabled={isDateDisabled}
+          />
+        )}
 
-          <View style={styles.calendarWeekDays}>
-            {daysOfWeek.map((day) => (
-              <Text key={day} style={styles.calendarWeekDayText}>
-                {day}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.calendarGrid}>{renderCalendar()}</View>
-        </View>
-
-        {/* TIME SLOTS */}
         {selectedDate && (
           <View style={styles.timeSlotsSection}>
             <View style={styles.timeSlotsHeader}>
@@ -424,18 +367,18 @@ export default function CalendarScreen({ navigation, route }: any) {
                 AVAILABLE TIMES
               </Text>
               <View style={styles.timeSlotsBadge}>
-                <Text style={styles.timeSlotsBadgeText}>
-                  {availableCount} slots
-                </Text>
+                <Text style={styles.timeSlotsBadgeText}>{availableCount} slots</Text>
               </View>
             </View>
 
-            {isSelectedDayOver ? (
+            {isAvailabilityLoading ? (
+              <View style={{ paddingVertical: 18, alignItems: 'center' }}>
+                <ActivityIndicator size="small" color={colors.primary} />
+              </View>
+            ) : isSelectedDayOver ? (
               <View style={styles.noSlotsCard}>
                 <Text style={styles.noSlotsTitle}>This day is finished</Text>
-                <Text style={styles.noSlotsText}>
-                  Please select another date.
-                </Text>
+                <Text style={styles.noSlotsText}>Please select another date.</Text>
                 <View style={styles.noSlotsActions}>
                   {!isSearchingNext && nextAvailableDate && (
                     <TouchableOpacity
@@ -443,9 +386,14 @@ export default function CalendarScreen({ navigation, route }: any) {
                       activeOpacity={0.7}
                       onPress={() => selectDate(nextAvailableDate)}
                     >
-                      <Ionicons name="calendar-outline" size={16} color={colors.secondary} />
+                      <Ionicons
+                        name="calendar-outline"
+                        size={16}
+                        color={colors.secondary}
+                      />
                       <Text style={styles.nextAvailableButtonText}>
-                        Next available: {formatDate(nextAvailableDate, {
+                        Next available:{' '}
+                        {formatDate(nextAvailableDate, {
                           weekday: 'short',
                           month: 'short',
                           day: 'numeric',
@@ -468,9 +416,14 @@ export default function CalendarScreen({ navigation, route }: any) {
                       activeOpacity={0.7}
                       onPress={() => selectDate(nextAvailableDate)}
                     >
-                      <Ionicons name="calendar-outline" size={16} color={colors.secondary} />
+                      <Ionicons
+                        name="calendar-outline"
+                        size={16}
+                        color={colors.secondary}
+                      />
                       <Text style={styles.nextAvailableButtonText}>
-                        Next available: {formatDate(nextAvailableDate, {
+                        Next available:{' '}
+                        {formatDate(nextAvailableDate, {
                           weekday: 'short',
                           month: 'short',
                           day: 'numeric',
@@ -483,15 +436,14 @@ export default function CalendarScreen({ navigation, route }: any) {
                     style={styles.joinWaitlistButton}
                     activeOpacity={0.7}
                     onPress={() => {
-                      if (!selectedDate) return;
-
                       navigation.navigate('JoinWaitingListScreen', {
-                        employee, 
+                        employee,
                         service,
                         date: toLocalDate(selectedDate),
-                        nextAvailableDate: nextAvailableDate ? toLocalDate(nextAvailableDate) : null,
-
-                      })
+                        nextAvailableDate: nextAvailableDate
+                          ? toLocalDate(nextAvailableDate)
+                          : null,
+                      });
                     }}
                   >
                     <Ionicons name="time-outline" size={16} color={colors.white} />
@@ -535,7 +487,6 @@ export default function CalendarScreen({ navigation, route }: any) {
           </View>
         )}
 
-        {/* BOOKING SUMMARY */}
         {selectedDate && selectedTime && (
           <View style={styles.summaryCard}>
             <Text style={styles.summaryTitle}>Booking Summary</Text>
@@ -591,7 +542,6 @@ export default function CalendarScreen({ navigation, route }: any) {
           </View>
         )}
 
-        {/* CONTINUE BUTTON */}
         <TouchableOpacity
           style={[
             styles.continueButton,
