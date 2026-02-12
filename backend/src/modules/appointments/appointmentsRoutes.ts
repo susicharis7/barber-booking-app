@@ -12,6 +12,7 @@ import {
     getBookedTimesValidation,
     getAppointmentsValidation,
 } from './appointmentsValidation';
+import { requireRegisteredUser } from '../../middleware/rbacMiddleware';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ const router = Router();
 router.get(
     '/upcoming', 
     verifyToken, 
+    requireRegisteredUser,
     getAppointmentsValidation,
     validateRequest,
     appointmentsController.getUpcomingAppointments
@@ -27,6 +29,7 @@ router.get(
 router.get(
     '/past', 
     verifyToken, 
+    requireRegisteredUser,
     getAppointmentsValidation,
     validateRequest,    
     appointmentsController.getPastAppointments
@@ -35,6 +38,7 @@ router.get(
 router.get(
     '/barber/:barberId/booked', 
     verifyToken,
+    requireRegisteredUser,
     getBookedTimesValidation,
     validateRequest,
     appointmentsController.getBookedTimes
@@ -45,6 +49,7 @@ router.get(
 router.post(
   '/',
   verifyToken,
+  requireRegisteredUser,
   createAppointmentLimiter,
   createAppointmentValidation,
   validateRequest,
@@ -55,6 +60,7 @@ router.post(
 router.put(
   '/:id/cancel',
   verifyToken,
+  requireRegisteredUser,
   cancelAppointmentValidation,
   validateRequest,
   appointmentsController.cancelAppointment

@@ -313,3 +313,27 @@ export const markPastAppointmentsCompleted = async () => {
   return result.rowCount ?? 0;
 }
 
+export const isWithinBarberWorkingHours = async (
+  barberId: number,
+  date: string,
+  startTime: string,
+  serviceId: number,
+  db: QueryExecutor = pool
+) => {
+  const result = await db.query(
+    `
+    SELECT 1
+    FROM working_hours wh
+    JOIN services s ON s.id = $4
+    WHERE wh.barber_id = $1
+      AND wh.day_of_week = EXTRACT(DOW FROM $2::date)::int
+      AND wh.is_working = true
+      AND $3::time >= wh.start_time
+      AND ($3::time + (s.duration || ' minutes')::interval)::time <= wh.end_time
+    LIMIT 1
+    `,
+    [barberId, date, startTime, serviceId]
+  );
+
+  return (result.rowCount ?? 0) > 0;
+};

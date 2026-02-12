@@ -110,6 +110,21 @@ export const createAppointment = async(req: Request, res: Response) => {
           }
         }
 
+        const withinWorkingHours = await appointmentsService.isWithinBarberWorkingHours(
+          barber_id,
+          date,
+          start_time,
+          service_id
+        );
+
+        if (!withinWorkingHours) {
+          res.status(409).json({
+            code: 'OUTSIDE_WORKING_HOURS',
+            message: 'Selected time is outside barber working hours',
+          });
+          return;
+        }
+
         const appointment = await appointmentsService.createAppointmentByUid(
             user.uid, { barber_id, service_id, date, start_time, note}
         );
