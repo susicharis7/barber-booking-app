@@ -8,9 +8,17 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
     
     try {
         const { first_name, last_name } = req.body;
-
-        // Data from Verified Token
         const { uid, email } = req.user!;
+
+        const normalizedEmail = (email ?? '').trim().toLowerCase();
+
+        if (!normalizedEmail) {
+            res.status(400).json({
+                code: 'EMAIL_REQUIRED',
+                message: 'Authenticated Firebase user must have a valid email',
+            });
+            return ;
+        }
 
         // Check does user already exists?
         const existingUser = await userService.findUserByFirebaseUID(uid);
@@ -19,11 +27,20 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
             return;
         }
 
+        const existingEmailUser = await userService.findUserByEmail(normalizedEmail);
+        if (existingEmailUser && existingEmailUser.firebase_uid !== uid) {
+            res.status(409).json({
+                code: 'EMAIL_ALREADY_IN_USE',
+                message: 'Email is already associated with another account',
+            });
+            return;
+        }
+
 
         // Create User in DB
         const newUser = await userService.createUser({
             firebase_uid: uid,
-            email: email || '',
+            email: normalizedEmail,
             first_name,
             last_name,
         });
@@ -35,9 +52,17 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
             user: newUser,
         });
 
-    } catch(error) {
+    } catch(error: any) {
+        if (error?.code === '23505') {
+            res.status(409).json({
+                code: 'USER_ALREADY_EXISTS',
+                message: 'User already exists',
+            });
+            return;
+        }
+
         console.error('Registration Error: ', error);
-        res.status(500).json({ message: 'Internal Server Error...'});
+        res.status(500).json({ message: 'Internal Server Error...' });
     }
 
 };
