@@ -10,7 +10,7 @@ export const barberExists = async (
   db: QueryExecutor = pool
 ) => {
   const result = await db.query(
-    `SELECT 1 FROM barbers WHERE id = $1 LIMIT 1`,
+    `SELECT 1 FROM barbers WHERE id = $1 AND is_active = true LIMIT 1`,
     [barberId]
   );
   return (result.rowCount ?? 0) > 0;
@@ -21,7 +21,7 @@ export const serviceExists = async (
   db: QueryExecutor = pool
 ) => {
   const result = await db.query(
-    `SELECT 1 FROM services WHERE id = $1 LIMIT 1`,
+    `SELECT 1 FROM services WHERE id = $1 AND is_active = true LIMIT 1`,
     [serviceId]
   );
   return (result.rowCount ?? 0) > 0;
