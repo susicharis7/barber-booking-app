@@ -145,7 +145,6 @@ export const createAppointmentByUid = async (
   try {
     await client.query('BEGIN');
 
-    // Serialize booking attempts per barber + date.
     await client.query(
       'SELECT pg_advisory_xact_lock($1::int, $2::int)',
       [barber_id, dateLockKey]

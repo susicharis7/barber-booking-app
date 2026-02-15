@@ -16,6 +16,7 @@ export const requireRegisteredUser = async (
     }
 
     const dbUser = await userService.findUserByFirebaseUID(uid);
+
     if (!dbUser) {
       res.status(403).json({
         code: 'USER_NOT_REGISTERED',

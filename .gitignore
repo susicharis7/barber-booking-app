@@ -88,3 +88,4 @@ Thumbs.db
 /backend/.env.*
 /backend/src/firebase/firebase-service-account.json
 !/backend/.env.example
+/backend/secrets/

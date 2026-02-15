@@ -5,9 +5,15 @@ import { getBarberByIdValidation } from './barberValidation';
 
 const router = Router();
 
-router.get('/', barberController.getBarbers);
+router.get(
+    '/', 
+    barberController.getBarbers
+);
 
-router.get('/weekly-hours', barberController.getStudioWeeklyWorkingHours);
+router.get(
+    '/weekly-hours', 
+    barberController.getStudioWeeklyWorkingHours
+);
 
 router.get(
     '/:id/working-hours',
@@ -24,3 +30,4 @@ router.get(
 );
 
 export default router;
+

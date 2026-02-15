@@ -2,8 +2,6 @@ import { pool } from '../../db/pool';
 import type { CreateUserData, User } from '../../types/types';
 
 
-
-/* Creates new User in Postgre */
 export const createUser = async (userData: CreateUserData): Promise<User> => {
     const { firebase_uid, email, first_name, last_name } = userData;
 
@@ -17,7 +15,6 @@ export const createUser = async (userData: CreateUserData): Promise<User> => {
     return result.rows[0];
 };
 
-/* Updates User in DB */
 export const updateUser = async (
   firebase_uid: string,
   data: { first_name?: string; last_name?: string; phone?: string | null }
@@ -59,7 +56,6 @@ export const updateUser = async (
 };
 
 
-/* Deletes User in DB */
 export const deleteUser = async(firebase_uid: string): Promise<boolean> => {
     const result = await pool.query(
         `DELETE FROM users WHERE firebase_uid = $1 RETURNING *`, 
@@ -69,7 +65,7 @@ export const deleteUser = async(firebase_uid: string): Promise<boolean> => {
     return result.rowCount !== null && result.rowCount > 0;
 }
 
-/* Finds user by Firebase UID */
+
 export const findUserByFirebaseUID = async (firebase_uid: string): Promise<User | null> => {
     const result = await pool.query(
         `SELECT * FROM users WHERE firebase_uid = $1 LIMIT 1`,
@@ -79,7 +75,7 @@ export const findUserByFirebaseUID = async (firebase_uid: string): Promise<User 
     return result.rows[0] || null;
 }
 
-/* Finds user by EMAIL */
+
 export const findUserByEmail = async (email: string): Promise<User | null> => {
     const result = await pool.query(
         `SELECT * FROM users WHERE email = $1 LIMIT 1`,

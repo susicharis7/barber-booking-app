@@ -29,11 +29,13 @@ const readFromPath = (rawPath: string): RawServiceAccount => {
 };
 
 const readServiceAccount = () => {
+  // Default for deploy 
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     const fromEnv = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON) as RawServiceAccount;
     return normalizeServiceAccount(fromEnv);
   }
 
+  // Default for local 
   if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
     const fromFile = readFromPath(process.env.FIREBASE_SERVICE_ACCOUNT_PATH);
     return normalizeServiceAccount(fromFile);

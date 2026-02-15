@@ -10,7 +10,7 @@ const baseLimiterConfig = {
 export const apiLimiter = rateLimit({
   ...baseLimiterConfig,
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 100,
+  max: 150,
   message: {
     code: 'RATE_LIMITED',
     message: 'Too many requests from this IP. Please try again later.',
@@ -19,7 +19,7 @@ export const apiLimiter = rateLimit({
 
 export const createAppointmentLimiter = rateLimit({
   ...baseLimiterConfig,
-  windowMs:60 * 60 * 1000, // 1h
+  windowMs: 60 * 60 * 1000, // 1h
   max: 5,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
@@ -34,7 +34,7 @@ export const createAppointmentLimiter = rateLimit({
 export const createWaitingListLimiter = rateLimit({
   ...baseLimiterConfig,
   windowMs: 60 * 60 * 1000, // 1h
-  max: 10,
+  max: 5,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
     return authReq.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'unknown');
@@ -48,7 +48,7 @@ export const createWaitingListLimiter = rateLimit({
 export const registerLimiter = rateLimit({
   ...baseLimiterConfig,
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 20,
+  max: 50,
   keyGenerator: (req) => {
     const authReq = req as AuthRequest;
     return authReq.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'unknown');

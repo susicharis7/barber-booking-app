@@ -67,6 +67,7 @@ export const getMyAppointments = async (
     LEFT JOIN users cu ON cu.id = a.customer_id
     LEFT JOIN services s ON s.id = a.service_id
     WHERE bu.firebase_uid = $1
+      AND b.is_active = true
       AND ($2::date IS NULL OR a.date = $2::date)
       AND (
         $3::date IS NULL OR
@@ -112,6 +113,7 @@ export const getMyAppointmentDays = async (
     JOIN barbers b ON b.id = a.barber_id
     JOIN users bu ON bu.id = b.user_id
     WHERE bu.firebase_uid = $1
+      AND b.is_active = true  
       AND a.date BETWEEN $2::date AND $3::date
     GROUP BY a.date
     ORDER BY a.date ASC
@@ -134,6 +136,7 @@ export const cancelMyAppointment = async (
     JOIN users bu ON bu.id = b.user_id
     WHERE a.barber_id = b.id
       AND bu.firebase_uid = $1
+      AND b.is_active = true
       AND a.id = $2
       AND a.status = 'confirmed'
     RETURNING a.id, a.status

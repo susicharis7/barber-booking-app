@@ -140,7 +140,7 @@ export const deleteMe = async (req: AuthRequest, res: Response): Promise<void> =
         const deleted = await userService.deleteUser(uid);
 
         if (!deleted) {
-            res.status(404).json({ code: 'USER_NOT_FOUND', message: 'User not found' });
+            res.status(403).json({ code: 'USER_NOT_REGISTERED', message: 'User is not registered.' });
             return;
         }
 
@@ -148,6 +148,7 @@ export const deleteMe = async (req: AuthRequest, res: Response): Promise<void> =
         await firebaseAdminAuth.deleteUser(uid);
         console.log("Deleted User: ", uid);
         res.json({ message: 'Account deleted successfully!'});
+        
     } catch (error) {
         console.error("Delete user error: ", error);
         res.status(500).json({ message: 'Failed to delete account.'});

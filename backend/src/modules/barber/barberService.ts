@@ -55,6 +55,7 @@ export const getWorkingHoursByBarberId = async (barberId: number) => {
           is_working
         FROM working_hours
         WHERE barber_id = $1
+          AND is_working = true
         ORDER BY day_of_week ASC
         `,
         [barberId]
