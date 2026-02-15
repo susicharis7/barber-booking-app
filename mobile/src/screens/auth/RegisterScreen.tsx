@@ -9,7 +9,6 @@ import {
   Image,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import { api, isApiError } from '../../services/api';
 import { styles } from '../../styles/screens/register-styles';
 import { colors } from '../../styles/colors';
@@ -17,10 +16,13 @@ import {
   registerWithEmailAndPassword,
   deleteCurrentUserAccount,
 } from '../../services/auth-service';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { AuthStackParamList } from '../../navigation/types';
 
 const logo = require('../../../assets/images/logo.png');
+type RegisterScreenProps = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
-export default function RegisterScreen({ navigation }: any) {
+export default function RegisterScreen({ navigation }: RegisterScreenProps) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -65,7 +67,6 @@ export default function RegisterScreen({ navigation }: any) {
 
       Alert.alert('Success', 'Account created successfully!');
     } catch (error: unknown) {
-
       if (isApiError(error) && error.code === 'USER_ALREADY_EXISTS') {
         Alert.alert('Success', 'Account already exists and is ready to use.');
         return;

@@ -3,7 +3,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { logout } from '../../services/auth-service';
 import { styles } from '../../styles/screens/settings-screens/settings-styles';
 import { colors } from '../../styles/colors';
-
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { SettingsStackParamList } from '../../navigation/types';
 
 const headerImage = require('../../../assets/images/settings-bg.png');
 
@@ -14,11 +15,13 @@ type MenuItem = {
   isLogout?: boolean;
 };
 
-export default function SettingsScreen({ navigation }: any) {
+type SettingsScreenProps = NativeStackScreenProps<SettingsStackParamList, 'SettingsMain'>;
+
+export default function SettingsScreen({ navigation }: SettingsScreenProps) {
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (error) {
+    } catch {
       Alert.alert('Error', 'Failed to logout.');
     }
   };
@@ -75,7 +78,6 @@ export default function SettingsScreen({ navigation }: any) {
               </Text>
 
               <View style={styles.headerSeparator} />
-
             </View>
           </View>
         </ImageBackground>
@@ -91,21 +93,14 @@ export default function SettingsScreen({ navigation }: any) {
             onPress={item.onPress}
             activeOpacity={0.7}
           >
-            <View
-              style={[
-                styles.menuIconContainer,
-                item.isLogout && styles.logoutIconContainer,
-              ]}
-            >
+            <View style={[styles.menuIconContainer, item.isLogout && styles.logoutIconContainer]}>
               <Ionicons
                 name={item.icon}
                 size={20}
                 color={item.isLogout ? colors.error : colors.primary}
               />
             </View>
-            <Text style={[styles.menuText, item.isLogout && styles.logoutText]}>
-              {item.label}
-            </Text>
+            <Text style={[styles.menuText, item.isLogout && styles.logoutText]}>{item.label}</Text>
             <Ionicons
               name="chevron-forward"
               size={18}

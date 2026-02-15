@@ -12,12 +12,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/information-styles';
 import { colors } from '../../styles/colors';
 import { formatDate, formatTime } from '../../utils/calendar';
-
 import { api, isApiError } from '../../services/api';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { ServicesStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/settings-bg.png');
+type InformationScreenProps = NativeStackScreenProps<ServicesStackParamList, 'Information'>;
 
-export default function InformationScreen({ navigation, route }: any) {
+export default function InformationScreen({ navigation, route }: InformationScreenProps) {
   const { employee, service, date, time, note } = route.params;
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -40,7 +42,6 @@ export default function InformationScreen({ navigation, route }: any) {
   };
 
   const handleReserve = async () => {
-    
     try {
       await api.post('/api/appointments', {
         barber_id: employee.id,
@@ -50,7 +51,7 @@ export default function InformationScreen({ navigation, route }: any) {
         note,
       });
       setShowSuccessModal(true);
-    } catch(err: unknown) {
+    } catch (err: unknown) {
       if (isApiError(err)) {
         if (err.status === 409) {
           Alert.alert('Slot unavailable', err.message);
@@ -68,7 +69,6 @@ export default function InformationScreen({ navigation, route }: any) {
 
       Alert.alert('Error', 'Unexpected error');
     }
-
   };
 
   const handleSuccessClose = () => {
@@ -97,9 +97,7 @@ export default function InformationScreen({ navigation, route }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>CONFIRM</Text>
           <Text style={styles.headerTitle}>Booking Details</Text>
-          <Text style={styles.headerSubtitle}>
-            Review your appointment information.
-          </Text>
+          <Text style={styles.headerSubtitle}>Review your appointment information.</Text>
         </View>
       </ImageBackground>
 
@@ -145,7 +143,9 @@ export default function InformationScreen({ navigation, route }: any) {
             </View>
             <View style={styles.detailInfo}>
               <Text style={styles.detailLabel}>Time</Text>
-              <Text style={styles.detailValue}>{startTimeLabel} - {calculateEndTime()}</Text>
+              <Text style={styles.detailValue}>
+                {startTimeLabel} - {calculateEndTime()}
+              </Text>
             </View>
           </View>
 
@@ -193,9 +193,7 @@ export default function InformationScreen({ navigation, route }: any) {
 
           <View style={styles.policyItem}>
             <Ionicons name="checkmark-circle" size={18} color={colors.green[500]} />
-            <Text style={styles.policyText}>
-              Reschedule anytime before the appointment starts.
-            </Text>
+            <Text style={styles.policyText}>Reschedule anytime before the appointment starts.</Text>
           </View>
 
           <View style={styles.policyItem}>
@@ -207,11 +205,7 @@ export default function InformationScreen({ navigation, route }: any) {
         </View>
 
         {/* RESERVE BUTTON */}
-        <TouchableOpacity
-          style={styles.reserveButton}
-          activeOpacity={0.7}
-          onPress={handleReserve}
-        >
+        <TouchableOpacity style={styles.reserveButton} activeOpacity={0.7} onPress={handleReserve}>
           <Text style={styles.reserveButtonText}>Confirm Reservation</Text>
           <Ionicons name="checkmark-circle" size={20} color={colors.white} />
         </TouchableOpacity>

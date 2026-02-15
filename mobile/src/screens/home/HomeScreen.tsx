@@ -13,9 +13,13 @@ import { styles } from '../../styles/screens/home-styles';
 import { colors } from '../../styles/colors';
 import MapView, { Marker } from 'react-native-maps';
 import { api } from '../../services/api';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { MainTabParamList } from '../../navigation/types';
 
 const homeBg = require('../../../assets/images/home-bg.png');
 const logo = require('../../../assets/images/logo.png');
+
+type HomeScreenProps = BottomTabScreenProps<MainTabParamList, 'Home'>;
 
 const BARBER_LOCATION = {
   latitude: 44.821766031006305,
@@ -78,7 +82,7 @@ const buildSchedule = (weeklyHours: WeeklyHour[]): ScheduleItem[] => {
   });
 };
 
-export default function HomeScreen({ navigation }: any) {
+export default function HomeScreen({ navigation }: HomeScreenProps) {
   const [schedule, setSchedule] = useState<ScheduleItem[]>(CLOSED_SCHEDULE);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
 
@@ -91,7 +95,7 @@ export default function HomeScreen({ navigation }: any) {
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
       },
-      500
+      500,
     );
   };
 
@@ -102,7 +106,7 @@ export default function HomeScreen({ navigation }: any) {
       try {
         const data = await api.get<{ weeklyHours: WeeklyHour[] }>(
           '/api/barbers/weekly-hours',
-          false
+          false,
         );
 
         if (!mounted) return;
@@ -128,10 +132,7 @@ export default function HomeScreen({ navigation }: any) {
       <ImageBackground source={homeBg} style={styles.bg} resizeMode="cover">
         <View style={styles.overlay} />
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.content}
-        >
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
           <View style={styles.heroSpacer} />
 
           <Image source={logo} style={styles.logo} resizeMode="contain" />
@@ -149,11 +150,13 @@ export default function HomeScreen({ navigation }: any) {
             <Text style={styles.sectionTitle}>UNA BARBERINA</Text>
 
             <Text style={styles.paragraph}>
-              Welcome to our Barber Shop, where tradition meets modern style. Our goal is for every guest to leave feeling satisfied and confident.
+              Welcome to our Barber Shop, where tradition meets modern style. Our goal is for every
+              guest to leave feeling satisfied and confident.
             </Text>
 
             <Text style={styles.paragraph}>
-              We are dedicated to quality, attention to detail, and a personalized approach for every client in a relaxed and professional atmosphere.
+              We are dedicated to quality, attention to detail, and a personalized approach for
+              every client in a relaxed and professional atmosphere.
             </Text>
           </View>
 
@@ -174,17 +177,12 @@ export default function HomeScreen({ navigation }: any) {
                 {schedule.map((item) => (
                   <View
                     key={item.day}
-                    style={[
-                      styles.dayChip,
-                      item.active ? styles.dayChipLight : styles.dayChipDark,
-                    ]}
+                    style={[styles.dayChip, item.active ? styles.dayChipLight : styles.dayChipDark]}
                   >
                     <Text
                       style={[
                         styles.dayChipDay,
-                        item.active
-                          ? styles.dayChipDayDarkText
-                          : styles.dayChipDayLightText,
+                        item.active ? styles.dayChipDayDarkText : styles.dayChipDayLightText,
                       ]}
                     >
                       {item.day}
@@ -192,9 +190,7 @@ export default function HomeScreen({ navigation }: any) {
                     <Text
                       style={[
                         styles.dayChipTime,
-                        item.active
-                          ? styles.dayChipDayDarkText
-                          : styles.dayChipDayLightText,
+                        item.active ? styles.dayChipDayDarkText : styles.dayChipDayLightText,
                       ]}
                     >
                       {item.time}
@@ -216,20 +212,12 @@ export default function HomeScreen({ navigation }: any) {
               </View>
 
               <View style={styles.socialItem}>
-                <Ionicons
-                  name="logo-instagram"
-                  size={34}
-                  color={colors.alpha.white45}
-                />
+                <Ionicons name="logo-instagram" size={34} color={colors.alpha.white45} />
                 <Text style={styles.socialText}>@una_barberina_studio</Text>
               </View>
 
               <View style={styles.socialItem}>
-                <Ionicons
-                  name="logo-tiktok"
-                  size={34}
-                  color={colors.alpha.white45}
-                />
+                <Ionicons name="logo-tiktok" size={34} color={colors.alpha.white45} />
                 <Text style={styles.socialText}>@unabarberina</Text>
               </View>
             </View>

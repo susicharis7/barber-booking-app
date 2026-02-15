@@ -10,13 +10,16 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/myaccount-styles';
-import { api , isApiError } from '../../services/api';
+import { api, isApiError } from '../../services/api';
 import { logout } from '../../services/auth-service';
 import { colors } from '../../styles/colors';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { SettingsStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
+type MyAccountScreenProps = NativeStackScreenProps<SettingsStackParamList, 'MyAccount'>;
 
-export default function MyAccountScreen({ navigation }: any) {
+export default function MyAccountScreen({ navigation }: MyAccountScreenProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -37,7 +40,6 @@ export default function MyAccountScreen({ navigation }: any) {
       setShowDeleteModal(false);
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -118,13 +120,13 @@ export default function MyAccountScreen({ navigation }: any) {
             <Text style={styles.modalTitle}>Delete Account?</Text>
 
             <Text style={styles.modalMessage}>
-              Are you sure you want to delete your account? This action is permanent and cannot be undone.
+              Are you sure you want to delete your account? This action is permanent and cannot be
+              undone.
             </Text>
 
             <Text style={styles.modalWarning}>
-              • All your data will be permanently deleted{'\n'}
-              • You will lose your booking history{'\n'}
-              • You won't be able to recover your account
+              • All your data will be permanently deleted{'\n'}• You will lose your booking history
+              {'\n'}• You won&apos;t be able to recover your account
             </Text>
 
             <View style={styles.modalButtons}>
@@ -166,11 +168,7 @@ function MenuItem({
   onPress: () => void;
 }) {
   return (
-    <TouchableOpacity
-      style={styles.item}
-      activeOpacity={0.7}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={styles.item} activeOpacity={0.7} onPress={onPress}>
       <View style={styles.itemIconContainer}>
         <Ionicons name={icon} size={20} color={colors.primary} />
       </View>

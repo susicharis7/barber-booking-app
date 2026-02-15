@@ -1,24 +1,26 @@
-import { useState } from "react";
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Alert, 
-  TouchableOpacity, 
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Alert,
+  TouchableOpacity,
   ActivityIndicator,
   Image,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-
 import { styles } from '../../styles/screens/login-styles';
 import { login } from '../../services/auth-service';
 import { colors } from '../../styles/colors';
-
 import { isApiError } from '../../services/api';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { AuthStackParamList } from '../../navigation/types';
 
 const logo = require('../../../assets/images/logo.png');
 
-export default function LoginScreen({ navigation }: any) {
+type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, 'Login'>;
+
+export default function LoginScreen({ navigation }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,7 +28,7 @@ export default function LoginScreen({ navigation }: any) {
   // Email/Password Login
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Please enter email and password.");
+      Alert.alert('Error', 'Please enter email and password.');
       return;
     }
 
@@ -42,14 +44,11 @@ export default function LoginScreen({ navigation }: any) {
       Alert.alert('Login failed', 'Unexpected error');
     } finally {
       setLoading(false);
-    }};
-
-  
-
+    }
+  };
 
   return (
     <View style={styles.container}>
-
       <View style={styles.logoSection}>
         <Image source={logo} style={styles.logo} resizeMode="contain" />
       </View>
@@ -69,7 +68,7 @@ export default function LoginScreen({ navigation }: any) {
           style={styles.input}
         />
 
-        <TextInput 
+        <TextInput
           placeholder="Molimo unesite svoju šifru"
           textContentType="password"
           autoComplete="password"
@@ -82,11 +81,7 @@ export default function LoginScreen({ navigation }: any) {
         />
 
         {/* Email/Password Login Button */}
-        <TouchableOpacity 
-          style={styles.loginButton} 
-          onPress={handleLogin}
-          disabled={loading}
-        >
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={loading}>
           {loading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
@@ -113,8 +108,6 @@ export default function LoginScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
       </View>
-
-
     </View>
   );
 }

@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/servicesAndPriceList-styles';
 import { colors } from '../../styles/colors';
-
 import type { ServicesAndPriceList } from '../../types';
 import { api } from '../../services/api';
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { ServicesStackParamList } from '../../navigation/types';
+
 const bgImage = require('../../../assets/images/services-bg.png');
 
-export default function ServicesAndPriceListScreen({ navigation, route }: any) {
+type ServicesAndPriceListScreenProps = NativeStackScreenProps<
+  ServicesStackParamList,
+  'ServicesAndPriceList'
+>;
+
+export default function ServicesAndPriceListScreen({
+  navigation,
+  route,
+}: ServicesAndPriceListScreenProps) {
   const { employee } = route.params;
 
   const [services, setServices] = useState<ServicesAndPriceList[]>([]);
-  const [selectedService, setSelectedService] =
-    useState<ServicesAndPriceList | null>(null);
+  const [selectedService, setSelectedService] = useState<ServicesAndPriceList | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
     try {
       const data = await api.get<{ services: ServicesAndPriceList[] }>(
         '/api/servicesAndPriceListRoutes',
-        false
+        false,
       );
       setServices(data.services);
     } catch (error) {
@@ -52,7 +55,6 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
 
   return (
     <View style={styles.container}>
-    
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
 
@@ -70,9 +72,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>SERVICES</Text>
           <Text style={styles.headerTitle}>Services & Price List</Text>
-          <Text style={styles.headerSubtitle}>
-            with {employee.name}
-          </Text>
+          <Text style={styles.headerSubtitle}>with {employee.name}</Text>
         </View>
       </ImageBackground>
 
@@ -80,9 +80,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
       <View style={styles.content}>
         {loading ? (
           <View style={{ paddingTop: 40 }}>
-            <Text style={{ textAlign: 'center', color: colors.muted }}>
-              Loading services...
-            </Text>
+            <Text style={{ textAlign: 'center', color: colors.muted }}>Loading services...</Text>
           </View>
         ) : (
           <>
@@ -94,8 +92,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
                   key={service.id}
                   style={[
                     styles.serviceCard,
-                    selectedService?.id === service.id &&
-                      styles.serviceCardSelected,
+                    selectedService?.id === service.id && styles.serviceCardSelected,
                   ]}
                   activeOpacity={0.7}
                   onPress={() => setSelectedService(service)}
@@ -104,8 +101,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
                     <View
                       style={[
                         styles.radioButton,
-                        selectedService?.id === service.id &&
-                          styles.radioButtonSelected,
+                        selectedService?.id === service.id && styles.radioButtonSelected,
                       ]}
                     >
                       {selectedService?.id === service.id && (
@@ -117,38 +113,28 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
                       <Text
                         style={[
                           styles.serviceName,
-                          selectedService?.id === service.id &&
-                            styles.serviceNameSelected,
+                          selectedService?.id === service.id && styles.serviceNameSelected,
                         ]}
                       >
                         {service.name}
                       </Text>
 
                       {service.description && (
-                        <Text style={styles.serviceDescription}>
-                          {service.description}
-                        </Text>
+                        <Text style={styles.serviceDescription}>{service.description}</Text>
                       )}
                     </View>
                   </View>
 
                   <View style={styles.serviceFooter}>
                     <View style={styles.durationContainer}>
-                      <Ionicons
-                        name="time-outline"
-                        size={16}
-                        color={colors.muted}
-                      />
-                      <Text style={styles.durationText}>
-                        {service.duration} min
-                      </Text>
+                      <Ionicons name="time-outline" size={16} color={colors.muted} />
+                      <Text style={styles.durationText}>{service.duration} min</Text>
                     </View>
 
                     <Text
                       style={[
                         styles.priceText,
-                        selectedService?.id === service.id &&
-                          styles.priceTextSelected,
+                        selectedService?.id === service.id && styles.priceTextSelected,
                       ]}
                     >
                       {Number(service.price).toFixed(2)} BAM
@@ -162,8 +148,7 @@ export default function ServicesAndPriceListScreen({ navigation, route }: any) {
             <TouchableOpacity
               style={[
                 styles.reserveButton,
-                (!selectedService || loading) &&
-                  styles.reserveButtonDisabled,
+                (!selectedService || loading) && styles.reserveButtonDisabled,
               ]}
               activeOpacity={0.7}
               onPress={handleContinue}

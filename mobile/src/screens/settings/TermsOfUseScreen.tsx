@@ -1,18 +1,15 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/termsOfUse-styles';
 import { colors } from '../../styles/colors';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { SettingsStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
+type TermsOfUseScreenProps = NativeStackScreenProps<SettingsStackParamList, 'TermsOfUse'>;
 
-export default function TermsOfUse({ navigation }: any) {
+export default function TermsOfUse({ navigation }: TermsOfUseScreenProps) {
   return (
     <View style={styles.container}>
       {/* HERO */}
@@ -33,9 +30,7 @@ export default function TermsOfUse({ navigation }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>LEGAL</Text>
           <Text style={styles.headerTitle}>Terms of Use</Text>
-          <Text style={styles.headerSubtitle}>
-            Please read our terms and conditions carefully.
-          </Text>
+          <Text style={styles.headerSubtitle}>Please read our terms and conditions carefully.</Text>
         </View>
       </ImageBackground>
 
@@ -85,9 +80,7 @@ export default function TermsOfUse({ navigation }: any) {
 
           <View style={styles.footerCard}>
             <Ionicons name="checkmark-circle" size={24} color={colors.green[500]} />
-            <Text style={styles.footerText}>
-              Last updated: January 2026
-            </Text>
+            <Text style={styles.footerText}>Last updated: January 2026</Text>
           </View>
         </ScrollView>
       </View>

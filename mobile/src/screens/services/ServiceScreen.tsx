@@ -1,4 +1,4 @@
-import React, { useEffect, useState }from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,15 +11,15 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/service-styles';
 import { colors } from '../../styles/colors';
-
 import type { Barber } from '../../types';
 import { api } from '../../services/api';
-
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { ServicesStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/settings-bg.png');
+type ServiceScreenProps = NativeStackScreenProps<ServicesStackParamList, 'ServiceMain'>;
 
-
-export default function ServiceScreen({ navigation }: any) {
+export default function ServiceScreen({ navigation }: ServiceScreenProps) {
   const [barbers, setBarbers] = useState<Barber[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,9 +58,7 @@ export default function ServiceScreen({ navigation }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>BOOKING</Text>
           <Text style={styles.headerTitle}>Choose Employee</Text>
-          <Text style={styles.headerSubtitle}>
-            Select your preferred barber to continue.
-          </Text>
+          <Text style={styles.headerSubtitle}>Select your preferred barber to continue.</Text>
         </View>
       </ImageBackground>
 
@@ -84,10 +82,7 @@ export default function ServiceScreen({ navigation }: any) {
               >
                 <View style={styles.employeeAvatar}>
                   {barber.avatar_url ? (
-                    <Image
-                      source={{ uri: barber.avatar_url }}
-                      style={styles.avatarImage}
-                    />
+                    <Image source={{ uri: barber.avatar_url }} style={styles.avatarImage} />
                   ) : (
                     <Ionicons name="person" size={32} color={colors.white} />
                   )}
@@ -100,23 +95,14 @@ export default function ServiceScreen({ navigation }: any) {
                   <Text style={styles.employeeTitle}>{barber.title}</Text>
                 </View>
 
-                <Ionicons
-                  name="chevron-forward"
-                  size={22}
-                  color={colors.slate[400]}
-                />
+                <Ionicons name="chevron-forward" size={22} color={colors.slate[400]} />
               </TouchableOpacity>
             ))}
 
             <View style={styles.infoCard}>
-              <Ionicons
-                name="information-circle-outline"
-                size={22}
-                color={colors.blue[500]}
-              />
+              <Ionicons name="information-circle-outline" size={22} color={colors.blue[500]} />
               <Text style={styles.infoText}>
-                All our barbers are certified professionals with years of
-                experience.
+                All our barbers are certified professionals with years of experience.
               </Text>
             </View>
           </ScrollView>

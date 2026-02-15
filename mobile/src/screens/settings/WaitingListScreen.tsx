@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/waitingList-styles';
 import { api, isApiError } from '../../services/api';
@@ -13,17 +7,17 @@ import type { WaitingListItem } from '../../types';
 import { formatDate } from '../../utils/calendar';
 import { colors } from '../../styles/colors';
 
-import { useFocusEffect } from '@react-navigation/native';
-import { CommonActions } from '@react-navigation/native';
-
+import { useFocusEffect, CommonActions, type NavigationProp } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { MainTabParamList, SettingsStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/waiting-list.png');
+type WaitingListScreenProps = NativeStackScreenProps<SettingsStackParamList, 'WaitingList'>;
 
-export default function WaitingListScreen({ navigation }: any) {
+export default function WaitingListScreen({ navigation }: WaitingListScreenProps) {
   const [waitingList, setWaitingList] = useState<WaitingListItem[]>([]);
 
-  const loadWaitingList = async (silent = false) => {
-
+  const loadWaitingList = async () => {
     try {
       const res = await api.get<{ waitingList: WaitingListItem[] }>('/api/waiting-list');
       setWaitingList(res.waitingList || []);
@@ -33,15 +27,14 @@ export default function WaitingListScreen({ navigation }: any) {
         return;
       }
       console.error('Fetch waiting list error: ', err);
-    } 
+    }
   };
 
   useFocusEffect(
     React.useCallback(() => {
       loadWaitingList();
-    }, [])
+    }, []),
   );
-
 
   const activeList = waitingList.filter((item) => item.status === 'active');
   const hasItems = activeList.length > 0;
@@ -61,14 +54,10 @@ export default function WaitingListScreen({ navigation }: any) {
       }
       console.error('Cancel waiting list error:', err);
     }
-
   };
 
-
-
-
-    const goToServicesMain = () => {
-    const parent = navigation.getParent();
+  const goToServicesMain = () => {
+    const parent = navigation.getParent<NavigationProp<MainTabParamList>>();
     if (!parent) return;
 
     parent.dispatch(
@@ -82,13 +71,12 @@ export default function WaitingListScreen({ navigation }: any) {
             },
           },
         ],
-      })
+      }),
     );
   };
 
-
   const goToSettingsMain = () => {
-    const parent = navigation.getParent();
+    const parent = navigation.getParent<NavigationProp<MainTabParamList>>();
     if (!parent) return;
 
     parent.dispatch(
@@ -102,10 +90,9 @@ export default function WaitingListScreen({ navigation }: any) {
             },
           },
         ],
-      })
+      }),
     );
   };
-
 
   return (
     <View style={styles.container}>
@@ -113,11 +100,7 @@ export default function WaitingListScreen({ navigation }: any) {
         <View style={styles.heroOverlay} />
 
         {/* Back Button */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={goToSettingsMain}
-          activeOpacity={0.7}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={goToSettingsMain} activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
@@ -126,9 +109,7 @@ export default function WaitingListScreen({ navigation }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>QUEUE</Text>
           <Text style={styles.headerTitle}>Waiting List</Text>
-          <Text style={styles.headerSubtitle}>
-            Track your position in the booking queue.
-          </Text>
+          <Text style={styles.headerSubtitle}>Track your position in the booking queue.</Text>
         </View>
       </ImageBackground>
 
@@ -139,18 +120,13 @@ export default function WaitingListScreen({ navigation }: any) {
             <Text style={styles.sectionLabel}>YOUR REQUESTS</Text>
 
             {activeList.map((item, index) => (
-              <WaitingItem 
-                key={item.id} 
-                item={item} 
-                position={index + 1} 
-                onCancel={handleCancel}  
-              />
+              <WaitingItem key={item.id} item={item} position={index + 1} onCancel={handleCancel} />
             ))}
 
             <View style={styles.infoCard}>
               <Ionicons name="information-circle-outline" size={22} color={colors.blue[500]} />
               <Text style={styles.infoText}>
-                You'll receive a notification when a spot becomes available.
+                You&apos;ll receive a notification when a spot becomes available.
               </Text>
             </View>
           </ScrollView>
@@ -168,9 +144,7 @@ export default function WaitingListScreen({ navigation }: any) {
               onPress={goToServicesMain}
               activeOpacity={0.7}
             >
-              <Text style={styles.browseButtonText}>
-                Browse Services
-              </Text>
+              <Text style={styles.browseButtonText}>Browse Services</Text>
               <Ionicons name="arrow-forward" size={18} color={colors.white} />
             </TouchableOpacity>
           </View>
@@ -181,7 +155,15 @@ export default function WaitingListScreen({ navigation }: any) {
 }
 
 /* Waiting Item Component */
-function WaitingItem({ item, position, onCancel, }: { item: WaitingListItem; position: number; onCancel: (id: number) => void}) {
+function WaitingItem({
+  item,
+  position,
+  onCancel,
+}: {
+  item: WaitingListItem;
+  position: number;
+  onCancel: (id: number) => void;
+}) {
   const barberName = `${item.barber.first_name} ${item.barber.last_name}`;
   const dateOptions: Intl.DateTimeFormatOptions = {
     weekday: 'short',
@@ -218,7 +200,11 @@ function WaitingItem({ item, position, onCancel, }: { item: WaitingListItem; pos
       </View>
 
       <View style={styles.waitingActions}>
-        <TouchableOpacity style={styles.cancelButton} activeOpacity={0.7} onPress={() => onCancel(item.id)}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          activeOpacity={0.7}
+          onPress={() => onCancel(item.id)}
+        >
           <Ionicons name="close-circle-outline" size={18} color={colors.red[600]} />
           <Text style={styles.cancelButtonText}>Cancel</Text>
         </TouchableOpacity>

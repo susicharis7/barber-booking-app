@@ -1,18 +1,15 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/privacyPolicy-styles';
 import { colors } from '../../styles/colors';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { SettingsStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
+type PrivacyPolicyScreenProps = NativeStackScreenProps<SettingsStackParamList, 'PrivacyPolicy'>;
 
-export default function PrivacyPolicyScreen({ navigation }: any) {
+export default function PrivacyPolicyScreen({ navigation }: PrivacyPolicyScreenProps) {
   return (
     <View style={styles.container}>
       {/* HERO */}
@@ -33,9 +30,7 @@ export default function PrivacyPolicyScreen({ navigation }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>LEGAL</Text>
           <Text style={styles.headerTitle}>Privacy Policy</Text>
-          <Text style={styles.headerSubtitle}>
-            How we collect, use and protect your data.
-          </Text>
+          <Text style={styles.headerSubtitle}>How we collect, use and protect your data.</Text>
         </View>
       </ImageBackground>
 
@@ -93,9 +88,7 @@ export default function PrivacyPolicyScreen({ navigation }: any) {
 
           <View style={styles.footerCard}>
             <Ionicons name="checkmark-circle" size={24} color={colors.green[500]} />
-            <Text style={styles.footerText}>
-              Last updated: January 2026
-            </Text>
+            <Text style={styles.footerText}>Last updated: January 2026</Text>
           </View>
         </ScrollView>
       </View>

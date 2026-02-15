@@ -1,4 +1,12 @@
-import { View, Text, TouchableOpacity, TextInput, ImageBackground, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ImageBackground,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
@@ -6,27 +14,27 @@ import { styles } from '../../styles/screens/settings-screens/profile-styles';
 import { useAuth } from '../../context/auth-context';
 import { api, isApiError } from '../../services/api';
 import { colors } from '../../styles/colors';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { SettingsStackParamList } from '../../navigation/types';
 
 const headerImage = require('../../../assets/images/settings-bg.png');
+type UserProfileScreenProps = NativeStackScreenProps<SettingsStackParamList, 'UserProfile'>;
 
-export default function UserProfileScreen({ navigation }: any) {
+export default function UserProfileScreen({ navigation }: UserProfileScreenProps) {
   const { dbUser, refreshDbUser } = useAuth();
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [saving, setSaving] = useState(false);
-  const [loadingProfile, setLoadingProfile] = useState(true);
 
   useEffect(() => {
     const loadProfile = async () => {
-      setLoadingProfile(true);
       await refreshDbUser();
-      setLoadingProfile(false);
     };
 
     loadProfile();
-  }, []);
+  }, [refreshDbUser]);
 
   useEffect(() => {
     if (dbUser) {
@@ -68,7 +76,7 @@ export default function UserProfileScreen({ navigation }: any) {
         return;
       }
 
-      Alert.alert('Update failed' , 'Unexpected error')
+      Alert.alert('Update failed', 'Unexpected error');
     } finally {
       setSaving(false);
     }
@@ -85,18 +93,11 @@ export default function UserProfileScreen({ navigation }: any) {
       showsVerticalScrollIndicator={false}
     >
       {/* HERO */}
-      <ImageBackground
-        source={headerImage}
-        style={styles.hero}
-        resizeMode="cover"
-      >
+      <ImageBackground source={headerImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
 
         {/* BACK BUTTON */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
@@ -165,11 +166,7 @@ export default function UserProfileScreen({ navigation }: any) {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={handleSave}
-          disabled={saving}
-        >
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
           {saving ? (
             <ActivityIndicator color={colors.white} />
           ) : (

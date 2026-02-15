@@ -9,15 +9,18 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import { styles } from '../../styles/screens/services-screens/calendar-styles';
 import { colors } from '../../styles/colors';
 import { api } from '../../services/api';
 import { formatDate, isSameDay, toLocalDate } from '../../utils/calendar';
 import type { WorkingHours } from '../../types';
-import CalendarPicker from '../../components/calendar-component/CalendarPicker';
+import CalendarPicker from '../../components/calendar/CalendarPicker';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { ServicesStackParamList } from '../../navigation/types';
 
 const bgImage = require('../../../assets/images/settings-bg.png');
+
+type CalendarScreenProps = NativeStackScreenProps<ServicesStackParamList, 'Calendar'>;
 
 const SLOT_STEP_MINUTES = 30;
 
@@ -45,7 +48,7 @@ const minutesToTime = (value: number) => {
 const overlaps = (aStart: number, aEnd: number, bStart: number, bEnd: number) =>
   !(aEnd <= bStart || aStart >= bEnd);
 
-export default function CalendarScreen({ navigation, route }: any) {
+export default function CalendarScreen({ navigation, route }: CalendarScreenProps) {
   const { employee, service } = route.params;
 
   const serviceDuration = Math.max(1, Number(service.duration) || 0);
@@ -83,7 +86,7 @@ export default function CalendarScreen({ navigation, route }: any) {
     try {
       const res = await api.get<{ workingHours: WorkingHours[] }>(
         `/api/barbers/${employee.id}/working-hours`,
-        false
+        false,
       );
       setWorkingHours(res.workingHours ?? []);
     } catch (err) {
@@ -112,12 +115,13 @@ export default function CalendarScreen({ navigation, route }: any) {
 
       return { start, end };
     },
-    [workingHours]
+    [workingHours],
   );
 
   const isSlotPastByStartMinutes = useCallback(
-    (slotStartMinutes: number, date: Date) => isSameDay(date, now) && slotStartMinutes <= nowMinutes,
-    [now, nowMinutes]
+    (slotStartMinutes: number, date: Date) =>
+      isSameDay(date, now) && slotStartMinutes <= nowMinutes,
+    [now, nowMinutes],
   );
 
   const buildAvailableTimes = useCallback(
@@ -149,7 +153,7 @@ export default function CalendarScreen({ navigation, route }: any) {
 
       return available;
     },
-    [getWindowForDate, isSlotPastByStartMinutes, serviceDuration]
+    [getWindowForDate, isSlotPastByStartMinutes, serviceDuration],
   );
 
   const fetchBookedSlots = useCallback(
@@ -157,7 +161,7 @@ export default function CalendarScreen({ navigation, route }: any) {
       setIsAvailabilityLoading(true);
       try {
         const res = await api.get<{ slots: BookedSlot[] }>(
-          `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
+          `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
         );
         setBookedSlots(res.slots ?? []);
       } catch (err) {
@@ -167,7 +171,7 @@ export default function CalendarScreen({ navigation, route }: any) {
         setIsAvailabilityLoading(false);
       }
     },
-    [employee.id]
+    [employee.id],
   );
 
   const hasFreeSlot = useCallback(
@@ -177,13 +181,13 @@ export default function CalendarScreen({ navigation, route }: any) {
 
       const dateStr = toLocalDate(date);
       const res = await api.get<{ slots: BookedSlot[] }>(
-        `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`
+        `/api/appointments/barber/${employee.id}/booked?date=${dateStr}`,
       );
 
       const available = buildAvailableTimes(date, res.slots ?? []);
       return available.length > 0;
     },
-    [buildAvailableTimes, employee.id, getWindowForDate]
+    [buildAvailableTimes, employee.id, getWindowForDate],
   );
 
   const isDateDisabled = useCallback(
@@ -200,7 +204,7 @@ export default function CalendarScreen({ navigation, route }: any) {
 
       return false;
     },
-    [getWindowForDate, now, nowMinutes]
+    [getWindowForDate, now, nowMinutes],
   );
 
   const selectDate = useCallback(
@@ -209,7 +213,7 @@ export default function CalendarScreen({ navigation, route }: any) {
       setSelectedTime(null);
       fetchBookedSlots(toLocalDate(date));
     },
-    [fetchBookedSlots]
+    [fetchBookedSlots],
   );
 
   const handleContinue = () => {
@@ -309,10 +313,7 @@ export default function CalendarScreen({ navigation, route }: any) {
     };
   }, [availableTimes.length, hasFreeSlot, isSelectedDayOver, selectedDate]);
 
-  const minDate = useMemo(
-    () => new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-    [now]
-  );
+  const minDate = useMemo(() => new Date(now.getFullYear(), now.getMonth(), now.getDate()), [now]);
 
   return (
     <View style={styles.container}>
@@ -331,9 +332,7 @@ export default function CalendarScreen({ navigation, route }: any) {
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>SCHEDULE</Text>
           <Text style={styles.headerTitle}>Select Date & Time</Text>
-          <Text style={styles.headerSubtitle}>
-            Choose your preferred appointment slot.
-          </Text>
+          <Text style={styles.headerSubtitle}>Choose your preferred appointment slot.</Text>
         </View>
       </ImageBackground>
 
@@ -363,9 +362,7 @@ export default function CalendarScreen({ navigation, route }: any) {
         {selectedDate && (
           <View style={styles.timeSlotsSection}>
             <View style={styles.timeSlotsHeader}>
-              <Text style={[styles.sectionLabel, styles.sectionLabelTight]}>
-                AVAILABLE TIMES
-              </Text>
+              <Text style={[styles.sectionLabel, styles.sectionLabelTight]}>AVAILABLE TIMES</Text>
               <View style={styles.timeSlotsBadge}>
                 <Text style={styles.timeSlotsBadgeText}>{availableCount} slots</Text>
               </View>
@@ -386,11 +383,7 @@ export default function CalendarScreen({ navigation, route }: any) {
                       activeOpacity={0.7}
                       onPress={() => selectDate(nextAvailableDate)}
                     >
-                      <Ionicons
-                        name="calendar-outline"
-                        size={16}
-                        color={colors.secondary}
-                      />
+                      <Ionicons name="calendar-outline" size={16} color={colors.secondary} />
                       <Text style={styles.nextAvailableButtonText}>
                         Next available:{' '}
                         {formatDate(nextAvailableDate, {
@@ -416,11 +409,7 @@ export default function CalendarScreen({ navigation, route }: any) {
                       activeOpacity={0.7}
                       onPress={() => selectDate(nextAvailableDate)}
                     >
-                      <Ionicons
-                        name="calendar-outline"
-                        size={16}
-                        color={colors.secondary}
-                      />
+                      <Ionicons name="calendar-outline" size={16} color={colors.secondary} />
                       <Text style={styles.nextAvailableButtonText}>
                         Next available:{' '}
                         {formatDate(nextAvailableDate, {
@@ -456,10 +445,7 @@ export default function CalendarScreen({ navigation, route }: any) {
                 {availableTimes.map((time) => (
                   <TouchableOpacity
                     key={time}
-                    style={[
-                      styles.timeSlot,
-                      selectedTime === time && styles.timeSlotSelected,
-                    ]}
+                    style={[styles.timeSlot, selectedTime === time && styles.timeSlotSelected]}
                     onPress={() => setSelectedTime(time)}
                     activeOpacity={0.7}
                   >
