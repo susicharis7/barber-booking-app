@@ -5,8 +5,10 @@ import ServicesAndPriceListScreen from '../screens/services/ServicesAndPriceList
 import CalendarScreen from '../screens/services/CalendarScreen';
 import InformationScreen from '../screens/services/InformationScreen';
 import JoinWaitingListScreen from '../screens/services/JoinWaitingListScreen';
+import type { ServicesStackParamList } from './types';
 
-const Stack = createNativeStackNavigator();
+
+const Stack = createNativeStackNavigator<ServicesStackParamList>();
 
 export default function ServicesStackNavigator() {
   return (
@@ -15,7 +17,7 @@ export default function ServicesStackNavigator() {
       <Stack.Screen name="ServicesAndPriceList" component={ServicesAndPriceListScreen} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Information" component={InformationScreen} />
-      <Stack.Screen name = "JoinWaitingListScreen" component={JoinWaitingListScreen} />
+      <Stack.Screen name="JoinWaitingListScreen" component={JoinWaitingListScreen} />
     </Stack.Navigator>
   );
 }

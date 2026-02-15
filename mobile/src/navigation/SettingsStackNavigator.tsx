@@ -8,9 +8,9 @@ import TermsOfUseScreen from '../screens/settings/TermsOfUseScreen';
 import PrivacyPolicyScreen from '../screens/settings/PrivacyPolicyScreen';
 import WaitingListScreen from '../screens/settings/WaitingListScreen';
 import NotificationsScreen from '../screens/settings/NotificationsScreen';
+import type { SettingsStackParamList } from './types';
 
-
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
 export default function SettingsStackNavigator() {
   return (
@@ -23,8 +23,6 @@ export default function SettingsStackNavigator() {
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="WaitingList" component={WaitingListScreen} />
       <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
-
-
     </Stack.Navigator>
   );
 }

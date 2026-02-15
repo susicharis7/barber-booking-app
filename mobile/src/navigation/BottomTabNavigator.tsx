@@ -4,24 +4,20 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/home/HomeScreen';
 import AppointmentsScreen from '../screens/appointments/AppointmentsScreen';
 import SettingsStackNavigator from './SettingsStackNavigator';
-
 import ServicesStackNavigator from './ServicesStackNavigator';
 import NotificationsScreen from '../screens/settings/NotificationsScreen';
-
 import { useAuth } from '../context/auth-context';
 import StaffDashboardScreen from '../screens/staff/StaffDashboardScreen';
+import type { MainTabParamList } from './types';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<MainTabParamList>();
 
 export default function BottomTabNavigator() {
-  
   const { dbUser } = useAuth();
   const isStaff = dbUser?.role === 'barber' || dbUser?.role === 'admin';
 
-
   return (
     <Tab.Navigator
-  
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ color, size, focused }) => {
@@ -34,7 +30,7 @@ export default function BottomTabNavigator() {
           } else if (route.name === 'Appointments') {
             iconName = 'calendar-outline';
           } else if (route.name === 'Dashboard') {
-            iconName = focused ? 'speedometer' : 'speedometer-outline'
+            iconName = focused ? 'speedometer' : 'speedometer-outline';
           } else if (route.name === 'Notifications') {
             iconName = focused ? 'notifications' : 'notifications-outline';
           } else {
@@ -46,14 +42,11 @@ export default function BottomTabNavigator() {
         tabBarActiveTintColor: '#000000',
         tabBarInactiveTintColor: '#6B7280',
       })}
-
-      
     >
       <Tab.Screen name="Home" component={HomeScreen} />
 
-      
-      <Tab.Screen 
-        name="Services" 
+      <Tab.Screen
+        name="Services"
         component={ServicesStackNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -68,7 +61,7 @@ export default function BottomTabNavigator() {
           component={StaffDashboardScreen}
           options={{ title: 'Dashboard' }}
         />
-      )}   
+      )}
 
       <Tab.Screen
         name="Appointments"
@@ -77,9 +70,7 @@ export default function BottomTabNavigator() {
       />
 
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
-
       <Tab.Screen name="Settings" component={SettingsStackNavigator} />
-
     </Tab.Navigator>
   );
 }
