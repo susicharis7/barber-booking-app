@@ -28,7 +28,7 @@ export const verifyToken = async (
 
 
         const token = authHeader.split(' ')[1];
-        const decodedToken = await firebaseAdminAuth.verifyIdToken(token);
+        const decodedToken = await firebaseAdminAuth.verifyIdToken(token, true);
 
         /* Adding User Data on the Request Object */
         req.user = {
@@ -38,8 +38,20 @@ export const verifyToken = async (
         };
 
         next();
-    } catch (error) {
+    } catch (error: any) {
         console.error('Token Verification Failed: ', error);
+
+        if (error?.code === 'auth/id-token-revoked') {
+            res.status(401).json({ code: 'TOKEN_REVOKED', message: 'Token is revoked.'});
+            return; 
+        }
+
+        if (error?.code === 'auth/user-disabled') {
+            res.status(401).json({ code: 'USER_DISABLED', message: 'User account is disabled.'});
+            return;
+        }
+
+
         res.status(401).json({ message: 'Invalid Token' });
     }
 
