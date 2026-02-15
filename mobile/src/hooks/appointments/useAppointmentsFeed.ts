@@ -52,6 +52,24 @@ export const useAppointmentsFeed = (pageSize = 5): UseAppointmentsFeedReturn => 
     setLoadingPast(value);
   };
 
+  const handleFeedError = (err: unknown, silent: boolean) => {
+    if (isApiError(err)) {
+      if (!silent) {
+        setError(err.message);
+      } else {
+        console.error("Silent refresh failed: ", err.status, err.code, err.message);
+      }
+
+      return;
+    }
+
+    if (!silent) {
+      setError('Failed to load appointments');
+    } else {
+      console.error('Silent refresh failed: ', err);
+    }
+  };
+
   const loadUpcoming = useCallback(
     async ({ reset = false, silent = false }: LoadOptions = {}) => {
       if (loadingUpcomingRef.current) return;
@@ -73,20 +91,7 @@ export const useAppointmentsFeed = (pageSize = 5): UseAppointmentsFeedReturn => 
         upcomingCursorRef.current = res.nextCursor ?? null;
         upcomingHasMoreRef.current = Boolean(res.nextCursor);
       } catch (err: unknown) {
-        if (isApiError(err)) {
-          if (!silent) {
-            setError(err.message);
-          } else {
-            console.error('Silent refresh failed:', err.status, err.code, err.message);
-          }
-          return;
-        }
-
-        if (!silent) {
-          setError('Failed to load appointments.');
-        } else {
-          console.error('Silent refresh failed:', err);
-        }
+        handleFeedError(err, silent);
       } finally {
         setUpcomingLoadingSync(false);
       }
@@ -115,20 +120,7 @@ export const useAppointmentsFeed = (pageSize = 5): UseAppointmentsFeedReturn => 
         pastCursorRef.current = res.nextCursor ?? null;
         pastHasMoreRef.current = Boolean(res.nextCursor);
       } catch (err: unknown) {
-        if (isApiError(err)) {
-          if (!silent) {
-            setError(err.message);
-          } else {
-            console.error('Silent refresh failed:', err.status, err.code, err.message);
-          }
-          return;
-        }
-
-        if (!silent) {
-          setError('Failed to load appointments.');
-        } else {
-          console.error('Silent refresh failed:', err);
-        }
+        handleFeedError(err, silent);
       } finally {
         setPastLoadingSync(false);
       }
