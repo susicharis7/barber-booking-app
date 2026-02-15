@@ -26,8 +26,6 @@
         "projectId": "7bdb659a-fcfc-449e-88ab-1aaaf05382b0"
       }
     },
-    "plugins": [
-      "@react-native-community/datetimepicker"
-    ]
+    "plugins": ["@react-native-community/datetimepicker"]
   }
 }

@@ -10,7 +10,7 @@ const baseLimiterConfig = {
 export const apiLimiter = rateLimit({
   ...baseLimiterConfig,
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 150,
+  max: 2000,
   message: {
     code: 'RATE_LIMITED',
     message: 'Too many requests from this IP. Please try again later.',

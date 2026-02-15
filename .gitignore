@@ -89,3 +89,7 @@ Thumbs.db
 /backend/src/firebase/firebase-service-account.json
 !/backend/.env.example
 /backend/secrets/
+
+
+
+/PLAN.md
