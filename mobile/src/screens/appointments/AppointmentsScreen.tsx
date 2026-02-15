@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Alert } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useAppointmentsRefresh } from '../../hooks/appointments/useAppointmentsRefresh';
@@ -16,6 +16,8 @@ import type { MainTabParamList } from '../../navigation/types';
 
 const PAGE_SIZE = 5;
 type AppointmentsScreenProps = BottomTabScreenProps<MainTabParamList, 'Appointments'>;
+
+
 
 export default function AppointmentsScreen({ navigation }: AppointmentsScreenProps) {
   const {
@@ -45,9 +47,25 @@ export default function AppointmentsScreen({ navigation }: AppointmentsScreenPro
     onInterval: refreshSilently,
   });
 
+
   const { cancelingId, handleCancel } = useCancelAppointment({
     refreshAll: refreshSilently,
   });
+
+  const handleCancelWithFeedback = React.useCallback(
+  async (appointmentId: number) => {
+    const result = await handleCancel(appointmentId);
+
+    if (result.ok) {
+      Alert.alert('Cancelled', 'Your appointment was cancelled.');
+      return;
+    }
+
+    Alert.alert('Error', result.message);
+  },
+  [handleCancel],
+);
+
 
   return (
     <View style={styles.container}>
@@ -76,7 +94,7 @@ export default function AppointmentsScreen({ navigation }: AppointmentsScreenPro
             loadingUpcoming={loadingUpcoming}
             loadingPast={loadingPast}
             cancelingId={cancelingId}
-            onCancel={handleCancel}
+            onCancel={handleCancelWithFeedback}
             onEndReachedUpcoming={() => {
               void loadUpcoming({ silent: true });
             }}
