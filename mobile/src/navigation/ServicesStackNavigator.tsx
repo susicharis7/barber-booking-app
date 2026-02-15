@@ -7,7 +7,6 @@ import InformationScreen from '../screens/services/InformationScreen';
 import JoinWaitingListScreen from '../screens/services/JoinWaitingListScreen';
 import type { ServicesStackParamList } from './types';
 
-
 const Stack = createNativeStackNavigator<ServicesStackParamList>();
 
 export default function ServicesStackNavigator() {
