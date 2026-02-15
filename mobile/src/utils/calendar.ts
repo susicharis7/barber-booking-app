@@ -3,8 +3,18 @@ export type DateParam = Date | string | null | undefined;
 export const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export const months = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 export const getDaysInMonth = (month: number, year: number) => {
@@ -42,16 +52,13 @@ export const clampDate = (value: Date, min: Date, max: Date) => {
 
 export const monthKey = (year: number, month: number) => year * 12 + month;
 
-
 const coerceDate = (value: DateParam) => {
   if (!value) return null;
   if (value instanceof Date) {
     return Number.isNaN(value.getTime()) ? null : value;
   }
   if (typeof value === 'string') {
-    const date = value.includes('T')
-      ? new Date(value)
-      : new Date(`${value}T00:00:00`);
+    const date = value.includes('T') ? new Date(value) : new Date(`${value}T00:00:00`);
     return Number.isNaN(date.getTime()) ? null : date;
   }
   return null;
@@ -64,7 +71,7 @@ export const formatDate = (
     month: 'long',
     day: 'numeric',
     year: 'numeric',
-  }
+  },
 ) => {
   const date = coerceDate(value);
   if (!date) return '-';

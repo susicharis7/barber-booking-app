@@ -23,8 +23,7 @@ type CalendarPickerProps = {
   onMonthChange?: (year: number, month: number) => void;
 };
 
-const startOfDay = (date: Date) =>
-  new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
 const toMonthKey = (year: number, month: number) => year * 12 + month;
 
@@ -56,12 +55,8 @@ export default function CalendarPicker({
   const markerSet = useMemo(() => new Set(markedDates ?? []), [markedDates]);
 
   const currentKey = toMonthKey(currentYear, currentMonth);
-  const minKey = min
-    ? toMonthKey(min.getFullYear(), min.getMonth())
-    : Number.NEGATIVE_INFINITY;
-  const maxKey = max
-    ? toMonthKey(max.getFullYear(), max.getMonth())
-    : Number.POSITIVE_INFINITY;
+  const minKey = min ? toMonthKey(min.getFullYear(), min.getMonth()) : Number.NEGATIVE_INFINITY;
+  const maxKey = max ? toMonthKey(max.getFullYear(), max.getMonth()) : Number.POSITIVE_INFINITY;
 
   const canGoPrev = currentKey > minKey;
   const canGoNext = currentKey < maxKey;
@@ -126,9 +121,7 @@ export default function CalendarPicker({
           disabled={disabled}
           activeOpacity={0.7}
         >
-          {hasMarker && (
-            <View style={[styles.dayDot, selected && styles.dayDotSelected]} />
-          )}
+          {hasMarker && <View style={[styles.dayDot, selected && styles.dayDotSelected]} />}
           <Text
             style={[
               styles.calendarDayText,
@@ -138,7 +131,7 @@ export default function CalendarPicker({
           >
             {day}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>,
       );
     }
 

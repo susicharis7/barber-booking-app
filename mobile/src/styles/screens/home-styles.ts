@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
   },
 
   heroSpacer: {
-    height: 30, 
+    height: 30,
   },
 
   primaryButton: {
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
     textShadowColor: 'rgba(0,0,0,0.45)',
     textShadowOffset: { width: 0, height: 4 },
     textShadowRadius: 12,
-    top: 20
+    top: 20,
   },
 
   sectionTitle: {
@@ -195,7 +195,7 @@ export const styles = StyleSheet.create({
   },
 
   bottomSpacer: {
-    height: 140, 
+    height: 140,
   },
   logo: {
     width: 340,
@@ -203,7 +203,6 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
-
 
   /* Map */
   mapCard: {
@@ -214,15 +213,13 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.45)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
-    top: 40
+    top: 40,
   },
 
   map: {
     width: '100%',
     height: '100%',
   },
-
-
 
   recenterButton: {
     position: 'absolute',
@@ -246,6 +243,4 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.gray[900],
   },
-
-
 });

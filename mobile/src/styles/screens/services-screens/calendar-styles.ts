@@ -174,7 +174,7 @@ export const styles = StyleSheet.create({
   },
 
   timeSlot: {
-    width: '31%',         
+    width: '31%',
     paddingVertical: 14,
     borderRadius: 12,
     backgroundColor: colors.white,
@@ -188,8 +188,6 @@ export const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 2,
   },
-
-
 
   timeSlotSelected: {
     backgroundColor: colors.primary,
@@ -301,8 +299,6 @@ export const styles = StyleSheet.create({
     color: colors.white,
   },
 
-
-
   /* Time Slot */
   timeSlotDisabled: {
     backgroundColor: colors.slate[200],
@@ -339,7 +335,6 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
 
-
   selectedSummary: {
     marginTop: 12,
     flexDirection: 'row',
@@ -357,10 +352,6 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.slate[700],
   },
-
-
-
-
 
   noSlotsCard: {
     backgroundColor: colors.white,
@@ -432,9 +423,4 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
-
-
-
-  
-
 });

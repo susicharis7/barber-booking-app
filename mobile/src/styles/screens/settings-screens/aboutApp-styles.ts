@@ -176,5 +176,4 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.gray[400],
   },
-
 });

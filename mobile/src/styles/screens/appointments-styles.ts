@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
 
-
   hero: {
     width: '100%',
     height: 220,
@@ -49,7 +48,6 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.85)',
   },
-
 
   content: {
     flex: 1,

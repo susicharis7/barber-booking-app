@@ -22,11 +22,8 @@ export class ApiError extends Error {
   }
 }
 
-// Type-guard 
-export const isApiError = (err: unknown): err is ApiError =>
-  err instanceof ApiError;
-
-
+// Type-guard
+export const isApiError = (err: unknown): err is ApiError => err instanceof ApiError;
 
 class ApiService {
   private async getToken(): Promise<string | null> {
@@ -71,13 +68,12 @@ class ApiService {
       }
     }
 
-
     if (!response.ok) {
       throw new ApiError(
         data.message || 'Something went wrong',
         response.status,
         data?.code,
-        data?.errors
+        data?.errors,
       );
     }
 

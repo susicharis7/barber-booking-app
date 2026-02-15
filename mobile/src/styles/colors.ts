@@ -61,7 +61,6 @@ export const colors = {
     white45: 'rgba(255,255,255,0.45)',
   },
 
- 
   primary: '#0f172a',
   secondary: '#2563eb',
   text: '#0f172a',

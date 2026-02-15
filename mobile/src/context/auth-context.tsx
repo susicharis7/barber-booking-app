@@ -29,14 +29,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setDbUser(data.user);
     } catch (error: unknown) {
       if (isApiError(error)) {
-        console.log('Backend Auth Error:', error.status, error.code, error.message);
+        console.warn('Backend Auth Error:', error.status, error.code, error.message);
       } else {
-        console.log('Backend Auth Error:', error);
+        console.warn('Backend Auth Error:', error);
       }
       setDbUser(null);
     }
   };
-
 
   const refreshDbUser = async () => {
     if (user) {

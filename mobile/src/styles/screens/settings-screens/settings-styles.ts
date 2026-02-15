@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.white,
     textShadowColor: 'rgba(0,0,0,0.45)',
-    textShadowOffset: { width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 6,
   },
 
@@ -74,12 +74,12 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(15, 23, 42, 0.22)',
     zIndex: 3,
   },
-  
+
   headerSeparator: {
     marginTop: 8,
     top: 18,
     height: 2,
-    borderRadius: 999, 
+    borderRadius: 999,
     backgroundColor: colors.white,
     opacity: 0.5,
     alignSelf: 'stretch',

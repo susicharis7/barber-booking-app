@@ -1,20 +1,19 @@
 /* User from the PostgreSQL DB */
 export type DatabaseUser = {
-    id: number;
-    firebase_uid: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    phone: string  | null;
-    role: 'customer' | 'barber' | 'admin';
-    created_at: string;
-}
-
+  id: number;
+  firebase_uid: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string | null;
+  role: 'customer' | 'barber' | 'admin';
+  created_at: string;
+};
 
 /* Barber from the PostgreSQL DB */
 export type Barber = {
   id: number;
-  user_id: number; // FK 
+  user_id: number; // FK
   first_name: string;
   last_name: string;
   email: string;
@@ -34,19 +33,17 @@ export type ServicesAndPriceList = {
   price: number | string;
   is_active: boolean;
   created_at: string;
-}
-
+};
 
 /* Barber Working Hours */
 export type WorkingHours = {
   id: number;
   barber_id: number;
   day_of_week: number; // 0 = Sunday ... 6 = Saturday
-  start_time: string;  // 'HH:mm:ss'
-  end_time: string;    // 'HH:mm:ss'
+  start_time: string; // 'HH:mm:ss'
+  end_time: string; // 'HH:mm:ss'
   is_working: boolean;
 };
-
 
 /* Appointment */
 export type Appointment = {
@@ -54,14 +51,13 @@ export type Appointment = {
   customer_id: number | null;
   barber_id: number | null;
   service_id: number | null;
-  date: string;        // 'YYYY-MM-DD'
-  start_time: string;  // 'HH:mm:ss'
-  end_time: string;    // 'HH:mm:ss'
+  date: string; // 'YYYY-MM-DD'
+  start_time: string; // 'HH:mm:ss'
+  end_time: string; // 'HH:mm:ss'
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   note: string | null;
   created_at: string;
 };
-
 
 /* Appointment with relations */
 export type AppointmentDetailed = {
@@ -69,14 +65,13 @@ export type AppointmentDetailed = {
   date: string;
   start_time: string;
   end_time: string;
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  status: 'confirmed' | 'completed' | 'cancelled';
   note: string | null;
 
   customer: Pick<DatabaseUser, 'id' | 'first_name' | 'last_name' | 'email'>;
   barber: Pick<Barber, 'id' | 'first_name' | 'last_name' | 'title'>;
   service: Pick<ServicesAndPriceList, 'id' | 'name' | 'duration' | 'price'>;
 };
-
 
 /* Waiting List */
 export type WaitingListItem = {
@@ -87,10 +82,6 @@ export type WaitingListItem = {
   barber: { id: number; first_name: string; last_name: string; title: string };
   service: { id: number; name: string; duration: number; price: string };
 };
-
-
-
-
 
 /* Staff Dashboard - OVERVIEW */
 export type StaffDashboardOverview = {
@@ -125,5 +116,3 @@ export type StaffAppointmentItem = {
     price: number | string;
   } | null;
 };
-
-

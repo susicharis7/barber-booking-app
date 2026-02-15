@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '../../styles/screens/staff-screens/staffDasboard-styles';
 import { colors } from '../../styles/colors';
 import { formatDate, formatTime, toLocalDate } from '../../utils/calendar';
-import CalendarPicker from '../../components/calendar-component/CalendarPicker';
+import CalendarPicker from '../../components/calendar/CalendarPicker';
 
 import type { StaffAppointmentItem, StaffDashboardOverview } from '../../types';
 import {
@@ -93,40 +93,34 @@ export default function StaffDashboardScreen() {
     setOverview(overviewData);
   }, []);
 
-  const loadMonthDots = useCallback(
-    async (year: number, month: number, force = false) => {
-      const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+  const loadMonthDots = useCallback(async (year: number, month: number, force = false) => {
+    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
 
-      if (!force && monthDotsCacheRef.current[monthKey]) {
-        setMarkedDates(monthDotsCacheRef.current[monthKey]);
-        return;
+    if (!force && monthDotsCacheRef.current[monthKey]) {
+      setMarkedDates(monthDotsCacheRef.current[monthKey]);
+      return;
+    }
+
+    try {
+      const from = toLocalDate(new Date(year, month, 1));
+      const to = toLocalDate(new Date(year, month + 1, 0));
+      const days = await getMyStaffAppointmentDays(from, to);
+      const dateKeys = days.map((item) => item.date);
+
+      monthDotsCacheRef.current[monthKey] = dateKeys;
+      setMarkedDates(dateKeys);
+    } catch (err) {
+      if (isApiError(err)) {
+        console.error('Load month dots error:', err.status, err.code, err.message);
+      } else {
+        console.error('Load month dots error:', err);
       }
-
-      try {
-        const from = toLocalDate(new Date(year, month, 1));
-        const to = toLocalDate(new Date(year, month + 1, 0));
-        const days = await getMyStaffAppointmentDays(from, to);
-        const dateKeys = days.map((item) => item.date);
-
-        monthDotsCacheRef.current[monthKey] = dateKeys;
-        setMarkedDates(dateKeys);
-      } catch (err) {
-        if (isApiError(err)) {
-          console.error('Load month dots error:', err.status, err.code, err.message);
-        } else {
-          console.error('Load month dots error:', err);
-        }
-        setMarkedDates([]);
-      }
-    },
-    []
-  );
+      setMarkedDates([]);
+    }
+  }, []);
 
   const loadAppointments = useCallback(
-    async ({
-      reset = false,
-      silent = false,
-    }: { reset?: boolean; silent?: boolean } = {}) => {
+    async ({ reset = false, silent = false }: { reset?: boolean; silent?: boolean } = {}) => {
       if (loadingAppointmentsRef.current) return;
       if (!reset && !hasMoreRef.current) return;
 
@@ -160,7 +154,7 @@ export default function StaffDashboardScreen() {
         setLoadingAppointmentsSync(false);
       }
     },
-    [selectedDateKey]
+    [selectedDateKey],
   );
 
   useEffect(() => {
@@ -250,7 +244,7 @@ export default function StaffDashboardScreen() {
         day: 'numeric',
         year: 'numeric',
       }),
-    [selectedDate]
+    [selectedDate],
   );
 
   const toggleExpandedAppointment = (appointmentId: number) => {
@@ -261,18 +255,14 @@ export default function StaffDashboardScreen() {
     (year: number, month: number) => {
       loadMonthDots(year, month);
     },
-    [loadMonthDots]
+    [loadMonthDots],
   );
 
   const confirmCancel = (appointmentId: number) => {
-    Alert.alert(
-      'Cancel appointment',
-      'Are you sure you want to cancel this appointment?',
-      [
-        { text: 'No', style: 'cancel' },
-        { text: 'Yes, cancel', style: 'destructive', onPress: () => handleCancel(appointmentId) },
-      ]
-    );
+    Alert.alert('Cancel appointment', 'Are you sure you want to cancel this appointment?', [
+      { text: 'No', style: 'cancel' },
+      { text: 'Yes, cancel', style: 'destructive', onPress: () => handleCancel(appointmentId) },
+    ]);
   };
 
   const summaryStats = [
@@ -331,7 +321,9 @@ export default function StaffDashboardScreen() {
                 <View>
                   <Text style={styles.heroEyebrow}>STAFF CONTROL PANEL</Text>
                   <Text style={styles.heroTitle}>My Dashboard</Text>
-                  <Text style={styles.heroSubtitle}>Operational view for appointments and staffing.</Text>
+                  <Text style={styles.heroSubtitle}>
+                    Operational view for appointments and staffing.
+                  </Text>
                 </View>
                 <View style={styles.heroIconCircle}>
                   <Ionicons name="analytics-outline" size={22} color={colors.white} />
@@ -402,9 +394,7 @@ export default function StaffDashboardScreen() {
               <View style={styles.selectedDateRow}>
                 <Text style={styles.selectedDateText}>{selectedDateLabel}</Text>
                 <View style={styles.selectedDateCountBadge}>
-                  <Text style={styles.selectedDateCountText}>
-                    {appointments.length} loaded
-                  </Text>
+                  <Text style={styles.selectedDateCountText}>{appointments.length} loaded</Text>
                 </View>
               </View>
 
@@ -445,18 +435,8 @@ export default function StaffDashboardScreen() {
                     {formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}
                   </Text>
                 </View>
-                <View
-                  style={[
-                    styles.appointmentStatusPill,
-                    { backgroundColor: statusMeta.bg },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.appointmentStatusText,
-                      { color: statusMeta.text },
-                    ]}
-                  >
+                <View style={[styles.appointmentStatusPill, { backgroundColor: statusMeta.bg }]}>
+                  <Text style={[styles.appointmentStatusText, { color: statusMeta.text }]}>
                     {statusMeta.label}
                   </Text>
                 </View>
@@ -544,4 +524,3 @@ export default function StaffDashboardScreen() {
     </SafeAreaView>
   );
 }
-
