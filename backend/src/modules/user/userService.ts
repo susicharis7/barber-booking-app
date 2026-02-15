@@ -1,5 +1,6 @@
 import { pool } from '../../db/pool';
 import type { CreateUserData, User } from '../../types/types';
+import type { QueryExecutor } from '../../db/repositoryUtils';
 
 
 export const createUser = async (userData: CreateUserData): Promise<User> => {
@@ -56,13 +57,16 @@ export const updateUser = async (
 };
 
 
-export const deleteUser = async(firebase_uid: string): Promise<boolean> => {
-    const result = await pool.query(
+export const deleteUser = async(
+  firebase_uid: string,
+  db: QueryExecutor = pool
+): Promise<boolean> => {
+    const result = await db.query(
         `DELETE FROM users WHERE firebase_uid = $1 RETURNING *`, 
         [firebase_uid]
     );
 
-    return result.rowCount !== null && result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
 }
 
 

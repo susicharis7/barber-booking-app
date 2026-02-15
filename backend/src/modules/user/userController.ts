@@ -2,6 +2,8 @@ import { Response } from 'express';
 import { AuthRequest } from '../../middleware/authMiddleware';
 import * as userService from './userService';
 import { firebaseAdminAuth } from '../../firebase/firebase-admin';
+import { pool } from '../../db/pool';
+
 
 /* POST /api/users/register */
 export const register = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -131,27 +133,51 @@ export const updateMe = async (req: AuthRequest, res: Response): Promise<void> =
 
 /* DELETE api/users/me */
 export const deleteMe = async (req: AuthRequest, res: Response): Promise<void> => {
-    
-    try {
-        const { uid } = req.user!;
+  const uid = req.user?.uid;
 
+  if (!uid) {
+    res.status(401).json({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
+    return;
+  }
 
-        // Delete from DB
-        const deleted = await userService.deleteUser(uid);
+  const client = await pool.connect();
 
-        if (!deleted) {
-            res.status(403).json({ code: 'USER_NOT_REGISTERED', message: 'User is not registered.' });
-            return;
-        }
+  try {
+    await client.query('BEGIN');
 
-        // Delete from Firebase
-        await firebaseAdminAuth.deleteUser(uid);
-        console.log("Deleted User: ", uid);
-        res.json({ message: 'Account deleted successfully!'});
-        
-    } catch (error) {
-        console.error("Delete user error: ", error);
-        res.status(500).json({ message: 'Failed to delete account.'});
+    const deleted = await userService.deleteUser(uid, client);
+    if (!deleted) {
+      await client.query('ROLLBACK');
+      res.status(404).json({ code: 'USER_NOT_FOUND', message: 'User not found' });
+      return;
     }
 
-}
+    try {
+      await firebaseAdminAuth.deleteUser(uid);
+    } catch (error: any) {
+      if (error?.code !== 'auth/user-not-found') {
+        await client.query('ROLLBACK');
+        console.error('Firebase delete user error:', error);
+        res.status(502).json({
+          code: 'FIREBASE_DELETE_FAILED',
+          message: 'Failed to delete Firebase account',
+        });
+        return;
+      }
+    }
+
+    await client.query('COMMIT');
+    res.json({ message: 'Account deleted successfully!' });
+  } catch (error) {
+    try {
+      await client.query('ROLLBACK');
+    } catch {
+        
+    }
+
+    console.error('Delete user error:', error);
+    res.status(500).json({ code: 'DELETE_FAILED', message: 'Failed to delete account.' });
+  } finally {
+    client.release();
+  }
+};
