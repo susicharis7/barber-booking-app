@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { isApiError } from '../../services/api';
+import { isApiError } from '../../services/api/client';
 import { cancelAppointment } from '../../services/appointments-service';
 
 type UseCancelAppointmentParams = {

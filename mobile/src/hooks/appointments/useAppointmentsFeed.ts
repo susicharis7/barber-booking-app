@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { isApiError } from '../../services/api';
+import { isApiError } from '../../services/api/client';
 import { getPastAppointments, getUpcomingAppointments } from '../../services/appointments-service';
 import type { AppointmentDetailed } from '../../types';
 
@@ -57,7 +57,7 @@ export const useAppointmentsFeed = (pageSize = 5): UseAppointmentsFeedReturn => 
       if (!silent) {
         setError(err.message);
       } else {
-        console.error("Silent refresh failed: ", err.status, err.code, err.message);
+        console.error('Silent refresh failed: ', err.status, err.code, err.message);
       }
 
       return;
