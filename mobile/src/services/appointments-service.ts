@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api } from './api/client';
 import type { AppointmentDetailed } from '../types';
 
 export type AppointmentListResponse = {
@@ -9,6 +9,29 @@ export type AppointmentListResponse = {
 export type GetAppointmentsParams = {
   limit?: number;
   cursor?: string | null;
+};
+
+export type BookedSlot = {
+  start_time: string;
+  end_time: string;
+};
+
+export type CreateAppointmentPayload = {
+  barber_id: number;
+  service_id: number;
+  date: string;
+  start_time: string;
+  note?: string;
+};
+
+export const getBookedSlots = async (barberId: number, date: string) => {
+  return api.get<{ slots: BookedSlot[] }>(
+    `/api/appointments/barber/${barberId}/booked?date=${encodeURIComponent(date)}`,
+  );
+};
+
+export const createAppointment = async (payload: CreateAppointmentPayload) => {
+  return api.post('/api/appointments', payload);
 };
 
 const buildAppointmentsQuery = ({ limit, cursor }: GetAppointmentsParams = {}) => {
