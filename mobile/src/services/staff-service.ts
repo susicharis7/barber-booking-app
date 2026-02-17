@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api } from './api/client';
 import type { StaffDashboardOverview, StaffAppointmentItem } from '../types';
 
 export const getStaffDashboardOverview = async (): Promise<StaffDashboardOverview> => {

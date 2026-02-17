@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { styles } from '../../styles/screens/settings-screens/profile-styles';
 import { useAuth } from '../../context/auth-context';
-import { api, isApiError } from '../../services/api';
+import { api, isApiError } from '../../services/api/client';
 import { colors } from '../../styles/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { SettingsStackParamList } from '../../navigation/types';
@@ -22,6 +22,7 @@ type UserProfileScreenProps = NativeStackScreenProps<SettingsStackParamList, 'Us
 
 export default function UserProfileScreen({ navigation }: UserProfileScreenProps) {
   const { dbUser, refreshDbUser } = useAuth();
+  const [didInitForm, setDidInitForm] = useState(false);
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -37,12 +38,16 @@ export default function UserProfileScreen({ navigation }: UserProfileScreenProps
   }, [refreshDbUser]);
 
   useEffect(() => {
-    if (dbUser) {
-      setFullName(`${dbUser.first_name} ${dbUser.last_name}`);
-      setEmail(dbUser.email);
-      setPhone(dbUser.phone || '');
-    }
-  }, [dbUser]);
+    if (!dbUser) return;
+
+    setEmail(dbUser.email);
+
+    if (didInitForm) return;
+
+    setFullName(`${dbUser.first_name} ${dbUser.last_name}`);
+    setPhone(dbUser.phone || '');
+    setDidInitForm(true);
+  }, [dbUser, didInitForm]);
 
   const handleSave = async () => {
     if (!fullName.trim()) {
@@ -69,6 +74,7 @@ export default function UserProfileScreen({ navigation }: UserProfileScreenProps
       });
 
       await refreshDbUser();
+      setDidInitForm(false);
       Alert.alert('Success', 'Profile updated successfully');
     } catch (error: unknown) {
       if (isApiError(error)) {

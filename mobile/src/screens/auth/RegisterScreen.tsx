@@ -9,13 +9,13 @@ import {
   Image,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { api, isApiError } from '../../services/api';
+import { api, isApiError } from '../../services/api/client';
 import { styles } from '../../styles/screens/register-styles';
 import { colors } from '../../styles/colors';
 import {
   registerWithEmailAndPassword,
   deleteCurrentUserAccount,
-} from '../../services/auth-service';
+} from '../../services/auth/auth-service';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../navigation/types';
 

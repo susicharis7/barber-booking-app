@@ -1,6 +1,6 @@
 import { View, Text, Alert, TouchableOpacity, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { logout } from '../../services/auth-service';
+import { logout } from '../../services/auth/auth-service';
 import { styles } from '../../styles/screens/settings-screens/settings-styles';
 import { colors } from '../../styles/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';

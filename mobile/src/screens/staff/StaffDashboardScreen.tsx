@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from '../../styles/screens/staff-screens/staffDasboard-styles';
 import { colors } from '../../styles/colors';
 import { formatDate, formatTime, toLocalDate } from '../../utils/calendar';
-import CalendarPicker from '../../components/calendar/CalendarPicker';
+import CalendarPicker from '../../components/customCalendar/CalendarPicker';
 
 import type { StaffAppointmentItem, StaffDashboardOverview } from '../../types';
 import {
@@ -22,7 +22,7 @@ import {
   getMyStaffAppointments,
   getStaffDashboardOverview,
 } from '../../services/staff-service';
-import { isApiError } from '../../services/api';
+import { isApiError } from '../../services/api/client';
 
 const initialOverview: StaffDashboardOverview = {
   users_total: 0,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/waitingList-styles';
-import { api, isApiError } from '../../services/api';
+import { api, isApiError } from '../../services/api/client';
 import type { WaitingListItem } from '../../types';
 import { formatDate } from '../../utils/calendar';
 import { colors } from '../../styles/colors';

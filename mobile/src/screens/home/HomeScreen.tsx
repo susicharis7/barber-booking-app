@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/home-styles';
 import { colors } from '../../styles/colors';
 import MapView, { Marker } from 'react-native-maps';
-import { api } from '../../services/api';
+import { api } from '../../services/api/client';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { MainTabParamList } from '../../navigation/types';
 

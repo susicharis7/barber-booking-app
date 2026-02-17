@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/login-styles';
-import { login } from '../../services/auth-service';
+import { login } from '../../services/auth/auth-service';
 import { colors } from '../../styles/colors';
-import { isApiError } from '../../services/api';
+import { isApiError } from '../../services/api/client';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../../navigation/types';
 

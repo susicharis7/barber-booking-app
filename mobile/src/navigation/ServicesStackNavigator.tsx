@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ServiceScreen from '../screens/services/ServiceScreen';
-import ServicesAndPriceListScreen from '../screens/services/ServicesAndPriceListScreen';
-import CalendarScreen from '../screens/services/CalendarScreen';
-import InformationScreen from '../screens/services/InformationScreen';
-import JoinWaitingListScreen from '../screens/services/JoinWaitingListScreen';
+import ServiceScreen from '../screens/services-screens/ServiceScreen';
+import ServicesAndPriceListScreen from '../screens/services-screens/ServicesAndPriceListScreen';
+import CalendarScreen from '../screens/services-screens/CalendarScreen';
+import InformationScreen from '../screens/services-screens/InformationScreen';
+import JoinWaitingListScreen from '../screens/services-screens/JoinWaitingListScreen';
 import type { ServicesStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<ServicesStackParamList>();

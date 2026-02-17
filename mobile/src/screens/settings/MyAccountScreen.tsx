@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/myaccount-styles';
-import { api, isApiError } from '../../services/api';
-import { logout } from '../../services/auth-service';
+import { api, isApiError } from '../../services/api/client';
+import { logout } from '../../services/auth/auth-service';
 import { colors } from '../../styles/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { SettingsStackParamList } from '../../navigation/types';

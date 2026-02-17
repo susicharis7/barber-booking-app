@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { firebaseAuth } from '../services/firebase';
-import { api, isApiError } from '../services/api';
+import { firebaseAuth } from '../services/auth/firebase';
+import { api, isApiError } from '../services/api/client';
 import { DatabaseUser } from '../types';
 
 type AuthContextType = {
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchDbUser = async () => {
+  const fetchDbUser = useCallback(async () => {
     try {
       const data = await api.get<{ user: DatabaseUser }>('/api/users/me');
       setDbUser(data.user);
@@ -35,13 +35,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       setDbUser(null);
     }
-  };
+  }, []);
 
-  const refreshDbUser = async () => {
-    if (user) {
+  const refreshDbUser = useCallback(async () => {
+    if (firebaseAuth.currentUser) {
       await fetchDbUser();
+    } else {
+      setDbUser(null);
     }
-  };
+  }, [fetchDbUser]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (firebaseUser) => {
@@ -58,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [fetchDbUser]);
 
   return (
     <AuthContext.Provider value={{ user, dbUser, loading, refreshDbUser }}>
