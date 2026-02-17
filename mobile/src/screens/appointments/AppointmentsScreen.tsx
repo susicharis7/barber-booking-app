@@ -17,8 +17,6 @@ import type { MainTabParamList } from '../../navigation/types';
 const PAGE_SIZE = 5;
 type AppointmentsScreenProps = BottomTabScreenProps<MainTabParamList, 'Appointments'>;
 
-
-
 export default function AppointmentsScreen({ navigation }: AppointmentsScreenProps) {
   const {
     activeTab,
@@ -47,25 +45,23 @@ export default function AppointmentsScreen({ navigation }: AppointmentsScreenPro
     onInterval: refreshSilently,
   });
 
-
   const { cancelingId, handleCancel } = useCancelAppointment({
     refreshAll: refreshSilently,
   });
 
   const handleCancelWithFeedback = React.useCallback(
-  async (appointmentId: number) => {
-    const result = await handleCancel(appointmentId);
+    async (appointmentId: number) => {
+      const result = await handleCancel(appointmentId);
 
-    if (result.ok) {
-      Alert.alert('Cancelled', 'Your appointment was cancelled.');
-      return;
-    }
+      if (result.ok) {
+        Alert.alert('Cancelled', 'Your appointment was cancelled.');
+        return;
+      }
 
-    Alert.alert('Error', result.message);
-  },
-  [handleCancel],
-);
-
+      Alert.alert('Error', result.message);
+    },
+    [handleCancel],
+  );
 
   return (
     <View style={styles.container}>
