@@ -1,53 +1,36 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  Modal,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/myaccount-styles';
-import { api, isApiError } from '../../services/api/client';
-import { logout } from '../../services/auth/auth-service';
 import { colors } from '../../styles/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { SettingsStackParamList } from '../../navigation/types';
+import { useDeleteAccount } from '../../hooks/settings/useDeleteAccount';
+import { ConfirmActionModal } from '../../components/settings/ConfirmActionModal';
+import { DangerZoneCard } from '../../components/settings/DangerZoneCard';
 
 const bgImage = require('../../../assets/images/myAcc-bg.png');
 type MyAccountScreenProps = NativeStackScreenProps<SettingsStackParamList, 'MyAccount'>;
 
 export default function MyAccountScreen({ navigation }: MyAccountScreenProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const { deleting, deleteAccount } = useDeleteAccount();
 
   const handleDeleteAccount = async () => {
-    setDeleting(true);
+    const result = await deleteAccount();
 
-    try {
-      await api.delete('/api/users/me');
-      await logout();
-    } catch (error: unknown) {
-      if (isApiError(error)) {
-        Alert.alert('Delete failed', error.message);
-      } else {
-        Alert.alert('Delete failed', 'Unexpected error');
-      }
-    } finally {
-      setDeleting(false);
-      setShowDeleteModal(false);
+    if (!result.ok) {
+      Alert.alert('Delete failed', result.message);
     }
+
+    setShowDeleteModal(false);
   };
 
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
 
-        {/* BACK BUTTON */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -57,7 +40,6 @@ export default function MyAccountScreen({ navigation }: MyAccountScreenProps) {
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
-        {/* HEADER CONTENT */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>ACCOUNT</Text>
           <Text style={styles.headerTitle}>My Account</Text>
@@ -67,7 +49,6 @@ export default function MyAccountScreen({ navigation }: MyAccountScreenProps) {
         </View>
       </ImageBackground>
 
-      {/* WHITE CONTENT */}
       <View style={styles.content}>
         <Text style={styles.sectionTitle}>SETTINGS</Text>
 
@@ -90,74 +71,25 @@ export default function MyAccountScreen({ navigation }: MyAccountScreenProps) {
         />
 
         <Text style={styles.sectionTitle}>DANGER ZONE</Text>
-
-        <TouchableOpacity
-          style={[styles.item, styles.dangerItem]}
-          activeOpacity={0.7}
-          onPress={() => setShowDeleteModal(true)}
-        >
-          <View style={[styles.itemIconContainer, styles.dangerIconContainer]}>
-            <Ionicons name="trash-outline" size={20} color={colors.error} />
-          </View>
-          <Text style={[styles.itemText, styles.dangerText]}>Delete My Account</Text>
-          <Ionicons name="chevron-forward" size={18} color={colors.error} />
-        </TouchableOpacity>
+        <DangerZoneCard onDeletePress={() => setShowDeleteModal(true)} />
       </View>
 
-      {/* DELETE CONFIRMATION MODAL */}
-      <Modal
+      <ConfirmActionModal
         visible={showDeleteModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowDeleteModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalIconContainer}>
-              <Ionicons name="warning" size={40} color={colors.error} />
-            </View>
-
-            <Text style={styles.modalTitle}>Delete Account?</Text>
-
-            <Text style={styles.modalMessage}>
-              Are you sure you want to delete your account? This action is permanent and cannot be
-              undone.
-            </Text>
-
-            <Text style={styles.modalWarning}>
-              • All your data will be permanently deleted{'\n'}• You will lose your booking history
-              {'\n'}• You won&apos;t be able to recover your account
-            </Text>
-
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setShowDeleteModal(false)}
-                disabled={deleting}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={handleDeleteAccount}
-                disabled={deleting}
-              >
-                {deleting ? (
-                  <ActivityIndicator color={colors.white} />
-                ) : (
-                  <Text style={styles.deleteButtonText}>Delete</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        title="Delete Account?"
+        message="Are you sure you want to delete your account? This action is permanent and cannot be undone."
+        warning={
+          "- All your data will be permanently deleted\n- You will lose your booking history\n- You won't be able to recover your account"
+        }
+        confirmLabel="Delete"
+        loading={deleting}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteAccount}
+      />
     </View>
   );
 }
 
-/* MENU ITEM */
 function MenuItem({
   icon,
   label,

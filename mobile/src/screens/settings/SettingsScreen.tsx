@@ -1,19 +1,14 @@
-import { View, Text, Alert, TouchableOpacity, ImageBackground } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, Alert, ImageBackground } from 'react-native';
 import { logout } from '../../services/auth/auth-service';
 import { styles } from '../../styles/screens/settings-screens/settings-styles';
-import { colors } from '../../styles/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { SettingsStackParamList } from '../../navigation/types';
+import {
+  SettingsMenuList,
+  type SettingsMenuItemProps,
+} from '../../components/settings/SettingsMenuList';
 
 const headerImage = require('../../../assets/images/settings-bg.png');
-
-type MenuItem = {
-  icon: keyof typeof Ionicons.glyphMap;
-  label: string;
-  onPress: () => void;
-  isLogout?: boolean;
-};
 
 type SettingsScreenProps = NativeStackScreenProps<SettingsStackParamList, 'SettingsMain'>;
 
@@ -26,7 +21,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
     }
   };
 
-  const menuItems: MenuItem[] = [
+  const menuItems: SettingsMenuItemProps[] = [
     {
       icon: 'person-outline',
       label: 'User Profile',
@@ -52,12 +47,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
       label: 'Notifications',
       onPress: () => navigation.navigate('NotificationsScreen'),
     },
-    {
-      icon: 'log-out-outline',
-      label: 'Logout',
-      onPress: handleLogout,
-      isLogout: true,
-    },
+    { icon: 'log-out-outline', label: 'Logout', onPress: handleLogout, isDanger: true },
   ];
 
   return (
@@ -76,7 +66,6 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
               <Text style={styles.headerSubtitle}>
                 Control your profile, bookings, and app experience.
               </Text>
-
               <View style={styles.headerSeparator} />
             </View>
           </View>
@@ -86,28 +75,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
 
       <View style={styles.menuContainer}>
         <Text style={styles.sectionTitle}>Quick Access</Text>
-        {menuItems.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.menuItem, item.isLogout && styles.logoutItem]}
-            onPress={item.onPress}
-            activeOpacity={0.7}
-          >
-            <View style={[styles.menuIconContainer, item.isLogout && styles.logoutIconContainer]}>
-              <Ionicons
-                name={item.icon}
-                size={20}
-                color={item.isLogout ? colors.error : colors.primary}
-              />
-            </View>
-            <Text style={[styles.menuText, item.isLogout && styles.logoutText]}>{item.label}</Text>
-            <Ionicons
-              name="chevron-forward"
-              size={18}
-              color={item.isLogout ? colors.error : colors.slate[400]}
-            />
-          </TouchableOpacity>
-        ))}
+        <SettingsMenuList items={menuItems} />
       </View>
     </View>
   );
