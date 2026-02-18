@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/waitingList-styles';
 import { colors } from '../../styles/colors';
 import { formatDate } from '../../utils/calendar';
 import type { WaitingListItem } from '../../types';
+import { Button } from '../ui';
 
 type WaitingListItemCardProps = {
   item: WaitingListItem;
@@ -50,14 +50,14 @@ export const WaitingListItemCard = ({ item, position, onCancel }: WaitingListIte
       </View>
 
       <View style={styles.waitingActions}>
-        <TouchableOpacity
-          style={styles.cancelButton}
-          activeOpacity={0.7}
+        <Button
+          label="Cancel"
           onPress={() => onCancel(item.id)}
-        >
-          <Ionicons name="close-circle-outline" size={18} color={colors.red[600]} />
-          <Text style={styles.cancelButtonText}>Cancel</Text>
-        </TouchableOpacity>
+          variant="danger"
+          size="sm"
+          leftIcon="close-circle-outline"
+        />
+
       </View>
     </View>
   );
