@@ -1,3 +1,4 @@
+import { WaitingListItem } from '@/types';
 import { api } from './api/client';
 
 export type CreateWaitingListPayload = {
@@ -9,4 +10,15 @@ export type CreateWaitingListPayload = {
 
 export const createWaitingList = async (payload: CreateWaitingListPayload) => {
   return api.post('/api/waiting-list', payload);
+};
+
+export const getWaitingList = async () => {
+  return api.get<{ waitingList: WaitingListItem[] }>('/api/waiting-list');
+};
+
+export const cancelWaitingList = async (id: number) => {
+  return api.put<{ waitingList: { id: number; status: 'cancelled' } }>(
+    `/api/waiting-list/${id}/cancel`,
+    {},
+  );
 };
