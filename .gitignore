@@ -70,7 +70,7 @@ Thumbs.db
 /mobile/.expo-shared/
 /mobile/web-build/
 /mobile/dist/
-/mobile/src/services/firebase.ts
+/mobile/src/services/auth/firebase.ts
 /mobile/.env
 /mobile/.env.*
 !/mobile/.env.example
