@@ -140,52 +140,5 @@ export const styles = StyleSheet.create({
     elevation: 4,
   },
 
-  inputGroup: {
-    marginBottom: 18,
-  },
-
-  inputLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-    color: colors.slate[400],
-    marginBottom: 8,
-    marginLeft: 2,
-  },
-
-  input: {
-    backgroundColor: colors.slate[50],
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    color: colors.primary,
-    borderWidth: 1,
-    borderColor: colors.slate[200],
-  },
-
-  inputDisabled: {
-    backgroundColor: colors.slate[100],
-    color: colors.slate[400],
-  },
-
-  /* SAVE BUTTON */
-  saveButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 'auto',
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 14,
-    elevation: 6,
-  },
-
-  saveButtonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '700',
-  },
+ 
 });

@@ -212,22 +212,6 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
 
-  cancelButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.red[100],
-    paddingVertical: 12,
-    borderRadius: 10,
-    gap: 6,
-  },
-
-  cancelButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.error,
-  },
 
   rebookButton: {
     flex: 1,

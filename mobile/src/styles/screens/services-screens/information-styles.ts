@@ -188,23 +188,6 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-  /* RESERVE BUTTON */
-  reserveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: 14,
-    marginBottom: 32,
-    gap: 8,
-  },
-
-  reserveButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.white,
-  },
 
   /* MODAL */
   modalOverlay: {

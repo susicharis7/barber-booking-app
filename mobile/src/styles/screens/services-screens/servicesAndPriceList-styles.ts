@@ -186,26 +186,5 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
 
-  /* RESERVE BUTTON */
-  reserveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: 14,
-    marginTop: 8,
-    marginBottom: 32,
-    gap: 8,
-  },
 
-  reserveButtonDisabled: {
-    backgroundColor: colors.slate[300],
-  },
-
-  reserveButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.white,
-  },
 });

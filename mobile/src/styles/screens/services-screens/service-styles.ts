@@ -20,11 +20,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  loadingText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: colors.muted,
-  },
+
 
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,

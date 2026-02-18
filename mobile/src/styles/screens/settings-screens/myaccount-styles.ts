@@ -120,18 +120,6 @@ export const styles = StyleSheet.create({
     marginLeft: 14,
   },
 
-  /* DANGER */
-  dangerItem: {
-    backgroundColor: colors.red[50],
-  },
-
-  dangerIconContainer: {
-    backgroundColor: colors.red[200],
-  },
-
-  dangerText: {
-    color: colors.error,
-  },
 
   /* MODAL */
   modalOverlay: {

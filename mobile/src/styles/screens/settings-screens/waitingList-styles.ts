@@ -180,18 +180,6 @@ export const styles = StyleSheet.create({
     paddingTop: 14,
   },
 
-  cancelButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
-
-  cancelButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.error,
-  },
 
   /* INFO CARD */
   infoCard: {
