@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, ImageBackground, ActivityIndicator } from 'react-native';
+import { View, Text, ImageBackground } from 'react-native';
+import { LoadingBlock } from '../../components/ui';
 import { styles } from '../../styles/screens/services-screens/service-styles';
-import { colors } from '../../styles/colors';
 import { EmployeeListSection } from '../../components/services/EmployeeListSection';
 import type { Barber } from '../../types';
 import { useBarbers } from '../../hooks/services/useBarbers';
@@ -42,10 +42,7 @@ export default function ServiceScreen({ navigation }: ServiceScreenProps) {
       {/* CONTENT */}
       <View style={styles.content}>
         {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            <Text style={styles.loadingText}>Loading barbers...</Text>
-          </View>
+          <LoadingBlock label="Loading barbers..." style={styles.loadingContainer} />
         ) : (
           <EmployeeListSection
             barbers={barbers}

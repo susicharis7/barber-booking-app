@@ -5,7 +5,6 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
-  ActivityIndicator,
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +16,7 @@ import type { MainTabParamList, SettingsStackParamList } from '../../navigation/
 import { useWaitingList } from '../../hooks/settings/useWaitingList';
 import { WaitingListItemCard } from '../../components/settings/WaitingListItemCard';
 import { WaitingListEmptyState } from '../../components/settings/WaitingListEmptyState';
+import { LoadingBlock, EmptyState } from '../../components/ui';
 
 const bgImage = require('../../../assets/images/waiting-list.png');
 type WaitingListScreenProps = NativeStackScreenProps<SettingsStackParamList, 'WaitingList'>;
@@ -95,14 +95,18 @@ export default function WaitingListScreen({ navigation }: WaitingListScreenProps
 
       <View style={styles.content}>
         {loading ? (
-          <View style={{ paddingTop: 40, alignItems: 'center' }}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            <Text style={{ marginTop: 12, color: colors.muted }}>Loading waiting list...</Text>
-          </View>
+          <LoadingBlock label="Loading waiting list..." />
         ) : error ? (
-          <View style={{ paddingTop: 40, alignItems: 'center' }}>
-            <Text style={{ color: colors.error, textAlign: 'center' }}>{error}</Text>
-          </View>
+          <EmptyState
+            icon="alert-circle-outline"
+            title="Could not load waiting list"
+            description={error}
+            actionLabel="Retry"
+            onAction={() => {
+              void load();
+            }}
+            compact
+          />
         ) : activeList.length > 0 ? (
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.sectionLabel}>YOUR REQUESTS</Text>

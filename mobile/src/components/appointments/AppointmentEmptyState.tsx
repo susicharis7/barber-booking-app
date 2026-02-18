@@ -1,9 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-
-import { styles } from '../../styles/screens/appointments-styles';
-import { colors } from '../../styles/colors';
+import { EmptyState } from '../ui';
 
 type TabType = 'upcoming' | 'past';
 
@@ -16,32 +12,19 @@ export const AppointmentsEmptyState = ({
   activeTab,
   onPressBookNow,
 }: AppointmentsEmptyStateProps) => {
+  const isUpcoming = activeTab === 'upcoming';
+
   return (
-    <View style={styles.emptyState}>
-      <View style={styles.emptyIconContainer}>
-        <Ionicons
-          name={activeTab === 'upcoming' ? 'calendar-outline' : 'time-outline'}
-          size={48}
-          color={colors.slate[400]}
-        />
-      </View>
-
-      <Text style={styles.emptyTitle}>
-        {activeTab === 'upcoming' ? 'No Upcoming Appointments' : 'No Past Appointments'}
-      </Text>
-
-      <Text style={styles.emptyText}>
-        {activeTab === 'upcoming'
+    <EmptyState
+      icon={isUpcoming ? 'calendar-outline' : 'time-outline'}
+      title={isUpcoming ? 'No Upcoming Appointments' : 'No Past Appointments'}
+      description={
+        isUpcoming
           ? 'Book your next appointment and it will appear here.'
-          : 'Your appointment history will appear here.'}
-      </Text>
-
-      {activeTab === 'upcoming' && (
-        <TouchableOpacity style={styles.bookButton} activeOpacity={0.7} onPress={onPressBookNow}>
-          <Text style={styles.bookButtonText}>Book Now</Text>
-          <Ionicons name="arrow-forward" size={18} color={colors.white} />
-        </TouchableOpacity>
-      )}
-    </View>
+          : 'Your appointment history will appear here.'
+      }
+      actionLabel={isUpcoming ? 'Book Now' : undefined}
+      onAction={isUpcoming ? onPressBookNow : undefined}
+    />
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { colors } from '../../styles/colors';
+import { View } from 'react-native';
 import CalendarPicker from '../customCalendar/CalendarPicker';
+import { EmptyState, LoadingBlock } from '../ui';
 
 type CalendarDatePickerSectionProps = {
   loading: boolean;
@@ -23,20 +23,20 @@ export const CalendarDatePickerSection = ({
   isDateDisabled,
 }: CalendarDatePickerSectionProps) => {
   if (loading) {
-    return (
-      <View style={{ paddingVertical: 24, alignItems: 'center' }}>
-        <ActivityIndicator size="small" color={colors.primary} />
-      </View>
-    );
+    return <LoadingBlock label="" size="small" />;
   }
 
   if (error) {
     return (
-      <View style={{ paddingVertical: 24, alignItems: 'center' }}>
-        <Text style={{ color: colors.error, marginBottom: 8, textAlign: 'center' }}>{error}</Text>
-        <TouchableOpacity onPress={onRetry} activeOpacity={0.7}>
-          <Text style={{ color: colors.primary }}>Try again</Text>
-        </TouchableOpacity>
+      <View style={{ paddingVertical: 8 }}>
+        <EmptyState
+          icon="alert-circle-outline"
+          title="Could not load calendar"
+          description={error}
+          actionLabel="Try again"
+          onAction={onRetry}
+          compact
+        />
       </View>
     );
   }

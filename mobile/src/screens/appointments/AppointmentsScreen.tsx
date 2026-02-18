@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useAppointmentsRefresh } from '../../hooks/appointments/useAppointmentsRefresh';
@@ -11,8 +11,8 @@ import { AppointmentsEmptyState } from '../../components/appointments/Appointmen
 import { AppointmentsList } from '../../components/appointments/AppointmentList';
 
 import { styles } from '../../styles/screens/appointments-styles';
-import { colors } from '../../styles/colors';
 import type { MainTabParamList } from '../../navigation/types';
+import { EmptyState, LoadingBlock } from '../../components/ui';
 
 const PAGE_SIZE = 5;
 type AppointmentsScreenProps = BottomTabScreenProps<MainTabParamList, 'Appointments'>;
@@ -75,13 +75,19 @@ export default function AppointmentsScreen({ navigation }: AppointmentsScreenPro
         />
 
         {loading ? (
-          <View style={{ paddingTop: 40, alignItems: 'center' }}>
-            <ActivityIndicator size="large" />
-            <Text style={{ marginTop: 12, color: colors.muted }}>Loading appointments...</Text>
-          </View>
+          <LoadingBlock label="Loading appointments..." />
         ) : error ? (
           <View style={{ paddingTop: 40, alignItems: 'center' }}>
-            <Text style={{ color: colors.error }}>{error}</Text>
+            <EmptyState
+              icon="alert-circle-outline"
+              title="Could not load appointments"
+              description={error}
+              actionLabel="Retry"
+              onAction={() => {
+                void loadInitial();
+              }}
+              compact
+            />
           </View>
         ) : hasAppointments ? (
           <AppointmentsList

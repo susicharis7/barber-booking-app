@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text } from 'react-native';
+import { Input } from '../ui';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/services-screens/calendar-styles';
 import { colors } from '../../styles/colors';
@@ -64,17 +65,17 @@ export const CalendarBookingSummaryCard = ({
       </View>
 
       <View style={styles.noteSection}>
-        <Text style={styles.noteLabel}>Add a note (optional)</Text>
-        <TextInput
-          style={styles.noteInput}
-          placeholder="Any special requests..."
+        <Input
+          label="Add a note (optional)"
           value={note}
           onChangeText={onChangeNote}
+          placeholder="Any special requests..."
           multiline
           numberOfLines={3}
           onFocus={onFocusNote}
         />
       </View>
+
     </View>
   );
 };

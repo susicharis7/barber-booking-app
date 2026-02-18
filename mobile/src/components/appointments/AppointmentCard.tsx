@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Button } from '../ui';
+
 
 import { styles } from '../../styles/screens/appointments-styles';
 import { colors } from '../../styles/colors';
@@ -68,28 +70,25 @@ export const AppointmentCard = React.memo(function AppointmentCard({
 
       {isUpcoming && appointment.status !== 'cancelled' && (
         <View style={styles.appointmentActions}>
-          <TouchableOpacity
-            style={styles.cancelButton}
-            activeOpacity={0.7}
-            disabled={isCancelling}
+          <Button
+            label="Cancel"
             onPress={() =>
-              Alert.alert(
-                'Cancel appointment',
-                'Are you sure you want to cancel this appointment?',
-                [
-                  { text: 'No', style: 'cancel' },
-                  {
-                    text: 'Yes, cancel',
-                    style: 'destructive',
-                    onPress: () => onCancel(appointment.id),
-                  },
-                ],
-              )
+              Alert.alert('Cancel appointment', 'Are you sure you want to cancel this appointment?', [
+                { text: 'No', style: 'cancel' },
+                {
+                  text: 'Yes, cancel',
+                  style: 'destructive',
+                  onPress: () => onCancel(appointment.id),
+                },
+              ])
             }
-          >
-            <Ionicons name="close-circle-outline" size={16} color={colors.error} />
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
+            variant="danger"
+            size="sm"
+            leftIcon="close-circle-outline"
+            disabled={isCancelling}
+            loading={isCancelling}
+          />
+
         </View>
       )}
     </View>

@@ -6,6 +6,7 @@ import { colors } from '../../styles/colors';
 import type { ServicesAndPriceList } from '../../types';
 import { useServicesCatalog } from '../../hooks/services/useServicesCatalog';
 import { ServicesCatalogList } from '../../components/services/ServiceCatalogList';
+import { Button, LoadingBlock } from '../../components/ui';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { ServicesStackParamList } from '../../navigation/types';
@@ -60,9 +61,7 @@ export default function ServicesAndPriceListScreen({
       {/* White Content */}
       <View style={styles.content}>
         {loading ? (
-          <View style={{ paddingTop: 40 }}>
-            <Text style={{ textAlign: 'center', color: colors.muted }}>Loading services...</Text>
-          </View>
+          <LoadingBlock label="Loading services..." />
         ) : (
           <>
             <ServicesCatalogList
@@ -74,18 +73,14 @@ export default function ServicesAndPriceListScreen({
             />
 
             {/* Reserve Btn */}
-            <TouchableOpacity
-              style={[
-                styles.reserveButton,
-                (!selectedService || loading) && styles.reserveButtonDisabled,
-              ]}
-              activeOpacity={0.7}
+            <Button
+              label="Continue"
               onPress={handleContinue}
               disabled={!selectedService || loading}
-            >
-              <Text style={styles.reserveButtonText}>Continue</Text>
-              <Ionicons name="arrow-forward" size={20} color={colors.white} />
-            </TouchableOpacity>
+              rightIcon="arrow-forward"
+              variant="primary"
+              size="lg"
+            />
           </>
         )}
       </View>

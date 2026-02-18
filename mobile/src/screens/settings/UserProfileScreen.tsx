@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ImageBackground,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/screens/settings-screens/profile-styles';
@@ -14,6 +6,8 @@ import { colors } from '../../styles/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { SettingsStackParamList } from '../../navigation/types';
 import { useUserProfile } from '../../hooks/settings/useUserProfile';
+import { Button, Input } from '../../components/ui';
+
 
 const headerImage = require('../../../assets/images/settings-bg.png');
 type UserProfileScreenProps = NativeStackScreenProps<SettingsStackParamList, 'UserProfile'>;
@@ -74,50 +68,44 @@ export default function UserProfileScreen({ navigation }: UserProfileScreenProps
         <Text style={styles.sectionTitle}>PERSONAL INFO</Text>
 
         <View style={styles.inputCard}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              value={fullName}
-              onChangeText={setFullName}
-              placeholder="Enter your full name"
-              autoComplete="off"
-              textContentType="name"
-            />
-          </View>
+          <Input
+            label="Full Name"
+            value={fullName}
+            onChangeText={setFullName}
+            placeholder="Enter your full name"
+            autoComplete="off"
+            textContentType="name"
+          />
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Email Address</Text>
-            <TextInput
-              style={[styles.input, styles.inputDisabled]}
-              value={email}
-              editable={false}
-              autoComplete="off"
-              textContentType="emailAddress"
-            />
-          </View>
+          <Input
+            label="Email Address"
+            value={email}
+            onChangeText={() => undefined}
+            editable={false}
+            autoComplete="off"
+            textContentType="emailAddress"
+          />
 
-          <View style={[styles.inputGroup, { marginBottom: 0 }]}>
-            <Text style={styles.inputLabel}>Phone Number</Text>
-            <TextInput
-              style={styles.input}
-              value={phone}
-              onChangeText={setPhone}
-              placeholder="Enter your phone number"
-              keyboardType="phone-pad"
-              autoComplete="tel"
-              textContentType="telephoneNumber"
-            />
-          </View>
+          <Input
+            label="Phone Number"
+            value={phone}
+            onChangeText={setPhone}
+            placeholder="Enter your phone number"
+            keyboardType="phone-pad"
+            autoComplete="tel"
+            textContentType="telephoneNumber"
+          />
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saving}>
-          {saving ? (
-            <ActivityIndicator color={colors.white} />
-          ) : (
-            <Text style={styles.saveButtonText}>Save Changes</Text>
-          )}
-        </TouchableOpacity>
+        <View style={{ marginTop: 'auto' }}>
+          <Button
+            label="Save Changes"
+            onPress={() => void handleSave()}
+            loading={saving}
+            disabled={saving}
+          />
+        </View>
+
       </View>
     </KeyboardAwareScrollView>
   );

@@ -10,6 +10,9 @@ import { useReserveAppointment } from '../../hooks/services/useReserveAppointmen
 import { BookingDetailsCard } from '../../components/services/BookingDetailsCard';
 import { BookingPolicyCard } from '../../components/services/BookingPolicyCard';
 import { BookingSuccessModal } from '../../components/services/BookingSuccessModal';
+import { calculateEndTime } from '../../utils/time';
+import { Button } from '../../components/ui';
+
 
 const bgImage = require('../../../assets/images/settings-bg.png');
 type InformationScreenProps = NativeStackScreenProps<ServicesStackParamList, 'Information'>;
@@ -28,14 +31,6 @@ export default function InformationScreen({ navigation, route }: InformationScre
     year: 'numeric',
   });
   const startTimeLabel = formatTime(time);
-
-  const calculateEndTime = () => {
-    const [hours, minutes] = time.split(':').map(Number);
-    const endMinutes = minutes + serviceDuration;
-    const endHours = hours + Math.floor(endMinutes / 60);
-    const finalMinutes = endMinutes % 60;
-    return `${endHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
-  };
 
   const handleReserve = async () => {
     const result = await reserve({
@@ -102,7 +97,7 @@ export default function InformationScreen({ navigation, route }: InformationScre
           barberName={employee.name}
           appointmentDateLabel={appointmentDateLabel}
           startTimeLabel={startTimeLabel}
-          endTimeLabel={calculateEndTime()}
+          endTimeLabel={calculateEndTime(time, serviceDuration)}
           durationMinutes={serviceDuration}
           note={note}
           priceText={`${servicePrice.toFixed(2)} BAM`}
@@ -112,17 +107,15 @@ export default function InformationScreen({ navigation, route }: InformationScre
         <BookingPolicyCard />
 
         {/* RESERVE BUTTON */}
-        <TouchableOpacity
-          style={styles.reserveButton}
-          activeOpacity={0.7}
-          onPress={handleReserve}
-          disabled={reserving}
-        >
-          <Text style={styles.reserveButtonText}>
-            {reserving ? 'Reserving...' : 'Confirm Reservation'}
-          </Text>
-          <Ionicons name="checkmark-circle" size={20} color={colors.white} />
-        </TouchableOpacity>
+        <View style={{ marginBottom: 32 }}>
+          <Button
+            label="Confirm Reservation"
+            onPress={() => void handleReserve()}
+            loading={reserving}
+            disabled={reserving}
+            rightIcon="checkmark-circle"
+          />
+        </View>
       </ScrollView>
 
       {/* SUCCESS MODAL */}

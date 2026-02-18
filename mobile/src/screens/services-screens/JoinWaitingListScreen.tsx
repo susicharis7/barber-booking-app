@@ -8,6 +8,7 @@ import type { ServicesStackParamList } from '../../navigation/types';
 import { useJoinWaitingList } from '../../hooks/services/useJoinWaitingList';
 import { WaitingListDateWindowCard } from '../../components/services/WaitingListDateWindowCard';
 import { useWaitingListDateWindow } from '../../hooks/services/useWaitingListDateWindow';
+import { Button } from '../../components/ui';
 
 type JoinWaitingListScreenProps = NativeStackScreenProps<
   ServicesStackParamList,
@@ -170,14 +171,13 @@ export default function JoinWaitingListScreen({ navigation, route }: JoinWaiting
         </Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.ctaButton}
-        activeOpacity={0.7}
+      <Button
+        label={joining ? 'Joining...' : 'Join Waiting List'}
         onPress={handleJoinWaitingList}
         disabled={joining}
-      >
-        <Text style={styles.ctaButtonText}>{joining ? 'Joining...' : 'Join Waiting List'}</Text>
-      </TouchableOpacity>
+        variant="primary"
+        size="lg"
+      />
 
       <Modal
         visible={existsModalVisible}
