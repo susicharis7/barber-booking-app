@@ -57,7 +57,6 @@ export const WaitingListItemCard = ({ item, position, onCancel }: WaitingListIte
           size="sm"
           leftIcon="close-circle-outline"
         />
-
       </View>
     </View>
   );

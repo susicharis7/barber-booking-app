@@ -245,19 +245,6 @@ export const styles = StyleSheet.create({
     color: colors.slate[700],
   },
 
-  ctaButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-
-  ctaButtonText: {
-    color: colors.white,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-
   existsModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(15, 23, 42, 0.55)',

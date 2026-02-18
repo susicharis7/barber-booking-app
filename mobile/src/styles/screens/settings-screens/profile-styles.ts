@@ -139,6 +139,4 @@ export const styles = StyleSheet.create({
     shadowRadius: 14,
     elevation: 4,
   },
-
- 
 });

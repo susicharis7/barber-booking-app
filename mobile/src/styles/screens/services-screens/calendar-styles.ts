@@ -258,56 +258,9 @@ export const styles = StyleSheet.create({
     marginTop: 16,
   },
 
-  noteLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.muted,
-    marginBottom: 10,
-  },
-
-  noteInput: {
-    backgroundColor: colors.slate[50],
-    borderRadius: 12,
-    padding: 14,
-    fontSize: 14,
-    color: colors.primary,
-    borderWidth: 1,
-    borderColor: colors.slate[200],
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-
   /* CONTINUE BUTTON */
-  continueButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: 14,
-    marginBottom: 32,
-    gap: 8,
-  },
-
-  continueButtonDisabled: {
-    backgroundColor: colors.slate[300],
-  },
-
-  continueButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.white,
-  },
 
   /* Time Slot */
-  timeSlotDisabled: {
-    backgroundColor: colors.slate[200],
-    borderColor: colors.slate[200],
-    opacity: 0.5,
-  },
-  timeSlotTextDisabled: {
-    color: colors.slate[400],
-  },
 
   /* Additional Design */
 

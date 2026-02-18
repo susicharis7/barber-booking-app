@@ -188,7 +188,6 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-
   /* MODAL */
   modalOverlay: {
     flex: 1,

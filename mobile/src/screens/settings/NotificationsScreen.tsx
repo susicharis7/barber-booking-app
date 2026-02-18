@@ -53,25 +53,18 @@ export default function NotificationsScreen({ navigation }: NotificationsScreenP
 
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
-
-        {/* BACK */}
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-
-        {/* HEADER */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>UPDATES</Text>
           <Text style={styles.headerTitle}>Notifications</Text>
           <Text style={styles.headerSubtitle}>Stay informed about your bookings and updates.</Text>
         </View>
       </ImageBackground>
-
-      {/* CONTENT */}
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {notifications.map((item) => (
@@ -107,8 +100,6 @@ export default function NotificationsScreen({ navigation }: NotificationsScreenP
           ))}
         </ScrollView>
       </View>
-
-      {/* MODAL */}
       <Modal
         visible={!!selected}
         transparent

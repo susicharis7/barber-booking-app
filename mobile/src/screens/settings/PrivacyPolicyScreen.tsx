@@ -12,11 +12,8 @@ type PrivacyPolicyScreenProps = NativeStackScreenProps<SettingsStackParamList, '
 export default function PrivacyPolicyScreen({ navigation }: PrivacyPolicyScreenProps) {
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
-
-        {/* BACK BUTTON */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -25,16 +22,12 @@ export default function PrivacyPolicyScreen({ navigation }: PrivacyPolicyScreenP
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-
-        {/* HEADER CONTENT */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>LEGAL</Text>
           <Text style={styles.headerTitle}>Privacy Policy</Text>
           <Text style={styles.headerSubtitle}>How we collect, use and protect your data.</Text>
         </View>
       </ImageBackground>
-
-      {/* WHITE CONTENT */}
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.sectionLabel}>YOUR PRIVACY MATTERS</Text>
@@ -95,8 +88,6 @@ export default function PrivacyPolicyScreen({ navigation }: PrivacyPolicyScreenP
     </View>
   );
 }
-
-/* POLICY SECTION COMPONENT */
 function PolicySection({
   icon,
   title,

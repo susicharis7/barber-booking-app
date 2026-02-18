@@ -185,6 +185,4 @@ export const styles = StyleSheet.create({
   priceTextSelected: {
     color: colors.primary,
   },
-
-
 });

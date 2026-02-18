@@ -14,17 +14,14 @@ export const login = async (email: string, password: string): Promise<User> => {
   return userCredential.user;
 };
 
-/* Logout Current User */
 export const logout = async (): Promise<void> => {
   await signOut(firebaseAuth);
 };
 
-/* Get Current User */
 export const getCurrentUser = (): User | null => {
   return firebaseAuth.currentUser;
 };
 
-/* Registration */
 export const registerWithEmailAndPassword = async (
   email: string,
   password: string,
@@ -34,7 +31,6 @@ export const registerWithEmailAndPassword = async (
   return userCredential.user;
 };
 
-/* Deletes currently signed in Firebase User => for Registration rollback */
 export const deleteCurrentUserAccount = async (): Promise<void> => {
   const currentUser = firebaseAuth.currentUser;
 

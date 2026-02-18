@@ -212,7 +212,6 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
 
-
   rebookButton: {
     flex: 1,
     flexDirection: 'row',

@@ -39,8 +39,6 @@ export default function ServicesAndPriceListScreen({
     <View style={styles.container}>
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
-
-        {/* Back Button */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -49,16 +47,12 @@ export default function ServicesAndPriceListScreen({
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-
-        {/* Header Content */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>SERVICES</Text>
           <Text style={styles.headerTitle}>Services & Price List</Text>
           <Text style={styles.headerSubtitle}>with {employee.name}</Text>
         </View>
       </ImageBackground>
-
-      {/* White Content */}
       <View style={styles.content}>
         {loading ? (
           <LoadingBlock label="Loading services..." />
@@ -71,8 +65,6 @@ export default function ServicesAndPriceListScreen({
               onRetry={() => void refetch()}
               onSelectService={setSelectedService}
             />
-
-            {/* Reserve Btn */}
             <Button
               label="Continue"
               onPress={handleContinue}

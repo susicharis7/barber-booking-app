@@ -19,11 +19,8 @@ export default function AboutAppScreen({ navigation }: AboutAppScreenProps) {
 
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
-
-        {/* BACK BUTTON */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -32,19 +29,14 @@ export default function AboutAppScreen({ navigation }: AboutAppScreenProps) {
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-
-        {/* HEADER CONTENT */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>INFO</Text>
           <Text style={styles.headerTitle}>About App</Text>
           <Text style={styles.headerSubtitle}>App information, version and developer contact.</Text>
         </View>
       </ImageBackground>
-
-      {/* WHITE CONTENT */}
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* APP INFO */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>UNA BARBERINA</Text>
             <Text style={styles.cardText}>
@@ -52,8 +44,6 @@ export default function AboutAppScreen({ navigation }: AboutAppScreenProps) {
               direktan kontakt – sve na jednom mjestu.
             </Text>
           </View>
-
-          {/* CONTACT */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Developer Contact</Text>
 
@@ -81,8 +71,6 @@ export default function AboutAppScreen({ navigation }: AboutAppScreenProps) {
               onPress={() => openLink('https://www.linkedin.com/in/susicharis7')}
             />
           </View>
-
-          {/* VERSION */}
           <View style={[styles.card, styles.versionCard]}>
             <Text style={styles.versionText}>App Version</Text>
             <Text style={styles.versionNumber}>v{appVersion}</Text>
@@ -94,8 +82,6 @@ export default function AboutAppScreen({ navigation }: AboutAppScreenProps) {
     </View>
   );
 }
-
-/* INFO ITEM */
 function InfoItem({
   icon,
   label,

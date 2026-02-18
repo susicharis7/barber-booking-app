@@ -75,7 +75,6 @@ export const CalendarBookingSummaryCard = ({
           onFocus={onFocusNote}
         />
       </View>
-
     </View>
   );
 };

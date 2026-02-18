@@ -79,8 +79,6 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
           onChangeText={setPassword}
           style={styles.input}
         />
-
-        {/* Email/Password Login Button */}
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={loading}>
           {loading ? (
             <ActivityIndicator color={colors.white} />

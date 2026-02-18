@@ -3,7 +3,6 @@ import { View, Text, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '../ui';
 
-
 import { styles } from '../../styles/screens/appointments-styles';
 import { colors } from '../../styles/colors';
 import { formatDateShort, formatTime } from '../../utils/calendar';
@@ -73,14 +72,18 @@ export const AppointmentCard = React.memo(function AppointmentCard({
           <Button
             label="Cancel"
             onPress={() =>
-              Alert.alert('Cancel appointment', 'Are you sure you want to cancel this appointment?', [
-                { text: 'No', style: 'cancel' },
-                {
-                  text: 'Yes, cancel',
-                  style: 'destructive',
-                  onPress: () => onCancel(appointment.id),
-                },
-              ])
+              Alert.alert(
+                'Cancel appointment',
+                'Are you sure you want to cancel this appointment?',
+                [
+                  { text: 'No', style: 'cancel' },
+                  {
+                    text: 'Yes, cancel',
+                    style: 'destructive',
+                    onPress: () => onCancel(appointment.id),
+                  },
+                ],
+              )
             }
             variant="danger"
             size="sm"
@@ -88,7 +91,6 @@ export const AppointmentCard = React.memo(function AppointmentCard({
             disabled={isCancelling}
             loading={isCancelling}
           />
-
         </View>
       )}
     </View>

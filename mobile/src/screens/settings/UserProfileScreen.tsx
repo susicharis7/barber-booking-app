@@ -8,7 +8,6 @@ import type { SettingsStackParamList } from '../../navigation/types';
 import { useUserProfile } from '../../hooks/settings/useUserProfile';
 import { Button, Input } from '../../components/ui';
 
-
 const headerImage = require('../../../assets/images/settings-bg.png');
 type UserProfileScreenProps = NativeStackScreenProps<SettingsStackParamList, 'UserProfile'>;
 
@@ -105,7 +104,6 @@ export default function UserProfileScreen({ navigation }: UserProfileScreenProps
             disabled={saving}
           />
         </View>
-
       </View>
     </KeyboardAwareScrollView>
   );

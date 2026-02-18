@@ -28,7 +28,6 @@ export default function ServiceScreen({ navigation }: ServiceScreenProps) {
 
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
 
@@ -38,8 +37,6 @@ export default function ServiceScreen({ navigation }: ServiceScreenProps) {
           <Text style={styles.headerSubtitle}>Select your preferred barber to continue.</Text>
         </View>
       </ImageBackground>
-
-      {/* CONTENT */}
       <View style={styles.content}>
         {loading ? (
           <LoadingBlock label="Loading barbers..." style={styles.loadingContainer} />

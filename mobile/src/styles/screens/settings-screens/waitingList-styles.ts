@@ -180,7 +180,6 @@ export const styles = StyleSheet.create({
     paddingTop: 14,
   },
 
-
   /* INFO CARD */
   infoCard: {
     flexDirection: 'row',
@@ -200,52 +199,4 @@ export const styles = StyleSheet.create({
   },
 
   /* EMPTY STATE */
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-    paddingBottom: 60,
-  },
-
-  emptyIconContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: colors.slate[100],
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.primary,
-    marginBottom: 8,
-  },
-
-  emptyText: {
-    fontSize: 15,
-    color: colors.muted,
-    textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 24,
-  },
-
-  browseButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    borderRadius: 12,
-    gap: 8,
-  },
-
-  browseButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.white,
-  },
 });

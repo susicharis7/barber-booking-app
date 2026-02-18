@@ -12,11 +12,8 @@ type TermsOfUseScreenProps = NativeStackScreenProps<SettingsStackParamList, 'Ter
 export default function TermsOfUse({ navigation }: TermsOfUseScreenProps) {
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
-
-        {/* BACK BUTTON */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -25,16 +22,12 @@ export default function TermsOfUse({ navigation }: TermsOfUseScreenProps) {
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-
-        {/* HEADER CONTENT */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>LEGAL</Text>
           <Text style={styles.headerTitle}>Terms of Use</Text>
           <Text style={styles.headerSubtitle}>Please read our terms and conditions carefully.</Text>
         </View>
       </ImageBackground>
-
-      {/* WHITE CONTENT */}
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.sectionLabel}>AGREEMENT</Text>
@@ -87,8 +80,6 @@ export default function TermsOfUse({ navigation }: TermsOfUseScreenProps) {
     </View>
   );
 }
-
-/* TERM SECTION COMPONENT */
 function TermSection({
   number,
   title,

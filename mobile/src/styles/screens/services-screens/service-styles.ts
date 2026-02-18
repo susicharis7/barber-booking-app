@@ -12,15 +12,11 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: 240,
   },
-
-  /* New */
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-
 
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,

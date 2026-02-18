@@ -13,7 +13,6 @@ import { BookingSuccessModal } from '../../components/services/BookingSuccessMod
 import { calculateEndTime } from '../../utils/time';
 import { Button } from '../../components/ui';
 
-
 const bgImage = require('../../../assets/images/settings-bg.png');
 type InformationScreenProps = NativeStackScreenProps<ServicesStackParamList, 'Information'>;
 
@@ -67,11 +66,8 @@ export default function InformationScreen({ navigation, route }: InformationScre
 
   return (
     <View style={styles.container}>
-      {/* HERO */}
       <ImageBackground source={bgImage} style={styles.hero} resizeMode="cover">
         <View style={styles.heroOverlay} />
-
-        {/* BACK BUTTON */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -80,18 +76,13 @@ export default function InformationScreen({ navigation, route }: InformationScre
           <Ionicons name="chevron-back" size={22} color={colors.white} />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-
-        {/* HEADER CONTENT */}
         <View style={styles.headerContent}>
           <Text style={styles.headerBadge}>CONFIRM</Text>
           <Text style={styles.headerTitle}>Booking Details</Text>
           <Text style={styles.headerSubtitle}>Review your appointment information.</Text>
         </View>
       </ImageBackground>
-
-      {/* WHITE CONTENT */}
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* APPOINTMENT DETAILS */}
         <BookingDetailsCard
           serviceName={service.name}
           barberName={employee.name}
@@ -102,11 +93,7 @@ export default function InformationScreen({ navigation, route }: InformationScre
           note={note}
           priceText={`${servicePrice.toFixed(2)} BAM`}
         />
-
-        {/* CANCELLATION POLICY */}
         <BookingPolicyCard />
-
-        {/* RESERVE BUTTON */}
         <View style={{ marginBottom: 32 }}>
           <Button
             label="Confirm Reservation"
@@ -117,8 +104,6 @@ export default function InformationScreen({ navigation, route }: InformationScre
           />
         </View>
       </ScrollView>
-
-      {/* SUCCESS MODAL */}
       <BookingSuccessModal
         visible={showSuccessModal}
         onClose={handleSuccessClose}
