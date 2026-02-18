@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { firebaseAuth } from '../services/auth/firebase';
-import { api, isApiError } from '../services/api/client';
+import { isApiError } from '../services/api/client';
 import { DatabaseUser } from '../types';
+import { getMe } from '../services/users-service';
 
 type AuthContextType = {
   user: User | null;
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const fetchDbUser = useCallback(async () => {
     try {
-      const data = await api.get<{ user: DatabaseUser }>('/api/users/me');
+      const data = await getMe();
       setDbUser(data.user);
     } catch (error: unknown) {
       if (isApiError(error)) {
