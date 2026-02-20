@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     phone VARCHAR(30),
     role VARCHAR(20) NOT NULL DEFAULT 'customer',
+    is_blocked BOOLEAN NOT NULL DEFAULT false,
+    blocked_at TIMESTAMP,
     CONSTRAINT users_role_check CHECK (role IN ('customer', 'barber', 'admin'))
 );
 
@@ -50,6 +52,8 @@ CREATE TABLE IF NOT EXISTS appointments (
     status VARCHAR(20) NOT NULL DEFAULT 'confirmed',
     note TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    service_price_at_booking DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    rescheduled_from_appointment_id INTEGER REFERENCES appointments(id) ON DELETE SET NULL,
     CONSTRAINT appointments_status_check CHECK (status IN ('confirmed', 'completed', 'cancelled'))
 );
 
@@ -80,31 +84,6 @@ CREATE TABLE IF NOT EXISTS waiting_list (
     CHECK (end_date IS NULL OR end_date >= start_date)
 );
 
-CREATE INDEX IF NOT EXISTS idx_waiting_list_customer
-  ON waiting_list(customer_id);
-
-CREATE INDEX IF NOT EXISTS idx_waiting_list_barber
-  ON waiting_list(barber_id);
-
-CREATE INDEX IF NOT EXISTS idx_waiting_list_status
-  ON waiting_list(status);
-
-CREATE INDEX IF NOT EXISTS idx_waiting_list_start
-  ON waiting_list(start_date);
-
-CREATE INDEX IF NOT EXISTS idx_waiting_list_end
-  ON waiting_list(end_date);
-
-
-
-
-
--- Indexes
-CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
-CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(date);
-CREATE INDEX IF NOT EXISTS idx_appointments_barber ON appointments(barber_id);
-CREATE INDEX IF NOT EXISTS idx_appointments_customer ON appointments(customer_id);
-CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
 
 -- Helper view: barbers with user info
 CREATE OR REPLACE VIEW barbers_with_user AS
@@ -159,5 +138,27 @@ RETURNS TABLE (
   LEFT JOIN services s ON s.id = a.service_id
   ORDER BY a.date DESC, a.start_time DESC;
 $$ LANGUAGE sql;
+
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+CREATE INDEX IF NOT EXISTS idx_users_is_blocked ON users(is_blocked);
+CREATE INDEX IF NOT EXISTS idx_users_firebase_uid ON users(firebase_uid);
+
+CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(date);
+CREATE INDEX IF NOT EXISTS idx_appointments_barber ON appointments(barber_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_customer ON appointments(customer_id);
+CREATE INDEX IF NOT EXISTS idx_appointments_status ON appointments(status);
+CREATE INDEX IF NOT EXISTS idx_appointments_barber_date ON appointments(barber_id, date);
+CREATE INDEX IF NOT EXISTS idx_appointments_date_status ON appointments(date, status);
+CREATE INDEX IF NOT EXISTS idx_appt_customer_status_date_time_id
+  ON appointments(customer_id, status, date, start_time, id);
+
+CREATE INDEX IF NOT EXISTS idx_waiting_list_customer ON waiting_list(customer_id);
+CREATE INDEX IF NOT EXISTS idx_waiting_list_barber ON waiting_list(barber_id);
+CREATE INDEX IF NOT EXISTS idx_waiting_list_status ON waiting_list(status);
+CREATE INDEX IF NOT EXISTS idx_waiting_list_start ON waiting_list(start_date);
+CREATE INDEX IF NOT EXISTS idx_waiting_list_end ON waiting_list(end_date);
+CREATE INDEX IF NOT EXISTS idx_waiting_list_customer_status_created
+  ON waiting_list(customer_id, status, created_at);
+
 
 COMMIT;
