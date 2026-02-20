@@ -21,6 +21,8 @@ export interface User {
     last_name: string;
     phone: string | null;
     role: UserRole;
+    is_blocked: boolean;
+    blocked_at: Date | null;
     created_at: Date;
 }
 
