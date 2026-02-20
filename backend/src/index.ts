@@ -1,39 +1,46 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { pool } from './db/pool';
 import app from './app';
+import { pool } from './db/pool';
+import { markPastAppointmentsCompleted } from './modules/appointments/appointmentsService';
+import { logger } from './core/logging/logger';
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT || 5000);
+const runEveryMs = 60_000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  logger.info('Server started', { port: PORT });
 });
 
 (async () => {
   try {
-    const res = await pool.query('SELECT NOW()');
-    console.log('Connected to PostgreSQL at', res.rows[0].now);
-  } catch (err) {
-    console.error('PostgreSQL connection failed:', err);
+    const result = await pool.query('SELECT NOW()');
+    logger.info('Connected to PostgreSQL', { now: result.rows[0].now });
+  } catch (error) {
+    logger.error('PostgreSQL connection failed', { error: String(error) });
     process.exit(1);
   }
 })();
 
-
-
-import { markPastAppointmentsCompleted } from './modules/appointments/appointmentsService';
-const runEveryMS = 60000;   // 60s
-
 setInterval(async () => {
   try {
     const updated = await markPastAppointmentsCompleted();
-
     if (updated > 0) {
-      console.log(`Marked ${updated} appointments as completed`)
-    };
-  } catch (err) {
-        console.error('Auto-complete appointments failed:', err);
-
+      logger.info('Auto-completed appointments', { updated });
+    }
+  } catch (error) {
+    logger.error('Auto-complete appointments failed', { error: String(error) });
   }
-}, runEveryMS)
+}, runEveryMs);
+
+const gracefulShutdown = (signal: string) => {
+  logger.warn('Shutdown signal received', { signal });
+  server.close(() => {
+    logger.info('HTTP server closed');
+    process.exit(0);
+  });
+};
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
