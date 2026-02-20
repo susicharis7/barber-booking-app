@@ -1,26 +1,23 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-
-/*
-    Reads result from all validators from routes
-    If there are any errors -> returns 400 & stops the chain
-    If not -> forwards it to controller
-*/
+import { sendError } from '../core/response/apiResponse';
+import { ERROR_CODES } from '../core/errors/errorCodes';
 
 export const validateRequest = (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): void => {
-    const errors = validationResult(req);
+  const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        res.status(400).json({
-            message: 'Validation Failed',
-            errors: errors.array(),
-        });
-        return;
-    }
+  if (!errors.isEmpty()) {
+    sendError(res, 400, {
+      code: ERROR_CODES.VALIDATION_FAILED,
+      message: 'Validation failed',
+      details: errors.array(),
+    });
+    return;
+  }
 
-    next();
-}
+  next();
+};

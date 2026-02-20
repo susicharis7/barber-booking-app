@@ -1,54 +1,91 @@
-import { Response, NextFunction } from 'express';
+import type { Response, NextFunction } from 'express';
 import type { UserRole } from '../types/types';
 import type { AuthRequest } from './authMiddleware';
 import * as userService from '../modules/user/userService';
+import { AppError } from '../core/errors/AppError';
+import { ERROR_CODES } from '../core/errors/errorCodes';
 
 export const requireRegisteredUser = async (
   req: AuthRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
     const uid = req.user?.uid;
+
     if (!uid) {
-      res.status(401).json({ code: 'UNAUTHORIZED', message: 'Missing AUTH User' });
+      next(
+        new AppError({
+          status: 401,
+          code: ERROR_CODES.UNAUTHORIZED,
+          message: 'Missing auth user',
+        })
+      );
       return;
     }
 
     const dbUser = await userService.findUserByFirebaseUID(uid);
 
     if (!dbUser) {
-      res.status(403).json({
-        code: 'USER_NOT_REGISTERED',
-        message: 'User must be registered in database',
-      });
+      next(
+        new AppError({
+          status: 403,
+          code: ERROR_CODES.USER_NOT_REGISTERED,
+          message: 'User must be registered in database',
+        })
+      );
       return;
-    }
+    };
+
+    if (dbUser.is_blocked) {
+      next(
+        new AppError({
+          status: 403,
+          code: ERROR_CODES.FORBIDDEN,
+          message: 'User profile is blocked.',
+        })
+      );
+
+      return;
+    };
 
     req.dbUser = dbUser;
     next();
-
-  } catch (error) {
-    console.error('requireRegisteredUser error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+  } catch {
+    next(
+      new AppError({
+        status: 500,
+        code: ERROR_CODES.INTERNAL_SERVER_ERROR,
+        message: 'Internal server error',
+      })
+    );
   }
-
-
-
 };
 
-export const requireAnyRole = 
+export const requireAnyRole =
   (...allowedRoles: UserRole[]) =>
-  (req: AuthRequest, res: Response, next: NextFunction): void => {
+  (req: AuthRequest, _res: Response, next: NextFunction): void => {
     const role = req.dbUser?.role;
 
     if (!role) {
-      res.status(403).json({ code: 'FORBIDDEN', message: 'Role missing' });
+      next(
+        new AppError({
+          status: 403,
+          code: ERROR_CODES.FORBIDDEN,
+          message: 'Role missing',
+        })
+      );
       return;
     }
 
     if (!allowedRoles.includes(role)) {
-      res.status(403).json({ code: 'FORBIDDEN', message: 'Insufficient role' });
+      next(
+        new AppError({
+          status: 403,
+          code: ERROR_CODES.FORBIDDEN,
+          message: 'Insufficient role',
+        })
+      );
       return;
     }
 
@@ -56,3 +93,4 @@ export const requireAnyRole =
   };
 
 export const requireStaff = requireAnyRole('barber', 'admin');
+export const requireAdmin = requireAnyRole('admin');
