@@ -8,7 +8,7 @@ The app allows users to browse services, select a barber, book available time sl
 
 ##  Project Status
 
-🟡 **In active development**
+🟡 **In hold due to Senior Design Project & Other projects**
 
 Current focus:
 - Core app architecture 
